@@ -1,6 +1,13 @@
 module.exports = function (api) {
   api.cache(true);
-  const plugins = [];
+  const plugins = [[
+    "module:react-native-dotenv",
+    {
+      envName: "APP_ENV",
+      moduleName: "@env",
+      path: ".env"
+    }
+  ]];
 
   plugins.push('nativewind/babel');
 
