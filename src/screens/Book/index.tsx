@@ -27,15 +27,13 @@ export default function BookDetails({ navigation, route }: BookDetailsProps) {
   }, [navigation]);
 
   useEffect(() => {
-    if(book.title) {
+    if(book?.title) {
       fetchReviews();
     }    
   }, [book]);
 
   const fetchReviews = async () => {
     try {
-      console.log("Getting Reviews...")
-      console.log(book.title);
       const res = await fetch(`${REACT_APP_API_URL}/books/reviews/${encodeURI(book.title)}`)
 
       const data = await res.json();

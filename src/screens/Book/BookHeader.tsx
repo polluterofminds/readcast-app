@@ -21,7 +21,9 @@ const BookHeader = ({ book, navigation }: BookHeaderProps) => {
     >
       <View className="h-full flex flex-col justify-between">
         <TouchableOpacity onPress={() => navigation.goBack()} className="p-4">
-          <FontAwesome name="chevron-left" size={24} color="#EAF4F4" />
+          <View className="flex flex-row items-center bg-dark rounded-full p-2 h-10 w-10">
+            <FontAwesome name="chevron-left" size={24} color="#EAF4F4" />
+          </View>          
         </TouchableOpacity>
         <View className="mx-auto justify-end relative">
           <Image

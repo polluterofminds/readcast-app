@@ -1,6 +1,6 @@
 import { Text, View, Image, ScrollView } from 'react-native';
 import { REACT_APP_API_URL } from "@env"
-import { FontAwesome5, AntDesign } from '@expo/vector-icons';
+import { FontAwesome5, AntDesign, MaterialCommunityIcons } from '@expo/vector-icons';
 import { useEffect, useRef, useState } from 'react';
 import { Book } from 'types';
 import Trending from './Trending';
@@ -20,7 +20,7 @@ export default function Feed() {
   const [newestCoords, setNewestCoords] = useState({x: 0, y: 0})
   const [fictionCoords, setFictionCoords] = useState({x: 0, y: 0})
 
-  const navigation = useNavigation();
+  const navigation: any = useNavigation();
 
   const scrollViewRef: any = useRef();
 
@@ -34,7 +34,7 @@ export default function Feed() {
       const data = await res.json();
       setTrending(data?.trending);
       setFiction(data?.fiction);
-      setNewest(data?.newest.map((n: any) => n.books))
+      setNewest(data?.newest)
       setLoading(false);
     } catch (error) {
       console.log(error);
@@ -69,7 +69,7 @@ export default function Feed() {
               <View className="py-6">
                 <ScrollView horizontal={true}>
                   <TouchableOpacity onPress={() => handleSelectSection("trending")}><View className={selectedTab === "trending" ? "flex flex-row items-center px-6 py-2 rounded rounded-full bg-primary mr-2" : "flex flex-row items-center px-6 py-2 rounded rounded-full bg-transparent border border-light mr-2"}><FontAwesome5 name="fire" size={24} color={selectedTab === "trending" ? "#181A1A" : "#EAF4F4"} /><Text style={{fontFamily: "Metropolis-Light"}} className={selectedTab === "trending" ? "ml-2 text-md" : "ml-2 text-md text-light"}>Trending</Text></View></TouchableOpacity>
-                  <TouchableOpacity onPress={() => handleSelectSection("newest")}><View className={selectedTab === "newest" ? "flex flex-row items-center px-6 py-2 rounded rounded-full bg-primary mr-2" : "flex flex-row items-center px-6 py-2 rounded rounded-full bg-transparent border border-light mr-2"}><AntDesign name="exclamationcircleo" size={24} color={selectedTab === "newest" ? "#181A1A" : "#EAF4F4"} /><Text style={{fontFamily: "Metropolis-Light"}} className={selectedTab === "newest" ? "ml-2 text-md" : "ml-2 text-md text-light"}>Newest</Text></View></TouchableOpacity>
+                  <TouchableOpacity onPress={() => handleSelectSection("newest")}><View className={selectedTab === "newest" ? "flex flex-row items-center px-6 py-2 rounded rounded-full bg-primary mr-2" : "flex flex-row items-center px-6 py-2 rounded rounded-full bg-transparent border border-light mr-2"}><MaterialCommunityIcons name="sprout" size={24} color={selectedTab === "newest" ? "#181A1A" : "#EAF4F4"} /><Text style={{fontFamily: "Metropolis-Light"}} className={selectedTab === "newest" ? "ml-2 text-md" : "ml-2 text-md text-light"}>Newest</Text></View></TouchableOpacity>
                   <TouchableOpacity onPress={() => handleSelectSection("fiction")}><View className={selectedTab === "fiction" ? "flex flex-row items-center px-6 py-2 rounded rounded-full bg-primary mr-2" : "flex flex-row items-center px-6 py-2 rounded rounded-full bg-transparent border border-light mr-2"}><FontAwesome5 name="bookmark" size={24} color={selectedTab === "fiction" ? "#181A1A" : "#EAF4F4"} /><Text style={{fontFamily: "Metropolis-Light"}} className={selectedTab === "fiction" ? "ml-2 text-md" : "ml-2 text-md text-light"}>Fiction</Text></View></TouchableOpacity>
                 </ScrollView>
                 <Trending handleBookPress={handleBookPress} trending={trending} setTrendingCoords={setTrendingCoords} />

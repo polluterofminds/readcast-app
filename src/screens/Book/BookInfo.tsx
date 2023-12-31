@@ -20,24 +20,19 @@ const BookInfo = ({ book, reviews }: BookInfoProps) => {
       <View className="bg-pill rounded-xl mt-4 m-auto px-4 py-2">
         <Text className="text-light text-lg" style={{ fontFamily: "Metropolis-Regular" }}>{book.category}</Text>
       </View>
-      {
-        reviews && reviews.length ?
-          <View className="mt-6">
-            <Text style={{ fontFamily: "Metropolis-Bold" }} className="text-3xl text-light">{reviews.length} reviews</Text>
-            <View>
-              {
-                reviews.map((r: ReviewWithUser) => {
-                  return (
-                    <ReviewItem key={r.id} review={r} />
-                  )
-                })
-              }
-            </View>
-          </View> :
-          <View className="mt-6">
-            <Text style={{ fontFamily: "Metropolis-Bold" }} className="text-3xl text-light">Loading reviews...</Text>
-          </View>
-      }
+
+      <View className="mt-6">
+        <Text style={{ fontFamily: "Metropolis-Bold" }} className="text-3xl text-light">{reviews.length} reviews</Text>
+        <View>
+          {
+            reviews.map((r: ReviewWithUser) => {
+              return (
+                <ReviewItem key={r.id} review={r} />
+              )
+            })
+          }
+        </View>
+      </View>
 
     </View>
   )

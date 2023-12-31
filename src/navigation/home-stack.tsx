@@ -3,6 +3,7 @@ import Book from "../screens/Book"
 import Feed from "~/screens/Feed";
 import { Pressable, Text, View, StyleSheet } from "react-native";
 import { Ionicons } from '@expo/vector-icons';
+import FullList from "~/screens/Feed/FullList";
 
 const HomeStack = createStackNavigator();
 
@@ -73,6 +74,13 @@ const HomeStackComponent = () => {
         <HomeStack.Screen 
           name="BookDetails" 
           component={Book} 
+          options={{
+            headerShown: false, 
+          }}
+        />
+        <HomeStack.Screen 
+          name="FullList" 
+          component={FullList} 
           options={{
             headerShown: false, 
           }}
