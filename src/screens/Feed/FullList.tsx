@@ -5,6 +5,7 @@ import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { Book } from 'types';
 import BookFeed from './BookFeed';
 import { REACT_APP_API_URL } from "@env"
+import useError from 'hooks/useError';
 
 interface FullListProps {
   route: any;
@@ -15,6 +16,7 @@ const FullList = ({ route }: FullListProps) => {
   const [books, setBooks] = useState<Book[]>([])
   const { category } = route?.params;
   const navigation = useNavigation();
+  const { submitError } = useError();
 
   useEffect(() => {
     loadBooks();
@@ -28,6 +30,7 @@ const FullList = ({ route }: FullListProps) => {
       setLoading(false);
     } catch (error) {
       console.log(error);
+      submitError(error);
       setLoading(false);
     }
   }

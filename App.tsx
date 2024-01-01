@@ -3,9 +3,13 @@ import RootStack from './src/navigation';
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
 import { useCallback } from 'react';
-import { View } from 'react-native';
+import ErrorBoundary from 'react-native-error-boundary';
+import { Text, TouchableOpacity, View } from 'react-native';
+import RNRestart from 'react-native-restart';
+import useError from 'hooks/useError';
 
 export default function App() {
+  const { submitError } = useError();
   const [fontsLoaded, fontError] = useFonts({
     'Metropolis-Black': require('./assets/fonts/Metropolis-Black.otf'),
     'Metropolis-Light': require('./assets/fonts/Metropolis-Light.otf'),
@@ -15,14 +19,24 @@ export default function App() {
     'Metropolis-Medium': require('./assets/fonts/Metropolis-Medium.otf'),
     'Metropolis-Regular': require('./assets/fonts/Metropolis-Regular.otf'),
   });
-  const onLayoutRootView = useCallback(async () => {
-    if (fontsLoaded || fontError) {
-      await SplashScreen.hideAsync();
-    }
-  }, [fontsLoaded, fontError]);
+
   if (!fontsLoaded && !fontError) {
     return null;
   }
 
-  return (<RootStack />);
+  const onError = async (e: any) => {
+    submitError(e);
+  }
+
+  const FallbackComponent = () => {
+    return (
+      <View>
+        <Text>Oops, something went wrong, click the button to try again.</Text>
+        <TouchableOpacity onPress={() => RNRestart.Restart()}>Try again</TouchableOpacity>
+      </View>
+    )
+  }
+  
+
+  return (<ErrorBoundary FallbackComponent={FallbackComponent} onError={onError}><RootStack /></ErrorBoundary>);
 }

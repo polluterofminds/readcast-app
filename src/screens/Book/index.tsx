@@ -8,6 +8,7 @@ import { TouchableOpacity } from 'react-native';
 import BookHeader from './BookHeader';
 import BookInfo from "./BookInfo";
 import {NavigationProp, ParamListBase} from '@react-navigation/native';
+import useError from 'hooks/useError';
 
 interface BookDetailsProps {
   navigation: NavigationProp<ParamListBase>;
@@ -18,6 +19,7 @@ export default function BookDetails({ navigation, route }: BookDetailsProps) {
   const [loading, setLoading] = useState(true);
   const [reviews, setReviews] = useState<ReviewWithUser[]>([]);
   const scrollViewRef: any = useRef();
+  const { submitError } = useError();
   const { book } = route?.params;
 
   React.useLayoutEffect(() => {
@@ -41,6 +43,7 @@ export default function BookDetails({ navigation, route }: BookDetailsProps) {
       setLoading(false);
     } catch (error) {      
       console.log(error);
+      submitError(error);
       setLoading(false);
     }
   }

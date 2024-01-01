@@ -8,6 +8,7 @@ import Newest from './Newest';
 import Fiction from './Fiction';
 import { TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import useError from 'hooks/useError';
 
 export default function Feed() {
   const [loading, setLoading] = useState(true);
@@ -24,6 +25,8 @@ export default function Feed() {
 
   const scrollViewRef: any = useRef();
 
+  const { submitError } = useError();
+
   useEffect(() => {
     fetchFeed();
   }, []);
@@ -38,6 +41,7 @@ export default function Feed() {
       setLoading(false);
     } catch (error) {
       console.log(error);
+      submitError(error);
       setLoading(false);
     }
   }
