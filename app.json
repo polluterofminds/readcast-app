@@ -3,7 +3,10 @@
     "name": "readstack-app",
     "slug": "readstack-app",
     "version": "1.0.0",
-
+    "scheme": "readcast",
+    "ios": {
+      "bundleIdentifier": "readcast"
+    },
     "web": {
       "favicon": "./assets/favicon.png"
     },

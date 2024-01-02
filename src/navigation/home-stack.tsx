@@ -4,6 +4,8 @@ import Feed from "~/screens/Feed";
 import { Pressable, Text, View, StyleSheet } from "react-native";
 import { Ionicons } from '@expo/vector-icons';
 import FullList from "~/screens/Feed/FullList";
+import { useNavigation } from "@react-navigation/native";
+import Auth from "~/screens/Auth";
 
 const HomeStack = createStackNavigator();
 
@@ -33,6 +35,7 @@ const getTimeOfDay = () => {
 }
 
 const HomeStackComponent = () => {
+  const navigation = useNavigation()
   return (
       <HomeStack.Navigator>
         <HomeStack.Screen 
@@ -47,7 +50,7 @@ const HomeStackComponent = () => {
             headerShadowVisible: false,
             tabBarIcon: ({ color }) => <TabBarIcon name="home" color={color} />,
             headerRight: () => (
-              <Pressable className="pb-2" onPress={() => navigation.navigate('Modal')}>
+              <Pressable className="pb-2" onPress={() => navigation.navigate('Auth')}>
                 {({ pressed }) => (
                   <Ionicons
                     name="person-outline"
@@ -81,6 +84,13 @@ const HomeStackComponent = () => {
         <HomeStack.Screen 
           name="FullList" 
           component={FullList} 
+          options={{
+            headerShown: false, 
+          }}
+        />
+        <HomeStack.Screen 
+          name="Auth" 
+          component={Auth} 
           options={{
             headerShown: false, 
           }}

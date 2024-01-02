@@ -5,20 +5,24 @@ import {
 
 const useError = () => {
   useEffect(() => {
-    startExceptionless();
+    // startExceptionless();
   }, []);
 
   const startExceptionless = async () => {
-    await Exceptionless.startup((c) => {
-      c.apiKey = "9IR1gAhnkp2dev8DZXUI6tMm5rBx2ZNqQZGiMsnU";
-      c.useDebugLogger();
-
-      c.defaultTags.push("ReadCast", "React Native");
-    });
+    try {
+      await Exceptionless.startup((c) => {
+        c.apiKey = "9IR1gAhnkp2dev8DZXUI6tMm5rBx2ZNqQZGiMsnU";
+        c.useDebugLogger();
+  
+        c.defaultTags.push("ReadCast", "React Native");
+      }); 
+    } catch (error) {
+      console.log(error);
+    }    
   };
 
   const submitMessage = (message: string) => {
-    Exceptionless.submitLog("Hello, world!");
+    Exceptionless.submitLog(message);
   };
 
   const submitError = (error: any) => {

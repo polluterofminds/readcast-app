@@ -19,7 +19,7 @@ const Search = () => {
   useEffect(() => {
     if(debouncedValue) {
       handleSearch();
-    }    
+    } 
   }, [debouncedValue])
 
   const handleChange = (value: string) => {
@@ -30,6 +30,7 @@ const Search = () => {
 
   const handleSearch = async () => {
     try {
+      setResults([]);
       setEmptyState(false);
       setSearching(true);
       const res = await fetch(`${REACT_APP_API_URL}/books/search?title=${debouncedValue}`)
