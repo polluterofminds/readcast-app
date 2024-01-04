@@ -1,51 +1,54 @@
-import { ImageBackground, Text, TouchableOpacity, View } from 'react-native'
-import * as WebBrowser from 'expo-web-browser';
-import * as ed from '@noble/ed25519';
-import { QRCode } from 'react-native-custom-qr-codes-expo';
-import { useState } from 'react';
+import { ImageBackground, Text, TouchableOpacity, View, Linking, Image } from 'react-native'
+import { REACT_APP_API_URL, ENVIRONMENT } from "@env"
+import QRCode from 'react-native-qrcode-svg';
+import { useEffect, useState } from 'react';
 import 'react-native-get-random-values';
 import { sha512 } from '@noble/hashes/sha512';
-import SignIn from './SignIn';
-ed.etc.sha512Sync = (...m) => sha512(ed.etc.concatBytes(...m));
-ed.etc.sha512Async = (...m) => Promise.resolve(ed?.etc?.sha512Sync!(...m));
+import useWarpcastConnection from 'hooks/useWarpcast';
 
 const Auth = () => {
-  const [deepLink, setDeepLink] = useState("");
+  const { connectWithWarpcast, connectedUserFid, deeplinkUrl } = useWarpcastConnection();
+  console.log({ deeplinkUrl })
   const handleSignIn = async () => {
-    const privateKey = ed.utils.randomPrivateKey();
-    const publicKey = await ed.getPublicKey(privateKey);
-    console.log({ privateKey, publicKey })
-    console.log(ed.etc.bytesToHex(publicKey))
-    const redirect = `exp://192.168.4.137:8081`
-    // const fullAuthUrl = `https://app.neynar.com/login?client_id=50fb47d0-06a0-42d1-ad86-8858d6d79f73&redirect_uri=${redirect}`
-    // await WebBrowser.openBrowserAsync(fullAuthUrl);
-    console.log({
-      publicKey: `0x${ed.etc.bytesToHex(publicKey)}`,
-      name: "ReadCast"
-    })
-    const res = await fetch(`https://api.warpcast.com/v2/signer-requests`, {
-      method: "POST",
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        publicKey: `0x${ed.etc.bytesToHex(publicKey)}`,
-        name: "ReadCast"
-      })
-    })
-    const data = await res.json();
-    console.log(data);
-    // const { token, deepLinkUrl } = data.result;
-    // setDeepLink(deepLinkUrl)
+    await connectWithWarpcast();
   }
 
-  const DeepLinkQRCode = () => <QRCode value={deepLink} />
+  const DeepLinkQRCode = () => <QRCode color={"black"} backgroundColor='white' value={deeplinkUrl} />
   return (
     <View className="bg-dark min-h-screen flex justify-center align-center items-center">
       {
-        deepLink ?
-          <DeepLinkQRCode /> :
-          <SignIn handleSignIn={handleSignIn} />
+        connectedUserFid ?
+          <View>
+            <Text>Signed in!</Text>
+          </View> :
+          <View>
+            <View>
+              <Image
+                className="w-64 h-64 m-auto mb-10 rounded-full"
+                source={require("../../../assets/ReadCastLogoSmall.png")}
+              />
+              <Text className="text-2xl text-light text-center" style={{ fontFamily: "Metropolis-Bold" }}>Welcome, to ReadCast!</Text>
+              <Text className="text-md text-light text-center" style={{ fontFamily: "Metropolis-Regular" }}>Let's get you signed in.</Text>
+              {
+                !deeplinkUrl &&
+                <TouchableOpacity className="mt-4 bg-primary px-4 py-2 rounded-md" onPress={() => handleSignIn()}>
+                  <Text className="text-dark font-bold text-xl text-center" style={{ fontFamily: "Metropolis-Bold" }}>Get started</Text>
+                </TouchableOpacity>
+              }
+            </View>
+            {
+              deeplinkUrl ?
+                <View className="flex items-center mt-4">
+                  {
+                    ENVIRONMENT === "simulator" ? <DeepLinkQRCode /> :
+                      <TouchableOpacity onPress={() => Linking.openURL(deeplinkUrl)} className="mt-4 bg-primary px-4 py-2 rounded-md" >
+                        <Text className="text-dark font-bold text-xl text-center" style={{ fontFamily: "Metropolis-Bold" }}>Sign in with Warpcast</Text>
+                      </TouchableOpacity>
+                  }
+                </View> :
+                null
+            }
+          </View>
       }
     </View>
   )

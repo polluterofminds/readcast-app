@@ -9,7 +9,7 @@ module.exports = {
         "light": "#EAF4F4", 
         "dark": "#181A1A", 
         "accent": "#232538",
-        "primary": "#CDE7BE", 
+        "primary": "#92bcb0", 
         "pill": "#313333"
       }
     },

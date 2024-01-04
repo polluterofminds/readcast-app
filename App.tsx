@@ -1,12 +1,10 @@
-import 'react-native-gesture-handler';
 import RootStack from './src/navigation';
 import { useFonts } from "expo-font";
-import * as SplashScreen from "expo-splash-screen";
-import { useCallback } from 'react';
 import ErrorBoundary from 'react-native-error-boundary';
 import { Text, TouchableOpacity, View } from 'react-native';
 import RNRestart from 'react-native-restart';
 import useError from 'hooks/useError';
+import 'text-encoding-polyfill';
 
 export default function App() {
   const { submitError } = useError();
