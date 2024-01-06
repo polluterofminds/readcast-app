@@ -5,6 +5,7 @@ import { Text, TouchableOpacity, View } from 'react-native';
 import RNRestart from 'react-native-restart';
 import useError from 'hooks/useError';
 import 'text-encoding-polyfill';
+import { UserProvider } from 'contexts/UserContext';
 
 export default function App() {
   const { submitError } = useError();
@@ -36,5 +37,5 @@ export default function App() {
   }
   
 
-  return (<ErrorBoundary FallbackComponent={FallbackComponent} onError={onError}><RootStack /></ErrorBoundary>);
+  return (<ErrorBoundary FallbackComponent={FallbackComponent} onError={onError}><UserProvider><RootStack /></UserProvider></ErrorBoundary>);
 }

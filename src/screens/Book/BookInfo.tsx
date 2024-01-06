@@ -8,7 +8,7 @@ interface BookDetailsProps {
   reviews: ReviewWithUser[]
 }
 
-const BookInfo = ({ book, reviews }: BookInfoProps) => {
+const BookInfo = ({ book, reviews }: BookDetailsProps) => {
   return (
     <View className="pt-10 px-4 pb-10">
       <Text style={{ fontFamily: "Metropolis-Bold" }} className="text-3xl font-bold text-light">{book.title}</Text>

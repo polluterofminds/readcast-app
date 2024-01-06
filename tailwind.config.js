@@ -8,6 +8,7 @@ module.exports = {
         "lightest": "#dfebeb",
         "light": "#EAF4F4", 
         "dark": "#181A1A", 
+        "contrast": "#272828",
         "accent": "#232538",
         "primary": "#92bcb0", 
         "pill": "#313333"

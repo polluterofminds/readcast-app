@@ -42,7 +42,7 @@ const BookHeader = ({ book, navigation }: BookHeaderProps) => {
                 </View>
               </TouchableOpacity>
               <Text className="text-light mx-4 text-2xl" style={{fontFamily: "Metropolis-Light"}}>|</Text>
-              <TouchableOpacity>
+              <TouchableOpacity onPress={() => navigation.navigate("Review", { book })}>
                 <View className="flex flex-row items-center">
                   <AntDesign name="staro" size={24} color="#EAF4F4" />
                   <Text style={{fontFamily: "Metropolis-Bold"}} className="mx-2 text-lg font-bold text-light">Add review</Text>

@@ -1,10 +1,7 @@
 import FontAwesome from '@expo/vector-icons/FontAwesome';
-import { Ionicons } from '@expo/vector-icons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { Pressable, StyleSheet, Text, Touchable, TouchableOpacity, View } from 'react-native';
-import Feed from '../screens/Feed';
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import Search from '../screens/Search';
-import { createStackNavigator } from '@react-navigation/stack';
 import HomeStackComponent from './home-stack';
 
 const Tab = createBottomTabNavigator();

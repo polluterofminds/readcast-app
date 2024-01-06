@@ -1,10 +1,8 @@
 import React from 'react';
 import { Text, View, Image, ScrollView, SafeAreaView } from 'react-native';
 import { REACT_APP_API_URL } from "@env"
-import { FontAwesome5, AntDesign } from '@expo/vector-icons';
 import { useEffect, useRef, useState } from 'react';
-import { Book, Review, ReviewWithUser, User } from 'types';
-import { TouchableOpacity } from 'react-native';
+import { ReviewWithUser } from 'types';
 import BookHeader from './BookHeader';
 import BookInfo from "./BookInfo";
 import {NavigationProp, ParamListBase} from '@react-navigation/native';

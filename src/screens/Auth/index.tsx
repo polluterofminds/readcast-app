@@ -1,27 +1,29 @@
 import { ImageBackground, Text, TouchableOpacity, View, Linking, Image } from 'react-native'
-import { REACT_APP_API_URL, ENVIRONMENT } from "@env"
+import { REACT_APP_API_URL, REACT_APP_ENVIRONMENT } from "@env"
 import QRCode from 'react-native-qrcode-svg';
 import { useEffect, useState } from 'react';
 import 'react-native-get-random-values';
 import { sha512 } from '@noble/hashes/sha512';
 import useWarpcastConnection from 'hooks/useWarpcast';
+import Profile from './Profile';
+import { useUser } from 'hooks/useUser';
 
 const Auth = () => {
   const { connectWithWarpcast, connectedUserFid, deeplinkUrl } = useWarpcastConnection();
-  console.log({ deeplinkUrl })
+  const { userState } = useUser();
   const handleSignIn = async () => {
     await connectWithWarpcast();
   }
 
   const DeepLinkQRCode = () => <QRCode color={"black"} backgroundColor='white' value={deeplinkUrl} />
   return (
-    <View className="bg-dark min-h-screen flex justify-center align-center items-center">
+    <View className="bg-dark min-h-screen">
       {
-        connectedUserFid ?
+        userState.fid !== "" ?
           <View>
-            <Text>Signed in!</Text>
+            <Profile />
           </View> :
-          <View>
+          <View className="h-full flex justify-center align-center items-center">
             <View>
               <Image
                 className="w-64 h-64 m-auto mb-10 rounded-full"
@@ -40,7 +42,7 @@ const Auth = () => {
               deeplinkUrl ?
                 <View className="flex items-center mt-4">
                   {
-                    ENVIRONMENT === "simulator" ? <DeepLinkQRCode /> :
+                    REACT_APP_ENVIRONMENT === "simulator" ? <DeepLinkQRCode /> :
                       <TouchableOpacity onPress={() => Linking.openURL(deeplinkUrl)} className="mt-4 bg-primary px-4 py-2 rounded-md" >
                         <Text className="text-dark font-bold text-xl text-center" style={{ fontFamily: "Metropolis-Bold" }}>Sign in with Warpcast</Text>
                       </TouchableOpacity>

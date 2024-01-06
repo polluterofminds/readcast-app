@@ -28,6 +28,7 @@ export interface User {
 }
 
 export interface ReviewWithUser {
+  created_at: string;
   id: string;
   title: string;
   review: string;
