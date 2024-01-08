@@ -7,6 +7,7 @@ import BookHeader from './BookHeader';
 import BookInfo from "./BookInfo";
 import {NavigationProp, ParamListBase} from '@react-navigation/native';
 import useError from 'hooks/useError';
+import useReviews from 'hooks/useReviews';
 
 interface BookDetailsProps {
   navigation: NavigationProp<ParamListBase>;
@@ -15,9 +16,8 @@ interface BookDetailsProps {
 
 export default function BookDetails({ navigation, route }: BookDetailsProps) {
   const [loading, setLoading] = useState(true);
-  const [reviews, setReviews] = useState<ReviewWithUser[]>([]);
   const scrollViewRef: any = useRef();
-  const { submitError } = useError();
+  const { reviews, fetchReviews } = useReviews();
   const { book } = route?.params;
 
   React.useLayoutEffect(() => {
@@ -28,22 +28,13 @@ export default function BookDetails({ navigation, route }: BookDetailsProps) {
 
   useEffect(() => {
     if(book?.title) {
-      fetchReviews();
+      getReviews();
     }    
   }, [book]);
 
-  const fetchReviews = async () => {
-    try {
-      const res = await fetch(`${REACT_APP_API_URL}/books/reviews/${encodeURI(book.title)}`)
-
-      const data = await res.json();
-      setReviews(data);
-      setLoading(false);
-    } catch (error) {      
-      console.log(error);
-      submitError(error);
-      setLoading(false);
-    }
+  const getReviews = async () => {
+    await fetchReviews(book);
+    setLoading(false);
   }
 
   return (

@@ -14,30 +14,9 @@ export type Star = {
   selected: boolean;
 }
 const Review = ({ route }: ReviewProps) => {
-  const [reviewText, setReviewText] = useState("");
-  const [stars, setStars] = useState<Star[]>([{
-    index: 1, 
-    selected: false
-  }, 
-  {
-    index: 2, 
-    selected: false
-  }, 
-  {
-    index: 3, 
-    selected: false
-  }, 
-  {
-    index: 4, 
-    selected: false
-  }, 
-  {
-    index: 5, 
-    selected: false
-  }])
-  const navigation = useNavigation();
   const scrollViewRef: any = useRef();
   const { book } = route?.params;
+
   return (
     <View className="bg-dark w-screen">
       <ScrollView ref={scrollViewRef} scrollIndicatorInsets={{ right: 1 }}>
@@ -46,7 +25,7 @@ const Review = ({ route }: ReviewProps) => {
             <ReviewHeader book={book} />
           </View>
           <View className="mt-4 px-4">
-            <ReviewForm stars={stars} setStars={setStars} reviewText={reviewText} setReviewText={setReviewText} />
+            <ReviewForm book={book} />
           </View>
         </SafeAreaView>
       </ScrollView>

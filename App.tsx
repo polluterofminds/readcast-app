@@ -6,6 +6,7 @@ import RNRestart from 'react-native-restart';
 import useError from 'hooks/useError';
 import 'text-encoding-polyfill';
 import { UserProvider } from 'contexts/UserContext';
+import FlashMessage from "react-native-flash-message";
 
 export default function App() {
   const { submitError } = useError();
@@ -37,5 +38,5 @@ export default function App() {
   }
   
 
-  return (<ErrorBoundary FallbackComponent={FallbackComponent} onError={onError}><UserProvider><RootStack /></UserProvider></ErrorBoundary>);
+  return (<ErrorBoundary FallbackComponent={FallbackComponent} onError={onError}><FlashMessage position="top" /><UserProvider><RootStack /></UserProvider></ErrorBoundary>);
 }

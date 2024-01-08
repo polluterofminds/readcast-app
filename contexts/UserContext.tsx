@@ -15,6 +15,8 @@ export interface UserState {
 interface UserProviderProps {
   userState: UserState;
   logOut: Function;
+  fetchUserData: Function;
+  children: any;
 }
 
 export const UserStateContext = createContext({});
@@ -67,7 +69,7 @@ export const UserProvider = (
   }
 
   return (
-    <UserStateContext.Provider value={{ userState, logOut }}>
+    <UserStateContext.Provider value={{ userState, fetchUserData, logOut }}>
       {props.children}
     </UserStateContext.Provider>
   );
