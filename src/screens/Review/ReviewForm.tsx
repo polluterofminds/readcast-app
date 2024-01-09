@@ -92,7 +92,7 @@ const ReviewForm = ({ book }: ReviewFormProps) => {
       if(stars.filter((s: Star) => s.selected).length > 0) {
         stars.filter((s: Star) => s.selected).forEach((s: Star) => {starRatings = starRatings + "⭐️"})
       } 
-      let text = `${book.title} by ${book.author} review: \n ${reviewText}\n ${starRatings && starRatings}`
+      let text = `${book.title} by ${book.author} review: \n${reviewText}\n${starRatings && starRatings}`
       await castReview(text, book, stars.filter((s: Star) => s.selected).length)
       showMessage({
         message: "Review added!",

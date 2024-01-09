@@ -36,7 +36,7 @@ export const UserProvider = (
   const [userState, setState] = useState(initialState);
   const { connectedUserFid } = useWarpcastConnection();
   console.log({connectedUserFid})
-  const { removeSecureValue } = useSecureStorage();
+  const { removeSecureValue, getSecureValue } = useSecureStorage();
 
   const updateState = (newState: any) => {
     setState((prevState) => ({ ...prevState, ...newState }));

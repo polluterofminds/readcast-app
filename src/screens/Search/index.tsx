@@ -1,6 +1,6 @@
 import useDebounce from 'hooks/debounce';
 import React, { useEffect, useState } from 'react'
-import { TextInput, View } from 'react-native'
+import { TextInput, View, Text } from 'react-native'
 import { REACT_APP_API_URL } from "@env"
 import { Book } from 'types';
 import Results from './Results';
@@ -12,6 +12,7 @@ const Search = () => {
   const [results, setResults] = useState<Book[]>([]);
   const [searching, setSearching] = useState(false);
   const [emptyState, setEmptyState] = useState(false);
+  const [ellipsisState, setEllipsisState] = useState("")
 
   const debouncedValue = useDebounce(searchText, 1000);
   const { submitError } = useError();
@@ -28,11 +29,33 @@ const Search = () => {
     setSearchText(value)
   }
 
+  const generateEllipsis = async () => {
+    let count = 0;
+    let ellipsis = ""
+    if(count === 3) {
+      count = 0;
+      generateEllipsis();
+    } else {
+      while(count < 3) {
+        ellipsis = ellipsis = "."
+        setEllipsisState(ellipsis)
+        count++;
+  
+        // await new Promise((resolve) => {
+        //   setTimeout(() => {
+        //     resolve("");
+        //   }, 300);
+        // });
+      }
+    }    
+  }
+
   const handleSearch = async () => {
     try {
       setResults([]);
       setEmptyState(false);
       setSearching(true);
+      generateEllipsis();
       const res = await fetch(`${REACT_APP_API_URL}/books/search?title=${debouncedValue}`)
       const data = await res.json();
       if(data.length === 0) {
@@ -40,10 +63,12 @@ const Search = () => {
       }
       setResults(data);
       setSearching(false); 
+      setEllipsisState("");
     } catch (error) {
       console.log(error);
       submitError(error);
       setSearching(false);
+      setEllipsisState("");
     }
   }
   return (
@@ -59,8 +84,12 @@ const Search = () => {
         placeholder='Search'
       />
       {
-        searchText.length > 0 ? 
+        searchText.length > 0 && !searching ? 
         <Results submitError={submitError} results={results} emptyState={emptyState} /> : 
+        searchText.length > 0 && searching ? 
+        <View className="mt-4">
+          <Text className="text-lg text-light" style={{fontFamily: "Metropolis-Regular"}}>Searching {ellipsisState}</Text>
+        </View> : 
         <RecentSearches />
       }
     </View>

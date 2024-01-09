@@ -5,6 +5,10 @@ import Foundation from '@expo/vector-icons/Foundation';
 import { Book } from 'types';
 import { NavigationProp, ParamListBase } from '@react-navigation/native';
 import AntDesign from '@expo/vector-icons/AntDesign';
+import useWarpcastConnection from 'hooks/useWarpcast';
+import { showMessage, hideMessage } from "react-native-flash-message";
+//  @ts-ignore
+import { REACT_APP_API_URL } from "@env";
 
 interface BookHeaderProps {
   book: Book;
@@ -12,6 +16,31 @@ interface BookHeaderProps {
 }
 
 const BookHeader = ({ book, navigation }: BookHeaderProps) => {
+  const { connectedUserFid } = useWarpcastConnection();
+  const addToLibrary = async () => {
+    showMessage({
+      type: "info",
+      message: "Adding to library..."
+    })
+    try {
+      await fetch(`${REACT_APP_API_URL}/books/library`, {
+        method: "POST",
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          book,
+          fid: connectedUserFid,
+          details: {
+            status: "tbr"
+          }
+        })
+      })
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   return (
     <ImageBackground
       style={{ flex: 1 }}
@@ -23,7 +52,7 @@ const BookHeader = ({ book, navigation }: BookHeaderProps) => {
         <TouchableOpacity onPress={() => navigation.goBack()} className="p-4">
           <View className="flex flex-row items-center bg-dark rounded-full p-2 h-10 w-10">
             <FontAwesome name="chevron-left" size={24} color="#EAF4F4" />
-          </View>          
+          </View>
         </TouchableOpacity>
         <View className="mx-auto justify-end relative">
           <Image
@@ -31,25 +60,25 @@ const BookHeader = ({ book, navigation }: BookHeaderProps) => {
             source={{
               uri: book.thumbnail
             }}
-          />          
+          />
         </View>
         <View className="absolute -bottom-4 w-[90%] left-[5%] m-auto">
-            <View className="flex w-full flex-row bg-accent py-4 px-6 rounded-md m-auto justify-center">
-              <TouchableOpacity>
-                <View className="flex flex-row items-center">
-                  <Foundation name="book-bookmark" size={24} color="#EAF4F4" />
-                  <Text style={{fontFamily: "Metropolis-Bold"}} className="mx-2 text-lg font-bold text-light">Want to read</Text>
-                </View>
-              </TouchableOpacity>
-              <Text className="text-light mx-4 text-2xl" style={{fontFamily: "Metropolis-Light"}}>|</Text>
-              <TouchableOpacity onPress={() => navigation.navigate("Review", { book })}>
-                <View className="flex flex-row items-center">
-                  <AntDesign name="staro" size={24} color="#EAF4F4" />
-                  <Text style={{fontFamily: "Metropolis-Bold"}} className="mx-2 text-lg font-bold text-light">Add review</Text>
-                </View>
-              </TouchableOpacity>
-            </View>
+          <View className="flex w-full flex-row bg-accent py-4 px-6 rounded-md m-auto justify-center">
+            <TouchableOpacity onPress={() => addToLibrary()}>
+              <View className="flex flex-row items-center">
+                <Foundation name="book-bookmark" size={24} color="#EAF4F4" />
+                <Text style={{ fontFamily: "Metropolis-Bold" }} className="mx-2 text-lg font-bold text-light">Want to read</Text>
+              </View>
+            </TouchableOpacity>
+            <Text className="text-light mx-4 text-2xl" style={{ fontFamily: "Metropolis-Light" }}>|</Text>
+            <TouchableOpacity onPress={() => navigation.navigate("Review", { book })}>
+              <View className="flex flex-row items-center">
+                <AntDesign name="staro" size={24} color="#EAF4F4" />
+                <Text style={{ fontFamily: "Metropolis-Bold" }} className="mx-2 text-lg font-bold text-light">Add review</Text>
+              </View>
+            </TouchableOpacity>
           </View>
+        </View>
       </View>
     </ImageBackground>
   )

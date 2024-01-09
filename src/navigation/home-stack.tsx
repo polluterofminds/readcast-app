@@ -8,6 +8,7 @@ import { useNavigation } from "@react-navigation/native";
 import Auth from "~/screens/Auth";
 import { useUser } from "hooks/useUser";
 import Review from "~/screens/Review";
+import Library from "~/screens/Library";
 
 const HomeStack = createStackNavigator();
 

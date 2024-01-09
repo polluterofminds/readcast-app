@@ -3,6 +3,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import Search from '../screens/Search';
 import HomeStackComponent from './home-stack';
+import Library from '~/screens/Library';
 
 const Tab = createBottomTabNavigator();
 // const HomeStack = createStackNavigator();
@@ -39,9 +40,16 @@ export default function TabLayout({ navigation }: TabLayoutProps) {
       />
       <Tab.Screen
         name="Library"
-        component={Search}
+        component={Library}
         options={{
           title: '',
+          headerStyle: {
+            backgroundColor: '#181A1A',
+          },
+          headerTitleStyle: {
+            color: '#EAF4F4',
+          },
+          headerShadowVisible: false,
           tabBarIcon: ({ color }) => <TabBarIcon name="book" color={color} />,
         }}
       />

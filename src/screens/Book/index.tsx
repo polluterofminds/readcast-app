@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from 'react';
 import { ReviewWithUser } from 'types';
 import BookHeader from './BookHeader';
 import BookInfo from "./BookInfo";
-import {NavigationProp, ParamListBase} from '@react-navigation/native';
+import {NavigationProp, ParamListBase, useIsFocused} from '@react-navigation/native';
 import useError from 'hooks/useError';
 import useReviews from 'hooks/useReviews';
 
@@ -18,6 +18,7 @@ export default function BookDetails({ navigation, route }: BookDetailsProps) {
   const [loading, setLoading] = useState(true);
   const scrollViewRef: any = useRef();
   const { reviews, fetchReviews } = useReviews();
+  const isFocused = useIsFocused();
   const { book } = route?.params;
 
   React.useLayoutEffect(() => {
@@ -27,10 +28,10 @@ export default function BookDetails({ navigation, route }: BookDetailsProps) {
   }, [navigation]);
 
   useEffect(() => {
-    if(book?.title) {
+    if(book?.title && isFocused) {
       getReviews();
     }    
-  }, [book]);
+  }, [isFocused]);
 
   const getReviews = async () => {
     await fetchReviews(book);

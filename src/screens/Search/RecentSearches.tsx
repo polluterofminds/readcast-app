@@ -33,7 +33,6 @@ const RecentSearches = () => {
           <ResultItem book={item} />
         )}
         keyExtractor={item => item.id}
-        numColumns={2}
       />
     </View>
   )

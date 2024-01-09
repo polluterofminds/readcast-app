@@ -7,7 +7,7 @@ import Trending from './Trending';
 import Newest from './Newest';
 import Fiction from './Fiction';
 import { TouchableOpacity } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { useIsFocused, useNavigation } from '@react-navigation/native';
 import useError from 'hooks/useError';
 
 export default function Feed() {
@@ -26,10 +26,13 @@ export default function Feed() {
   const scrollViewRef: any = useRef();
 
   const { submitError } = useError();
+  const isFocused = useIsFocused();
 
   useEffect(() => {
-    fetchFeed();
-  }, []);
+    if(isFocused) {
+      fetchFeed();
+    }
+  }, [isFocused]);
 
   const fetchFeed = async () => {
     try {
