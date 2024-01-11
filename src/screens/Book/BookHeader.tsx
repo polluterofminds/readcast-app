@@ -1,22 +1,58 @@
-import React from 'react'
-import { ImageBackground, TouchableOpacity, View, Image, Text } from 'react-native'
+import React, { useEffect, useState } from 'react'
+import { ImageBackground, TouchableOpacity, View, Image, Text, Modal } from 'react-native'
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import Foundation from '@expo/vector-icons/Foundation';
 import { Book } from 'types';
-import { NavigationProp, ParamListBase } from '@react-navigation/native';
+import { NavigationProp, ParamListBase, useIsFocused } from '@react-navigation/native';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import useWarpcastConnection from 'hooks/useWarpcast';
 import { showMessage, hideMessage } from "react-native-flash-message";
+import DateTimePicker from 'react-native-ui-datepicker';
+import dayjs from 'dayjs';
 //  @ts-ignore
 import { REACT_APP_API_URL } from "@env";
+import { LibraryWithBook } from '../Library';
+import { useLibrary } from 'hooks/useLibrary';
+import { useUser } from 'hooks/useUser';
 
 interface BookHeaderProps {
   book: Book;
   navigation: NavigationProp<ParamListBase>;
+  library?: LibraryWithBook;
 }
 
 const BookHeader = ({ book, navigation }: BookHeaderProps) => {
+  const [modalVisible, setModalVisible] = useState(false);
+  const [bookFormat, setBookFormat] = useState("paperback");
+  const [dateCompleted, setDateCompleted] = useState<any>(dayjs());
+  const [libraryBook, setLibraryBook] = useState<LibraryWithBook | null>(null);
   const { connectedUserFid } = useWarpcastConnection();
+  const { libraryState, fetchLibraryData} = useLibrary();
+  const { userState } = useUser();
+  const isFocused = useIsFocused();
+
+  const fullList = [...libraryState.tbr, ...libraryState.inProgress, ...libraryState.completed];
+
+  useEffect(() => {
+    const foundBook = fullList.find((l: LibraryWithBook) => l.book_id === book.id);
+    if (foundBook) {
+      setLibraryBook(foundBook)
+    }
+  }, [isFocused])
+
+  useEffect(() => {
+    console.log("Library State Change")
+    const list = [...libraryState.tbr, ...libraryState.inProgress, ...libraryState.completed];
+    const foundBook = list.find((l: LibraryWithBook) => l.book_id === book.id);
+    if (foundBook) {
+      setLibraryBook(foundBook)
+    }
+  }, [libraryState]);
+
+  const fetchAndUpdate = async () => {
+    await fetchLibraryData();
+  }
+
   const addToLibrary = async () => {
     showMessage({
       type: "info",
@@ -36,10 +72,97 @@ const BookHeader = ({ book, navigation }: BookHeaderProps) => {
           }
         })
       })
+      await fetchAndUpdate()
     } catch (error) {
       console.log(error);
     }
   }
+
+  const updateLibraryStatus = async (newStatus: string) => {
+    console.log({newStatus})
+    setModalVisible(false);
+    showMessage({
+      type: "info",
+      message: "Adding to library..."
+    })
+    try {
+      await fetch(`${REACT_APP_API_URL}/books/library/${libraryBook?.id}`, {
+        method: "PUT",
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          book,
+          fid: connectedUserFid,
+          details: {
+            status: newStatus,
+            bookFormat,
+            dateCompleted
+          }
+        })
+      })
+      showMessage({
+        type: "info",
+        message: "Updated library info!"
+      })
+      fetchAndUpdate();
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  console.log({libraryBook})
+
+  const renderLibraryAction = () => {
+    if (libraryBook && libraryBook.status === "tbr") {
+      return (
+        <TouchableOpacity onPress={() => setModalVisible(true)}>
+          <View className="flex flex-row items-center">
+            <Foundation name="book-bookmark" size={24} color="#EAF4F4" />
+            <Text style={{ fontFamily: "Metropolis-Bold" }} className="mx-2 text-lg font-bold text-light">Mark as started</Text>
+          </View>
+        </TouchableOpacity>
+      )
+    } else if (libraryBook && libraryBook.status === "in-progress") {
+      return (
+        <TouchableOpacity onPress={() => setModalVisible(true)}>
+          <View className="flex flex-row items-center">
+            <Foundation name="book-bookmark" size={24} color="#EAF4F4" />
+            <Text style={{ fontFamily: "Metropolis-Bold" }} className="mx-2 text-lg font-bold text-light">Mark as completed</Text>
+          </View>
+        </TouchableOpacity>
+      )
+    }
+
+    return (
+      <TouchableOpacity onPress={() => addToLibrary()}>
+        <View className="flex flex-row items-center">
+          <Foundation name="book-bookmark" size={24} color="#EAF4F4" />
+          <Text style={{ fontFamily: "Metropolis-Bold" }} className="mx-2 text-lg font-bold text-light">Want to read</Text>
+        </View>
+      </TouchableOpacity>
+    )
+  }
+
+  const options = [{
+    text: "Paperback",
+    onClick: () => setBookFormat("paperback"),
+    isSelected: bookFormat === "paperback"
+  },
+  {
+    text: "Hardcover",
+    onClick: () => setBookFormat("hardcover"),
+    isSelected: bookFormat === "hardcover"
+  },
+  {
+    text: "Ebook",
+    onClick: () => setBookFormat("ebook"),
+    isSelected: bookFormat === "ebook"
+  }, {
+    text: "Audio",
+    onClick: () => setBookFormat("audio"),
+    isSelected: bookFormat === "audio"
+  }]
 
   return (
     <ImageBackground
@@ -64,14 +187,10 @@ const BookHeader = ({ book, navigation }: BookHeaderProps) => {
         </View>
         <View className="absolute -bottom-4 w-[90%] left-[5%] m-auto">
           <View className="flex w-full flex-row bg-accent py-4 px-6 rounded-md m-auto justify-center">
-            <TouchableOpacity onPress={() => addToLibrary()}>
-              <View className="flex flex-row items-center">
-                <Foundation name="book-bookmark" size={24} color="#EAF4F4" />
-                <Text style={{ fontFamily: "Metropolis-Bold" }} className="mx-2 text-lg font-bold text-light">Want to read</Text>
-              </View>
-            </TouchableOpacity>
+            {renderLibraryAction()}
+
             <Text className="text-light mx-4 text-2xl" style={{ fontFamily: "Metropolis-Light" }}>|</Text>
-            <TouchableOpacity onPress={() => navigation.navigate("Review", { book })}>
+            <TouchableOpacity onPress={userState?.fid ? () => navigation.navigate("Review", { book }) : () => navigation.navigate("Auth")}>
               <View className="flex flex-row items-center">
                 <AntDesign name="staro" size={24} color="#EAF4F4" />
                 <Text style={{ fontFamily: "Metropolis-Bold" }} className="mx-2 text-lg font-bold text-light">Add review</Text>
@@ -80,6 +199,56 @@ const BookHeader = ({ book, navigation }: BookHeaderProps) => {
           </View>
         </View>
       </View>
+      <Modal
+        animationType="slide"
+        transparent={false}
+        visible={modalVisible}
+        presentationStyle='pageSheet'
+        onRequestClose={() => {
+          setModalVisible(!modalVisible);
+        }}>
+        <View className="bg-dark p-6 h-screen flex justify-center items-center">
+          <View>
+            <Text className="text-2xl text-light" style={{ fontFamily: "Metropolis-Bold" }}>What format {libraryBook && libraryBook.status === "tbr" ? "are you reading this book in?" : "did you read this book in?"}</Text>
+            {
+              options.map((o: any) => {
+                return (
+                  <TouchableOpacity onPress={o.onClick} key={o.text}>
+                    <View className="mt-2 flex flex-row items-center">
+                      <View className={o.isSelected ? "h-8 w-8 rounded-sm bg-primary" : "h-8 w-8 rounded-sm border border-primary"}></View>
+                      <Text className="ml-2 text-lg text-light" style={{ fontFamily: "Metropolis-Regular" }}>{o.text}</Text>
+                    </View>
+                  </TouchableOpacity>
+                )
+              })
+            }
+            {
+              libraryBook && libraryBook.status === "in-progress" &&
+              <View className="mt-4 pb-6">
+                <Text className="ml-2 text-lg text-light" style={{ fontFamily: "Metropolis-Bold" }}>Date finished</Text>
+                <View className="mt-2 bg-lightest text-dark rounded-md">
+                  <DateTimePicker
+                    value={dateCompleted}
+                    onValueChange={(d) => setDateCompleted(d)}
+                  />
+                </View>
+              </View>
+            }
+            <View className="flex flex-row justify-end mt-20">
+              <View className="flex flex-row items-center">
+                <TouchableOpacity
+                  onPress={() => setModalVisible(!modalVisible)}>
+                  <Text className="mr-2 text-lightest text-lg" style={{ fontFamily: "Metropolis-Bold" }}>Cancel</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => updateLibraryStatus(libraryBook && libraryBook.status === "tbr" ? "in-progress" : "completed")}>
+                  <Text className="text-dark bg-primary w-30 px-2 py-1 text-lg" style={{ fontFamily: "Metropolis-Bold" }}>{libraryBook && libraryBook.status === "tbr" ? "Mark as started" : "Mark as completed"}</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+        </View>
+      </Modal>
     </ImageBackground>
   )
 }

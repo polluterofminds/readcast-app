@@ -27,8 +27,8 @@ type Library = {
 }
 
 const initialLibrary = {
-  tbr: [], 
-  inProgress: [], 
+  tbr: [],
+  inProgress: [],
   completed: []
 }
 
@@ -41,9 +41,9 @@ const Library = () => {
   const isFocused = useIsFocused();
 
   useEffect(() => {
-    if(isFocused) {
+    if (isFocused) {
       loadLibrary();
-    }    
+    }
   }, [isFocused]);
 
   const handleSelectSection = (selection: string) => {
@@ -62,27 +62,35 @@ const Library = () => {
     setLibrary(libResponse)
   }
 
+  const renderScreen = () => {
+    if (selectedTab === "in-progress") {
+
+    } else if (selectedTab === "completed") {
+
+    }
+
+    return <TBR tbr={library?.tbr} />
+  }
+
   return (
     <View className="bg-dark">
       <View className="w-[95%] m-auto">
-        <ScrollView ref={scrollViewRef} scrollIndicatorInsets={{ right: 1 }}>
-          <SafeAreaView className="bg-dark min-h-screen" forceInset={{ bottom: 'never', vertical: 'never' }}>
-            <View className="mt-4 px-4">
-              <View>
-                <Text className="text-3xl font-bold text-light mt-6">Library</Text>
-                <View className="w-[28%] border-b-4 border-primary mb-6"></View>
-              </View>
-              <ScrollView horizontal={true}>
-                <TouchableOpacity onPress={() => handleSelectSection("tbr")}><View className={selectedTab === "tbr" ? "flex flex-row items-center px-6 py-2 rounded rounded-full bg-primary mr-2" : "flex flex-row items-center px-6 py-2 rounded rounded-full bg-transparent border border-light mr-2"}><FontAwesome5 name="bookmark" size={24} color={selectedTab === "tbr" ? "#181A1A" : "#EAF4F4"} /><Text style={{ fontFamily: "Metropolis-Light" }} className={selectedTab === "tbr" ? "ml-2 text-md" : "ml-2 text-md text-light"}>To Be Read</Text></View></TouchableOpacity>
-                <TouchableOpacity onPress={() => handleSelectSection("in-progress")}><View className={selectedTab === "in-progress" ? "flex flex-row items-center px-6 py-2 rounded rounded-full bg-primary mr-2" : "flex flex-row items-center px-6 py-2 rounded rounded-full bg-transparent border border-light mr-2"}><MaterialCommunityIcons name="book" size={24} color={selectedTab === "in-progress" ? "#181A1A" : "#EAF4F4"} /><Text style={{ fontFamily: "Metropolis-Light" }} className={selectedTab === "in-progress" ? "ml-2 text-md" : "ml-2 text-md text-light"}>In Progress</Text></View></TouchableOpacity>
-                <TouchableOpacity onPress={() => handleSelectSection("completed")}><View className={selectedTab === "completed" ? "flex flex-row items-center px-6 py-2 rounded rounded-full bg-primary mr-2" : "flex flex-row items-center px-6 py-2 rounded rounded-full bg-transparent border border-light mr-2"}><FontAwesome5 name="check" size={24} color={selectedTab === "completed" ? "#181A1A" : "#EAF4F4"} /><Text style={{ fontFamily: "Metropolis-Light" }} className={selectedTab === "completed" ? "ml-2 text-md" : "ml-2 text-md text-light"}>Completed</Text></View></TouchableOpacity>
-              </ScrollView>
-            </View>
+        <SafeAreaView className="bg-dark min-h-screen" forceInset={{ bottom: 'never', vertical: 'never' }}>
+          <View className="mt-10 px-4">
             <View>
-              <TBR tbr={library?.tbr} />
+              <Text className="text-3xl font-bold text-light mt-6">Library</Text>
+              <View className="w-[28%] border-b-4 border-primary mb-6"></View>
             </View>
-          </SafeAreaView>
-        </ScrollView>
+            <ScrollView horizontal={true}>
+              <TouchableOpacity onPress={() => handleSelectSection("tbr")}><View className={selectedTab === "tbr" ? "flex flex-row items-center px-6 py-2 rounded rounded-full bg-primary mr-2" : "flex flex-row items-center px-6 py-2 rounded rounded-full bg-transparent border border-light mr-2"}><FontAwesome5 name="bookmark" size={24} color={selectedTab === "tbr" ? "#181A1A" : "#EAF4F4"} /><Text style={{ fontFamily: "Metropolis-Light" }} className={selectedTab === "tbr" ? "ml-2 text-md" : "ml-2 text-md text-light"}>To Be Read</Text></View></TouchableOpacity>
+              <TouchableOpacity onPress={() => handleSelectSection("in-progress")}><View className={selectedTab === "in-progress" ? "flex flex-row items-center px-6 py-2 rounded rounded-full bg-primary mr-2" : "flex flex-row items-center px-6 py-2 rounded rounded-full bg-transparent border border-light mr-2"}><MaterialCommunityIcons name="book" size={24} color={selectedTab === "in-progress" ? "#181A1A" : "#EAF4F4"} /><Text style={{ fontFamily: "Metropolis-Light" }} className={selectedTab === "in-progress" ? "ml-2 text-md" : "ml-2 text-md text-light"}>In Progress</Text></View></TouchableOpacity>
+              <TouchableOpacity onPress={() => handleSelectSection("completed")}><View className={selectedTab === "completed" ? "flex flex-row items-center px-6 py-2 rounded rounded-full bg-primary mr-2" : "flex flex-row items-center px-6 py-2 rounded rounded-full bg-transparent border border-light mr-2"}><FontAwesome5 name="check" size={24} color={selectedTab === "completed" ? "#181A1A" : "#EAF4F4"} /><Text style={{ fontFamily: "Metropolis-Light" }} className={selectedTab === "completed" ? "ml-2 text-md" : "ml-2 text-md text-light"}>Completed</Text></View></TouchableOpacity>
+            </ScrollView>
+          </View>
+          <View>
+            <TBR tbr={library?.tbr} />
+          </View>
+        </SafeAreaView>
       </View>
     </View>
   )

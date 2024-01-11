@@ -5,13 +5,14 @@ import { EvilIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 
 interface BookFeedItemProps {
-  book: Book
+  book: Book;
+  libraryStatus: string 
 }
 
-const BookFeedItem = ({ book }: BookFeedItemProps) => {
+const BookFeedItem = ({ book, libraryStatus }: BookFeedItemProps) => {
   const navigation = useNavigation();
   return (
-    <TouchableOpacity className="flex-1 m-4" onPress={() => navigation.navigate('BookDetails', { book })}>
+    <TouchableOpacity className="flex-1 m-4 max-w-[40%]" onPress={() => navigation.navigate('BookDetails', { book, libraryStatus })}>
 
       <Image
         className="w-42 h-60"

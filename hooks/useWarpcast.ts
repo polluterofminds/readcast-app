@@ -1,10 +1,10 @@
 import { useState, useEffect, useCallback } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { AppState, Linking } from "react-native";
+//  @ts-ignore
 import { REACT_APP_API_URL } from "@env";
 import useSecureStorage from "./useSecureStorage";
 import { StorageKeys } from "../constants/storageKeys";
-import { Book } from "types";
 import { useUser } from "./useUser";
 
 interface UseWarpcastConnection {
@@ -32,7 +32,7 @@ export default function useWarpcastConnection(): UseWarpcastConnection {
   const [pollingToken, setPollingToken] = useState<string | null>(null);
   const [deeplinkUrl, setDeeplinkUrl] = useState("");
 
-  const { fetchUserData } = useUser();
+  const { fetchUserData, logOut } = useUser();
 
   const {  getSecureValue,
     saveSecureValue,
@@ -76,7 +76,8 @@ export default function useWarpcastConnection(): UseWarpcastConnection {
     setIsPolling(true);
     let attempts = 0;
     const maxAttempts = 10;
-    while (true) {
+    let poll = true
+    while (poll) {
       await new Promise((r) => setTimeout(r, 5000));
 
       console.log("polling signed key request");
@@ -108,15 +109,14 @@ export default function useWarpcastConnection(): UseWarpcastConnection {
         setIsPolling(false);
         setPollingToken("");
         const pendingKey = await getSecureValue(StorageKeys.PENDING_KEY);
-        saveSecureValue(StorageKeys.SIGNING_KEY, pendingKey!);
-        removeSecureValue(StorageKeys.PENDING_KEY);
+        await saveSecureValue(StorageKeys.SIGNING_KEY, pendingKey!);
+        await removeSecureValue(StorageKeys.PENDING_KEY);
         setConnectedUserFid(String(data.fid));
-        await AsyncStorage.setItem(
-          StorageKeys.CONNECTED_FID,
-          String(data.fid),
-        );
+        await AsyncStorage.setItem(StorageKeys.CONNECTED_FID, String(data.fid));
         await AsyncStorage.setItem(StorageKeys.IS_CONNECTED, "true");
+
         await fetchUserData();
+        poll = false;
         break;
       }
     }
@@ -127,9 +127,11 @@ export default function useWarpcastConnection(): UseWarpcastConnection {
     setIsPolling(false);
     setPollingToken(null);
     setWarpcastConnected(false);
+    setConnectedUserFid("");
     await AsyncStorage.setItem(StorageKeys.IS_CONNECTED, "false");
     await AsyncStorage.removeItem(StorageKeys.CONNECTED_FID);
-    removeSecureValue(StorageKeys.SIGNING_KEY);
+    await removeSecureValue(StorageKeys.SIGNING_KEY);
+    logOut();
   }, []);
 
   const connectWithWarpcast = async () => {
@@ -159,6 +161,7 @@ export default function useWarpcastConnection(): UseWarpcastConnection {
     isPolling,
     connectWithWarpcast,
     disconnectFromWarpcast,
-    deeplinkUrl
+    deeplinkUrl, 
+    setConnectedUserFid
   };
 }

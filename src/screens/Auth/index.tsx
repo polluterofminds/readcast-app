@@ -10,7 +10,6 @@ import { useUser } from 'hooks/useUser';
 
 const Auth = () => {
   const { connectWithWarpcast, connectedUserFid, deeplinkUrl } = useWarpcastConnection();
-  const { userState } = useUser();
   const handleSignIn = async () => {
     await connectWithWarpcast();
   }
@@ -19,7 +18,7 @@ const Auth = () => {
   return (
     <View className="bg-dark min-h-screen">
       {
-        userState.fid !== "" ?
+        connectedUserFid !== "" ?
           <View>
             <Profile />
           </View> :

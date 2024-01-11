@@ -1,8 +1,10 @@
 import useWarpcastConnection from "hooks/useWarpcast";
 import React, { useEffect, useState, createContext } from "react";
+//  @ts-ignore
 import { REACT_APP_API_URL } from "@env";
 import useSecureStorage from "hooks/useSecureStorage";
 import { StorageKeys } from "constants/storageKeys";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export interface UserState {
   username: string; 
@@ -34,8 +36,6 @@ export const UserProvider = (
   };
 
   const [userState, setState] = useState(initialState);
-  const { connectedUserFid } = useWarpcastConnection();
-  console.log({connectedUserFid})
   const { removeSecureValue, getSecureValue } = useSecureStorage();
 
   const updateState = (newState: any) => {
@@ -43,22 +43,22 @@ export const UserProvider = (
   };
 
   useEffect(() => {
-    if(connectedUserFid && (!userState?.username || !userState.display_name)) {
-      //  Fetch user data
-      fetchUserData();
-    }
-  }, [connectedUserFid]);
+    fetchUserData();
+  }, []);
 
   const fetchUserData = async () => {
-    const res = await fetch(`${REACT_APP_API_URL}/users/${connectedUserFid}`)
-    const data = await res.json();
-
-    updateState(data);
+    console.log("Fetching user data...")
+    const userFid = await AsyncStorage.getItem(StorageKeys.CONNECTED_FID);
+    console.log({userFid});
+    if(userFid) {
+      const res = await fetch(`${REACT_APP_API_URL}/users/${userFid}`)
+      const data = await res.json();
+      console.log({data});
+      updateState(data);
+    }    
   }
 
   const logOut = async () => {
-    await removeSecureValue(StorageKeys.SIGNING_KEY);
-    await removeSecureValue(StorageKeys.CONNECTED_FID);
     updateState({
       username: "", 
       display_name: "", 

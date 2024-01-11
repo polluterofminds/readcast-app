@@ -4,9 +4,11 @@ import { View, Text, Image, TouchableOpacity, SafeAreaView } from 'react-native'
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { useNavigation } from '@react-navigation/native';
 import { MaterialIcons } from '@expo/vector-icons';
+import useWarpcastConnection from 'hooks/useWarpcast';
 
 const Profile = () => {
   const { userState, logOut } = useUser();
+  const { disconnectFromWarpcast } = useWarpcastConnection();
   const navigation = useNavigation();
   return (
     <SafeAreaView>
@@ -42,7 +44,7 @@ const Profile = () => {
         </View>
         <View className="mt-6 w-full border-b border-lightest"></View>
         <View className="mt-6 flex flex-row items-center">
-          <TouchableOpacity onPress={() => logOut()} className="bg-contrast p-2 rounded-md">
+          <TouchableOpacity onPress={() => disconnectFromWarpcast()} className="bg-contrast p-2 rounded-md">
             <MaterialIcons name="logout" size={24} color="#92bcb0" />
           </TouchableOpacity>
           <Text className="text-light font-bold ml-2 text-lg" style={{ fontFamily: "Metropolis-Bold" }}>Log out</Text>

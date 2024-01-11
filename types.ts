@@ -37,3 +37,20 @@ export interface ReviewWithUser {
   stars?: number;
   users: User
 }
+
+export type LibraryWithBook = {
+  id: string;
+  created_at: string;
+  status: string;
+  fid: number;
+  book_id: string;
+  book_type?: string;
+  date_completed?: string;
+  books: Book
+}
+
+export interface Library {
+  tbr: LibraryWithBook[];
+  inProgress: LibraryWithBook[];
+  completed: LibraryWithBook[];
+}
