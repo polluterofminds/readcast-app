@@ -44,6 +44,12 @@ export default function useWarpcastConnection(): UseWarpcastConnection {
       const userFid = await AsyncStorage.getItem(StorageKeys.CONNECTED_FID);
       setWarpcastConnected(true);
       setConnectedUserFid(userFid || "");
+    } else {
+      //  Check for pending key
+      const pendingKey = await getSecureValue(StorageKeys.PENDING_KEY);
+      if(pendingKey) {
+        poll(pendingKey);
+      }
     }
   }, []);
 
@@ -77,7 +83,7 @@ export default function useWarpcastConnection(): UseWarpcastConnection {
     let attempts = 0;
     const maxAttempts = 10;
     let poll = true
-    while (poll) {
+    while (true) {
       await new Promise((r) => setTimeout(r, 5000));
 
       console.log("polling signed key request");
@@ -116,7 +122,7 @@ export default function useWarpcastConnection(): UseWarpcastConnection {
         await AsyncStorage.setItem(StorageKeys.IS_CONNECTED, "true");
 
         await fetchUserData();
-        poll = false;
+        // poll = false;
         break;
       }
     }
@@ -135,7 +141,6 @@ export default function useWarpcastConnection(): UseWarpcastConnection {
   }, []);
 
   const connectWithWarpcast = async () => {
-    console.log("SIGNING IN")
     const res = await fetch(`${REACT_APP_API_URL}/users/sign-in`, {
       method: "POST", 
       headers: {
@@ -144,7 +149,6 @@ export default function useWarpcastConnection(): UseWarpcastConnection {
     })
 
     const data = await res.json();
-    console.log(data);
     // setPollingToken(data.token);
     // await saveSecureValue(StorageKeys.PENDING_KEY, data.privateKeyString);
     // setDeeplinkUrl(data.deeplinkUrl)

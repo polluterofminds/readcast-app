@@ -40,12 +40,6 @@ const Search = () => {
         ellipsis = ellipsis = "."
         setEllipsisState(ellipsis)
         count++;
-  
-        // await new Promise((resolve) => {
-        //   setTimeout(() => {
-        //     resolve("");
-        //   }, 300);
-        // });
       }
     }    
   }

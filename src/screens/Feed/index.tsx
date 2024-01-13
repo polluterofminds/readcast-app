@@ -9,6 +9,7 @@ import Fiction from './Fiction';
 import { TouchableOpacity } from 'react-native';
 import { useIsFocused, useNavigation } from '@react-navigation/native';
 import useError from 'hooks/useError';
+import { useLibrary } from 'hooks/useLibrary';
 
 export default function Feed() {
   const [loading, setLoading] = useState(true);
@@ -28,9 +29,12 @@ export default function Feed() {
   const { submitError } = useError();
   const isFocused = useIsFocused();
 
+  const { fetchLibraryData } = useLibrary();
+
   useEffect(() => {
     if(isFocused) {
       fetchFeed();
+      fetchLibraryData();
     }
   }, [isFocused]);
 

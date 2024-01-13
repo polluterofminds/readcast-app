@@ -15,7 +15,7 @@ export type Star = {
 }
 const Review = ({ route }: ReviewProps) => {
   const scrollViewRef: any = useRef();
-  const { book } = route?.params;
+  const { book, libraryBook } = route?.params;
 
   return (
     <View className="bg-dark w-screen">
@@ -25,7 +25,7 @@ const Review = ({ route }: ReviewProps) => {
             <ReviewHeader book={book} />
           </View>
           <View className="mt-4 px-4">
-            <ReviewForm book={book} />
+            <ReviewForm book={book} libraryBook={libraryBook} />
           </View>
         </SafeAreaView>
       </ScrollView>

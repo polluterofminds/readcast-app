@@ -38,9 +38,7 @@ export const LibraryProvider = (
   }, []);
 
   const fetchLibraryData = async () => {
-    console.log("Fetching...")
     const signer = await getSecureValue(StorageKeys.SIGNING_KEY);
-    console.log({signer});
     if(signer) {
       const res = await fetch(`${REACT_APP_API_URL}/books/library`, {
         headers: {
@@ -48,8 +46,6 @@ export const LibraryProvider = (
         }
       })
       const data = await res.json();
-
-      console.log(data)
   
       updateState(data);
       return data;

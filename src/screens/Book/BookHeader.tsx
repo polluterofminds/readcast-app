@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { ImageBackground, TouchableOpacity, View, Image, Text, Modal } from 'react-native'
+import { ImageBackground, TouchableOpacity, View, Image, Text, Modal, ScrollView } from 'react-native'
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import Foundation from '@expo/vector-icons/Foundation';
 import { Book } from 'types';
@@ -31,23 +31,16 @@ const BookHeader = ({ book, navigation }: BookHeaderProps) => {
   const { userState } = useUser();
   const isFocused = useIsFocused();
 
-  const fullList = [...libraryState.tbr, ...libraryState.inProgress, ...libraryState.completed];
+  
 
   useEffect(() => {
+    const fullList = [...libraryState.tbr, ...libraryState.inProgress, ...libraryState.completed];
     const foundBook = fullList.find((l: LibraryWithBook) => l.book_id === book.id);
     if (foundBook) {
       setLibraryBook(foundBook)
+      setBookFormat(foundBook.book_type || "paperback");
     }
-  }, [isFocused])
-
-  useEffect(() => {
-    console.log("Library State Change")
-    const list = [...libraryState.tbr, ...libraryState.inProgress, ...libraryState.completed];
-    const foundBook = list.find((l: LibraryWithBook) => l.book_id === book.id);
-    if (foundBook) {
-      setLibraryBook(foundBook)
-    }
-  }, [libraryState]);
+  }, [isFocused, libraryState])
 
   const fetchAndUpdate = async () => {
     await fetchLibraryData();
@@ -79,7 +72,6 @@ const BookHeader = ({ book, navigation }: BookHeaderProps) => {
   }
 
   const updateLibraryStatus = async (newStatus: string) => {
-    console.log({newStatus})
     setModalVisible(false);
     showMessage({
       type: "info",
@@ -105,13 +97,11 @@ const BookHeader = ({ book, navigation }: BookHeaderProps) => {
         type: "info",
         message: "Updated library info!"
       })
-      fetchAndUpdate();
+      await fetchAndUpdate();
     } catch (error) {
       console.log(error);
     }
   }
-
-  console.log({libraryBook})
 
   const renderLibraryAction = () => {
     if (libraryBook && libraryBook.status === "tbr") {
@@ -119,7 +109,7 @@ const BookHeader = ({ book, navigation }: BookHeaderProps) => {
         <TouchableOpacity onPress={() => setModalVisible(true)}>
           <View className="flex flex-row items-center">
             <Foundation name="book-bookmark" size={24} color="#EAF4F4" />
-            <Text style={{ fontFamily: "Metropolis-Bold" }} className="mx-2 text-lg font-bold text-light">Mark as started</Text>
+            <Text style={{ fontFamily: "Metropolis-Bold" }} className="mx-2 text-lg font-bold text-light">Mark started</Text>
           </View>
         </TouchableOpacity>
       )
@@ -128,7 +118,16 @@ const BookHeader = ({ book, navigation }: BookHeaderProps) => {
         <TouchableOpacity onPress={() => setModalVisible(true)}>
           <View className="flex flex-row items-center">
             <Foundation name="book-bookmark" size={24} color="#EAF4F4" />
-            <Text style={{ fontFamily: "Metropolis-Bold" }} className="mx-2 text-lg font-bold text-light">Mark as completed</Text>
+            <Text style={{ fontFamily: "Metropolis-Bold" }} className="mx-2 text-lg font-bold text-light">Mark completed</Text>
+          </View>
+        </TouchableOpacity>
+      )
+    } else if(libraryBook && libraryBook.status === "completed") {
+      return (
+        <TouchableOpacity>
+          <View className="flex flex-row items-center">
+            <Foundation name="book-bookmark" size={24} color="#EAF4F4" />
+            <Text style={{ fontFamily: "Metropolis-Bold" }} className="mx-2 text-lg font-bold text-light">Completed</Text>
           </View>
         </TouchableOpacity>
       )
@@ -185,12 +184,12 @@ const BookHeader = ({ book, navigation }: BookHeaderProps) => {
             }}
           />
         </View>
-        <View className="absolute -bottom-4 w-[90%] left-[5%] m-auto">
+        <View className="absolute -bottom-4 w-[95%] left-[2.5%] m-auto">
           <View className="flex w-full flex-row bg-accent py-4 px-6 rounded-md m-auto justify-center">
             {renderLibraryAction()}
 
             <Text className="text-light mx-4 text-2xl" style={{ fontFamily: "Metropolis-Light" }}>|</Text>
-            <TouchableOpacity onPress={userState?.fid ? () => navigation.navigate("Review", { book }) : () => navigation.navigate("Auth")}>
+            <TouchableOpacity onPress={userState?.fid ? () => navigation.navigate("Review", { book, libraryBook }) : () => navigation.navigate("Auth")}>
               <View className="flex flex-row items-center">
                 <AntDesign name="staro" size={24} color="#EAF4F4" />
                 <Text style={{ fontFamily: "Metropolis-Bold" }} className="mx-2 text-lg font-bold text-light">Add review</Text>
@@ -208,7 +207,7 @@ const BookHeader = ({ book, navigation }: BookHeaderProps) => {
           setModalVisible(!modalVisible);
         }}>
         <View className="bg-dark p-6 h-screen flex justify-center items-center">
-          <View>
+          <ScrollView>
             <Text className="text-2xl text-light" style={{ fontFamily: "Metropolis-Bold" }}>What format {libraryBook && libraryBook.status === "tbr" ? "are you reading this book in?" : "did you read this book in?"}</Text>
             {
               options.map((o: any) => {
@@ -234,7 +233,7 @@ const BookHeader = ({ book, navigation }: BookHeaderProps) => {
                 </View>
               </View>
             }
-            <View className="flex flex-row justify-end mt-20">
+            <View className="flex flex-row justify-end mt-6">
               <View className="flex flex-row items-center">
                 <TouchableOpacity
                   onPress={() => setModalVisible(!modalVisible)}>
@@ -246,7 +245,7 @@ const BookHeader = ({ book, navigation }: BookHeaderProps) => {
                 </TouchableOpacity>
               </View>
             </View>
-          </View>
+          </ScrollView>
         </View>
       </Modal>
     </ImageBackground>

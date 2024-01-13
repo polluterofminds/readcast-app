@@ -5,10 +5,10 @@ import { useNavigation } from '@react-navigation/native'
 import FeedItem from '../Feed/FeedItem'
 import BookFeedItem from '../Feed/BookFeedItem'
 
-interface TBRProps {
-  tbr: LibraryWithBook[]
+interface ResultsProps {
+  results: LibraryWithBook[]
 }
-const TBR = ({ tbr }: TBRProps) => {
+const Results = ({ results }: ResultsProps) => {
   const navigation = useNavigation();
   const handleBookPress = (t: LibraryWithBook) => {
     console.log(t);
@@ -16,7 +16,7 @@ const TBR = ({ tbr }: TBRProps) => {
   return (
     <View className="pt-6">
       <FlatList
-        data={tbr}
+        data={results}
         renderItem={({ item }: { item: LibraryWithBook }) => (
           <BookFeedItem book={item.books} libraryStatus={item.status} />
         )}
@@ -27,4 +27,4 @@ const TBR = ({ tbr }: TBRProps) => {
   )
 }
 
-export default TBR
+export default Results

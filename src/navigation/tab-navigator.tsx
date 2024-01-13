@@ -1,9 +1,10 @@
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { StyleSheet, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Search from '../screens/Search';
 import HomeStackComponent from './home-stack';
 import Library from '~/screens/Library';
+import { Ionicons } from '@expo/vector-icons';
 
 const Tab = createBottomTabNavigator();
 // const HomeStack = createStackNavigator();
@@ -25,7 +26,7 @@ export default function TabLayout({ navigation }: TabLayoutProps) {
       screenOptions={{
         tabBarActiveTintColor: '#EAF4F4',
         tabBarStyle: {
-          backgroundColor: '#181A1A'
+          backgroundColor: '#181A1A',
         },
       }}
     >
@@ -34,8 +35,8 @@ export default function TabLayout({ navigation }: TabLayoutProps) {
         component={HomeStackComponent}
         options={{
           title: "",
-          headerShown: false, 
-          tabBarIcon: ({ color }) => <TabBarIcon name="home" color={color} />
+          headerShown: false,
+          tabBarIcon: ({ color }) => <Ionicons name="home-outline" size={28} color={color} />
         }}
       />
       <Tab.Screen
@@ -43,14 +44,23 @@ export default function TabLayout({ navigation }: TabLayoutProps) {
         component={Library}
         options={{
           title: '',
+          headerShadowVisible: false,
+          tabBarIcon: ({ color }) => <Ionicons name="library" size={28} color={color} />,
           headerStyle: {
             backgroundColor: '#181A1A',
           },
           headerTitleStyle: {
             color: '#EAF4F4',
           },
-          headerShadowVisible: false,
-          tabBarIcon: ({ color }) => <TabBarIcon name="book" color={color} />,
+          headerLeft: () => (
+            <View className="w-full p-4 flex flex-row h-20 items-center mt-2">
+              <TouchableOpacity onPress={() => navigation.goBack()}><TabBarIcon name="chevron-left" color="#EAF4F4" /></TouchableOpacity>
+              <View className="ml-4">
+                <Text className="text-3xl font-bold text-light" style={{fontFamily: "Metropolis-Bold"}}>Library</Text>
+                <View className="border-b-4 border-primary"></View>
+              </View>
+            </View>
+          ),
         }}
       />
       <Tab.Screen
@@ -59,7 +69,7 @@ export default function TabLayout({ navigation }: TabLayoutProps) {
         options={{
           title: '',
           headerShadowVisible: false,
-          tabBarIcon: ({ color }) => <TabBarIcon name="search" color={color} />,
+          tabBarIcon: ({ color }) => <Ionicons name="search-outline" size={28} color={color} />,
           headerStyle: {
             backgroundColor: '#181A1A',
           },
@@ -69,7 +79,7 @@ export default function TabLayout({ navigation }: TabLayoutProps) {
           headerLeft: () => (
             <View className="w-full p-4 flex flex-row pb-2 h-12 mt-4">
               <TouchableOpacity onPress={() => navigation.goBack()}><TabBarIcon name="chevron-left" color="#EAF4F4" /></TouchableOpacity>
-            </View>            
+            </View>
           ),
         }}
       />

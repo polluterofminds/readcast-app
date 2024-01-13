@@ -4,7 +4,7 @@ import { AntDesign } from '@expo/vector-icons';
 import { Star } from './index';
 import DateTimePicker from 'react-native-ui-datepicker';
 import dayjs from 'dayjs';
-import { Book } from 'types';
+import { Book, LibraryWithBook } from 'types';
 import useError from 'hooks/useError';
 import useWarpcastConnection from 'hooks/useWarpcast';
 import { showMessage, hideMessage } from "react-native-flash-message";
@@ -13,30 +13,31 @@ import useReviews from 'hooks/useReviews';
 
 interface ReviewFormProps {
   book: Book;
+  libraryBook?: LibraryWithBook;
 }
 
 const initialRating = [{
-  index: 1, 
+  index: 1,
   selected: false
-}, 
+},
 {
-  index: 2, 
+  index: 2,
   selected: false
-}, 
+},
 {
-  index: 3, 
+  index: 3,
   selected: false
-}, 
+},
 {
-  index: 4, 
+  index: 4,
   selected: false
-}, 
+},
 {
-  index: 5, 
+  index: 5,
   selected: false
 }]
 
-const ReviewForm = ({ book }: ReviewFormProps) => {
+const ReviewForm = ({ book, libraryBook }: ReviewFormProps) => {
   const [reviewText, setReviewText] = useState("");
   const [stars, setStars] = useState<Star[]>(initialRating)
   const [markComplete, setMarkComplete] = useState(false);
@@ -45,7 +46,6 @@ const ReviewForm = ({ book }: ReviewFormProps) => {
   const { submitError } = useError();
   const { castReview } = useReviews();
   const navigation = useNavigation();
-
   const handleStarSelection = (s: Star) => {
     const cloned = JSON.parse(JSON.stringify(stars));
     const index = s.index;
@@ -70,7 +70,7 @@ const ReviewForm = ({ book }: ReviewFormProps) => {
   const toggleComplete = () => setMarkComplete(previousState => !previousState);
 
   const isDisabled = () => {
-    if(!reviewText) {
+    if (!reviewText) {
       return true
     }
 
@@ -81,17 +81,17 @@ const ReviewForm = ({ book }: ReviewFormProps) => {
     try {
       setSubmitting(true);
       showMessage({
-        message: "Submitting review...", 
+        message: "Submitting review...",
         type: "info"
       })
-      if(markComplete) {
+      if (markComplete) {
         //  Add book to library
-      } 
+      }
       //  Post review
       let starRatings = ""
-      if(stars.filter((s: Star) => s.selected).length > 0) {
-        stars.filter((s: Star) => s.selected).forEach((s: Star) => {starRatings = starRatings + "⭐️"})
-      } 
+      if (stars.filter((s: Star) => s.selected).length > 0) {
+        stars.filter((s: Star) => s.selected).forEach((s: Star) => { starRatings = starRatings + "⭐️" })
+      }
       let text = `${book.title} by ${book.author} review: \n${reviewText}\n${starRatings && starRatings}`
       await castReview(text, book, stars.filter((s: Star) => s.selected).length)
       showMessage({
@@ -107,7 +107,7 @@ const ReviewForm = ({ book }: ReviewFormProps) => {
       console.log(error);
       submitError(error);
       setSubmitting(false);
-    }    
+    }
   }
 
   const clear = () => {
@@ -142,16 +142,19 @@ const ReviewForm = ({ book }: ReviewFormProps) => {
           <View className="flex flex-row justify-end">
             <TouchableOpacity onPress={() => handleClear()} className="m-4"><Text className="text-xs text-light">Clear</Text></TouchableOpacity>
           </View>
-          <View className="flex flex-row items-center mt-4">
-            <Switch
-              trackColor={{ false: '#767577', true: '#767577' }}
-              thumbColor={markComplete ? '#92bcb0' : '#f4f3f4'}
-              ios_backgroundColor="#3e3e3e"
-              onValueChange={toggleComplete}
-              value={markComplete}
-            />
-            <Text className="ml-2 text-lg text-light" style={{ fontFamily: "Metropolis-Bold" }}>Mark as read in your library?</Text>
-          </View>
+          {
+            !libraryBook || libraryBook.status !== "completed" &&
+            <View className="flex flex-row items-center mt-4">
+              <Switch
+                trackColor={{ false: '#767577', true: '#767577' }}
+                thumbColor={markComplete ? '#92bcb0' : '#f4f3f4'}
+                ios_backgroundColor="#3e3e3e"
+                onValueChange={toggleComplete}
+                value={markComplete}
+              />
+              <Text className="ml-2 text-lg text-light" style={{ fontFamily: "Metropolis-Bold" }}>Mark as read in your library?</Text>
+            </View>
+          }
           {
             markComplete &&
             <View className="mt-4 pb-6">
@@ -159,14 +162,14 @@ const ReviewForm = ({ book }: ReviewFormProps) => {
               <View className="mt-2 bg-lightest text-dark rounded-md">
                 <DateTimePicker
                   value={date}
-                  onValueChange={(d) => setDate(d)}                
-                />              
+                  onValueChange={(d) => setDate(d)}
+                />
               </View>
             </View>
           }
           <View className="mt-6 flex flex-row justify-end">
             <TouchableOpacity onPress={() => handleSubmit()} disabled={isDisabled()} className={isDisabled() ? "w-44 rounded-md px-4 py-2 bg-lightest" : "bg-primary w-44 rounded-md px-4 py-2"}>
-              <Text className="text-center text-dark" style={{fontFamily: "Metropolis-Bold"}}>Add review</Text>
+              <Text className="text-center text-dark" style={{ fontFamily: "Metropolis-Bold" }}>Add review</Text>
             </TouchableOpacity>
           </View>
         </View>

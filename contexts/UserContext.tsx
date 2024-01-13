@@ -47,13 +47,11 @@ export const UserProvider = (
   }, []);
 
   const fetchUserData = async () => {
-    console.log("Fetching user data...")
     const userFid = await AsyncStorage.getItem(StorageKeys.CONNECTED_FID);
     console.log({userFid});
     if(userFid) {
       const res = await fetch(`${REACT_APP_API_URL}/users/${userFid}`)
       const data = await res.json();
-      console.log({data});
       updateState(data);
     }    
   }
