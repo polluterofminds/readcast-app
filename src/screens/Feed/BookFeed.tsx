@@ -16,6 +16,7 @@ const BookFeed = ({ books }: BookFeedProps) => {
       )}
       keyExtractor={item => item.id}
       numColumns={2}
+      contentContainerStyle={{ paddingBottom: 250, margin: "auto" }}
     />
   )
 }

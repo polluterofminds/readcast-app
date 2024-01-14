@@ -14,6 +14,7 @@ interface UseWarpcastConnection {
   connectWithWarpcast: () => Promise<void>;
   disconnectFromWarpcast: () => Promise<void>;
   deeplinkUrl: string;
+  setConnectedUserFid: Function;
 }
 
 interface SignedKeyRequestResult {
@@ -34,23 +35,28 @@ export default function useWarpcastConnection(): UseWarpcastConnection {
 
   const { fetchUserData, logOut } = useUser();
 
-  const {  getSecureValue,
+  const { getSecureValue,
     saveSecureValue,
-    removeSecureValue} = useSecureStorage();
+    removeSecureValue } = useSecureStorage();
 
   const checkConnectionStatus = useCallback(async () => {
-    const isConnected = await AsyncStorage.getItem(StorageKeys.IS_CONNECTED);
-    if (isConnected === "true") {
-      const userFid = await AsyncStorage.getItem(StorageKeys.CONNECTED_FID);
-      setWarpcastConnected(true);
-      setConnectedUserFid(userFid || "");
-    } else {
-      //  Check for pending key
-      const pendingKey = await getSecureValue(StorageKeys.PENDING_KEY);
-      if(pendingKey) {
-        poll(pendingKey);
-      }
-    }
+    try {
+      const isConnected = await AsyncStorage.getItem(StorageKeys.IS_CONNECTED);
+      if (isConnected === "true") {
+        const userFid = await AsyncStorage.getItem(StorageKeys.CONNECTED_FID);
+        setWarpcastConnected(true);
+        setConnectedUserFid(userFid || "");
+      } else {
+        //  Check for pending key
+        const pendingKey = await getSecureValue(StorageKeys.PENDING_KEY);
+        if (pendingKey) {
+          poll(pendingKey);
+        }
+      } 
+    } catch (error) {
+      console.log("Check connection status error");
+      console.log(error);
+    }    
   }, []);
 
   useEffect(() => {
@@ -58,7 +64,7 @@ export default function useWarpcastConnection(): UseWarpcastConnection {
   }, [checkConnectionStatus]);
 
   useEffect(() => {
-    if(pollingToken) {
+    if (pollingToken) {
       setIsPolling(true);
       poll(pollingToken);
     }
@@ -84,79 +90,94 @@ export default function useWarpcastConnection(): UseWarpcastConnection {
     const maxAttempts = 10;
     let poll = true
     while (true) {
-      await new Promise((r) => setTimeout(r, 5000));
+      try {
+        await new Promise((r) => setTimeout(r, 5000));
 
-      console.log("polling signed key request");
-      // const keyPoll = await fetch(`https://api.warpcast.com/v2/signed-key-request?token=${token}`)
-      console.log(token);
-      const keyPoll = await fetch(`${REACT_APP_API_URL}/users/signer-status?token=${token}`)
+        console.log("polling signed key request");
+        // const keyPoll = await fetch(`https://api.warpcast.com/v2/signed-key-request?token=${token}`)
+        console.log(token);
+        const keyPoll = await fetch(`${REACT_APP_API_URL}/users/signer-status?token=${token}`)
 
-      const data = await keyPoll.json();
-      // const {signedKeyRequest} = data.result;
-      // if (signedKeyRequest.state === "completed") {
-      //   console.log("Signed Key Request completed:");
-      //   setWarpcastConnected(true);
-      //   setIsPolling(false);
-      //   setPollingToken("");
-      //   const pendingKey = await getSecureValue(StorageKeys.PENDING_KEY);
-      //   saveSecureValue(StorageKeys.SIGNING_KEY, pendingKey!);
-      //   removeSecureValue(StorageKeys.PENDING_KEY);
-      //   setConnectedUserFid(String(signedKeyRequest.userFid));
-      //   await AsyncStorage.setItem(
-      //     StorageKeys.CONNECTED_FID,
-      //     String(signedKeyRequest.userFid),
-      //   );
-      //   await AsyncStorage.setItem(StorageKeys.IS_CONNECTED, "true");
-      //   break;
-      // }
-      if (data.status === "approved") {
-        console.log("Signed Key Request completed:");
-        setWarpcastConnected(true);
-        setIsPolling(false);
-        setPollingToken("");
-        const pendingKey = await getSecureValue(StorageKeys.PENDING_KEY);
-        await saveSecureValue(StorageKeys.SIGNING_KEY, pendingKey!);
-        await removeSecureValue(StorageKeys.PENDING_KEY);
-        setConnectedUserFid(String(data.fid));
-        await AsyncStorage.setItem(StorageKeys.CONNECTED_FID, String(data.fid));
-        await AsyncStorage.setItem(StorageKeys.IS_CONNECTED, "true");
+        const data = await keyPoll.json();
+        // const {signedKeyRequest} = data.result;
+        // if (signedKeyRequest.state === "completed") {
+        //   console.log("Signed Key Request completed:");
+        //   setWarpcastConnected(true);
+        //   setIsPolling(false);
+        //   setPollingToken("");
+        //   const pendingKey = await getSecureValue(StorageKeys.PENDING_KEY);
+        //   saveSecureValue(StorageKeys.SIGNING_KEY, pendingKey!);
+        //   removeSecureValue(StorageKeys.PENDING_KEY);
+        //   setConnectedUserFid(String(signedKeyRequest.userFid));
+        //   await AsyncStorage.setItem(
+        //     StorageKeys.CONNECTED_FID,
+        //     String(signedKeyRequest.userFid),
+        //   );
+        //   await AsyncStorage.setItem(StorageKeys.IS_CONNECTED, "true");
+        //   break;
+        // }
+        if (data.status === "approved") {
+          console.log("Signed Key Request completed:");
+          setWarpcastConnected(true);
+          setIsPolling(false);
+          setPollingToken("");
+          const pendingKey = await getSecureValue(StorageKeys.PENDING_KEY);
+          await saveSecureValue(StorageKeys.SIGNING_KEY, pendingKey!);
+          await removeSecureValue(StorageKeys.PENDING_KEY);
+          setConnectedUserFid(String(data.fid));
+          await AsyncStorage.setItem(StorageKeys.CONNECTED_FID, String(data.fid));
+          await AsyncStorage.setItem(StorageKeys.IS_CONNECTED, "true");
 
-        await fetchUserData();
-        // poll = false;
-        break;
+          await fetchUserData();
+          // poll = false;
+          break;
+        }
+      } catch (error) {
+        console.log("Polling error")
+        console.log(error);
       }
     }
     setIsPolling(false);
   };
 
   const disconnectFromWarpcast = useCallback(async () => {
-    setIsPolling(false);
-    setPollingToken(null);
-    setWarpcastConnected(false);
-    setConnectedUserFid("");
-    await AsyncStorage.setItem(StorageKeys.IS_CONNECTED, "false");
-    await AsyncStorage.removeItem(StorageKeys.CONNECTED_FID);
-    await removeSecureValue(StorageKeys.SIGNING_KEY);
-    logOut();
+    try {
+      setIsPolling(false);
+      setPollingToken(null);
+      setWarpcastConnected(false);
+      setConnectedUserFid("");
+      await AsyncStorage.setItem(StorageKeys.IS_CONNECTED, "false");
+      await AsyncStorage.removeItem(StorageKeys.CONNECTED_FID);
+      await removeSecureValue(StorageKeys.SIGNING_KEY);
+      logOut();
+    } catch (error) {
+      console.log("Disconnect error");
+      console.log(error);
+    }
   }, []);
 
   const connectWithWarpcast = async () => {
-    const res = await fetch(`${REACT_APP_API_URL}/users/sign-in`, {
-      method: "POST", 
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    })
+    try {
+      const res = await fetch(`${REACT_APP_API_URL}/users/sign-in`, {
+        method: "POST",
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
 
-    const data = await res.json();
-    // setPollingToken(data.token);
-    // await saveSecureValue(StorageKeys.PENDING_KEY, data.privateKeyString);
-    // setDeeplinkUrl(data.deeplinkUrl)
-    if(data.signer_approval_url) {
-      setPollingToken(data.signer_uuid);
-      await saveSecureValue(StorageKeys.PENDING_KEY, data.signer_uuid);
-      setDeeplinkUrl(data.signer_approval_url);
-    }    
+      const data = await res.json();
+      // setPollingToken(data.token);
+      // await saveSecureValue(StorageKeys.PENDING_KEY, data.privateKeyString);
+      // setDeeplinkUrl(data.deeplinkUrl)
+      if (data.signer_approval_url) {
+        setPollingToken(data.signer_uuid);
+        await saveSecureValue(StorageKeys.PENDING_KEY, data.signer_uuid);
+        setDeeplinkUrl(data.signer_approval_url);
+      }
+    } catch (error) {
+      console.log("Connect with warpcast error")
+      console.log(error);
+    }
   };
 
   return {
@@ -165,7 +186,7 @@ export default function useWarpcastConnection(): UseWarpcastConnection {
     isPolling,
     connectWithWarpcast,
     disconnectFromWarpcast,
-    deeplinkUrl, 
+    deeplinkUrl,
     setConnectedUserFid
   };
 }

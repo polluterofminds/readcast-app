@@ -38,17 +38,24 @@ export const LibraryProvider = (
   }, []);
 
   const fetchLibraryData = async () => {
-    const signer = await getSecureValue(StorageKeys.SIGNING_KEY);
-    if(signer) {
-      const res = await fetch(`${REACT_APP_API_URL}/books/library`, {
-        headers: {
-          'Authorization': `Bearer ${signer}`
+    try {
+      const signer = await getSecureValue(StorageKeys.SIGNING_KEY);
+      if(signer) {
+        const res = await fetch(`${REACT_APP_API_URL}/books/library`, {
+          headers: {
+            'Authorization': `Bearer ${signer}`
+          }
+        })
+        if(res.status === 401) {
+          throw new Error("Unauthorized")
         }
-      })
-      const data = await res.json();
-  
-      updateState(data);
-      return data;
+        const data = await res.json();
+        updateState(data);
+        return data;
+      }     
+    } catch (error: any) {
+      console.log("Library fetch error:")
+      console.log(error);
     }    
   }
 

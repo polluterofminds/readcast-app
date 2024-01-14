@@ -1,8 +1,6 @@
-import useWarpcastConnection from "hooks/useWarpcast";
 import React, { useEffect, useState, createContext } from "react";
 //  @ts-ignore
 import { REACT_APP_API_URL } from "@env";
-import useSecureStorage from "hooks/useSecureStorage";
 import { StorageKeys } from "constants/storageKeys";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -36,7 +34,6 @@ export const UserProvider = (
   };
 
   const [userState, setState] = useState(initialState);
-  const { removeSecureValue, getSecureValue } = useSecureStorage();
 
   const updateState = (newState: any) => {
     setState((prevState) => ({ ...prevState, ...newState }));
@@ -47,13 +44,17 @@ export const UserProvider = (
   }, []);
 
   const fetchUserData = async () => {
-    const userFid = await AsyncStorage.getItem(StorageKeys.CONNECTED_FID);
-    console.log({userFid});
-    if(userFid) {
-      const res = await fetch(`${REACT_APP_API_URL}/users/${userFid}`)
-      const data = await res.json();
-      updateState(data);
-    }    
+    try {
+      const userFid = await AsyncStorage.getItem(StorageKeys.CONNECTED_FID);
+      if(userFid) {
+        const res = await fetch(`${REACT_APP_API_URL}/users/${userFid}`)
+        const data = await res.json();
+        updateState(data);
+      }    
+    } catch (error) {
+      console.log("User data error: ");
+      console.log(error);
+    } 
   }
 
   const logOut = async () => {

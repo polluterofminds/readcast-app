@@ -6,10 +6,9 @@ import DateTimePicker from 'react-native-ui-datepicker';
 import dayjs from 'dayjs';
 import { Book, LibraryWithBook } from 'types';
 import useError from 'hooks/useError';
-import useWarpcastConnection from 'hooks/useWarpcast';
-import { showMessage, hideMessage } from "react-native-flash-message";
 import { useNavigation } from '@react-navigation/native';
 import useReviews from 'hooks/useReviews';
+import useToast from 'hooks/useToast';
 
 interface ReviewFormProps {
   book: Book;
@@ -46,6 +45,7 @@ const ReviewForm = ({ book, libraryBook }: ReviewFormProps) => {
   const { submitError } = useError();
   const { castReview } = useReviews();
   const navigation = useNavigation();
+  const { setToastMessage, hideToastMessage } = useToast();
   const handleStarSelection = (s: Star) => {
     const cloned = JSON.parse(JSON.stringify(stars));
     const index = s.index;
@@ -80,10 +80,7 @@ const ReviewForm = ({ book, libraryBook }: ReviewFormProps) => {
   const handleSubmit = async () => {
     try {
       setSubmitting(true);
-      showMessage({
-        message: "Submitting review...",
-        type: "info"
-      })
+      setToastMessage("info", "Submitting review...");
       if (markComplete) {
         //  Add book to library
       }
@@ -94,16 +91,14 @@ const ReviewForm = ({ book, libraryBook }: ReviewFormProps) => {
       }
       let text = `${book.title} by ${book.author} review: \n${reviewText}\n${starRatings && starRatings}`
       await castReview(text, book, stars.filter((s: Star) => s.selected).length)
-      showMessage({
-        message: "Review added!",
-        type: "success",
-      });
+      setToastMessage("success", "Review added");
       setTimeout(() => {
-        hideMessage();
+        hideToastMessage();
         clear();
         navigation.goBack();
       }, 1500);
     } catch (error) {
+      console.log("Submit review error")
       console.log(error);
       submitError(error);
       setSubmitting(false);

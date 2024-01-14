@@ -27,6 +27,7 @@ export default function TabLayout({ navigation }: TabLayoutProps) {
         tabBarActiveTintColor: '#EAF4F4',
         tabBarStyle: {
           backgroundColor: '#181A1A',
+          paddingTop: 10
         },
       }}
     >

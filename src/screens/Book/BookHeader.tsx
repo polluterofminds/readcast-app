@@ -5,8 +5,8 @@ import Foundation from '@expo/vector-icons/Foundation';
 import { Book } from 'types';
 import { NavigationProp, ParamListBase, useIsFocused } from '@react-navigation/native';
 import AntDesign from '@expo/vector-icons/AntDesign';
+import { MaterialIcons } from '@expo/vector-icons';
 import useWarpcastConnection from 'hooks/useWarpcast';
-import { showMessage, hideMessage } from "react-native-flash-message";
 import DateTimePicker from 'react-native-ui-datepicker';
 import dayjs from 'dayjs';
 //  @ts-ignore
@@ -14,6 +14,20 @@ import { REACT_APP_API_URL } from "@env";
 import { LibraryWithBook } from '../Library';
 import { useLibrary } from 'hooks/useLibrary';
 import { useUser } from 'hooks/useUser';
+import { Entypo } from '@expo/vector-icons';
+import {
+  Menu,
+  MenuOptions,
+  MenuOption,
+  MenuTrigger,
+  // renderers
+} from 'react-native-popup-menu';
+import useSecureStorage from 'hooks/useSecureStorage';
+import { StorageKeys } from 'constants/storageKeys';
+import useToast from 'hooks/useToast';
+
+// const { ContextMenu, SlideInMenu, Popover } = renderers;
+
 
 interface BookHeaderProps {
   book: Book;
@@ -23,15 +37,16 @@ interface BookHeaderProps {
 
 const BookHeader = ({ book, navigation }: BookHeaderProps) => {
   const [modalVisible, setModalVisible] = useState(false);
+  // const [renderer, setRenderer] = useState(ContextMenu);
   const [bookFormat, setBookFormat] = useState("paperback");
   const [dateCompleted, setDateCompleted] = useState<any>(dayjs());
   const [libraryBook, setLibraryBook] = useState<LibraryWithBook | null>(null);
   const { connectedUserFid } = useWarpcastConnection();
-  const { libraryState, fetchLibraryData} = useLibrary();
+  const { getSecureValue } = useSecureStorage();
+  const { libraryState, fetchLibraryData } = useLibrary();
   const { userState } = useUser();
   const isFocused = useIsFocused();
-
-  
+  const { setToastMessage, hideToastMessage } = useToast();
 
   useEffect(() => {
     const fullList = [...libraryState.tbr, ...libraryState.inProgress, ...libraryState.completed];
@@ -39,6 +54,8 @@ const BookHeader = ({ book, navigation }: BookHeaderProps) => {
     if (foundBook) {
       setLibraryBook(foundBook)
       setBookFormat(foundBook.book_type || "paperback");
+    } else {
+      setLibraryBook(null);
     }
   }, [isFocused, libraryState])
 
@@ -47,15 +64,14 @@ const BookHeader = ({ book, navigation }: BookHeaderProps) => {
   }
 
   const addToLibrary = async () => {
-    showMessage({
-      type: "info",
-      message: "Adding to library..."
-    })
+    const signerUUID = await getSecureValue(StorageKeys.SIGNING_KEY)
+    setToastMessage("info", "Adding to library...");
     try {
       await fetch(`${REACT_APP_API_URL}/books/library`, {
         method: "POST",
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json', 
+          'Authorization': `Bearer ${signerUUID}`
         },
         body: JSON.stringify({
           book,
@@ -67,21 +83,21 @@ const BookHeader = ({ book, navigation }: BookHeaderProps) => {
       })
       await fetchAndUpdate()
     } catch (error) {
+      console.log("Add to library error");
       console.log(error);
     }
   }
 
   const updateLibraryStatus = async (newStatus: string) => {
+    const signerUUID = await getSecureValue(StorageKeys.SIGNING_KEY)
     setModalVisible(false);
-    showMessage({
-      type: "info",
-      message: "Adding to library..."
-    })
+    setToastMessage("info", "Updating library...");
     try {
       await fetch(`${REACT_APP_API_URL}/books/library/${libraryBook?.id}`, {
         method: "PUT",
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json', 
+          'Authorization': `Bearer ${signerUUID}`
         },
         body: JSON.stringify({
           book,
@@ -93,12 +109,27 @@ const BookHeader = ({ book, navigation }: BookHeaderProps) => {
           }
         })
       })
-      showMessage({
-        type: "info",
-        message: "Updated library info!"
-      })
+      setToastMessage("success", "Updated!");
       await fetchAndUpdate();
     } catch (error) {
+      console.log("Update library error")
+      console.log(error);
+    }
+  }
+
+  const removeFromLibrary = async () => {
+    const signerUUID = await getSecureValue(StorageKeys.SIGNING_KEY)
+    try {
+      await fetch(`${REACT_APP_API_URL}/books/library/${libraryBook?.id}`, {
+        method: "DELETE", 
+        headers: {
+          'Authorization': `Bearer ${signerUUID}`
+        }
+      });
+      setToastMessage("success", "Removed book from library.");
+      await fetchAndUpdate();
+    } catch (error) {
+      console.log("Remove from library error");
       console.log(error);
     }
   }
@@ -122,7 +153,7 @@ const BookHeader = ({ book, navigation }: BookHeaderProps) => {
           </View>
         </TouchableOpacity>
       )
-    } else if(libraryBook && libraryBook.status === "completed") {
+    } else if (libraryBook && libraryBook.status === "completed") {
       return (
         <TouchableOpacity>
           <View className="flex flex-row items-center">
@@ -171,11 +202,52 @@ const BookHeader = ({ book, navigation }: BookHeaderProps) => {
       className="h-full"
     >
       <View className="h-full flex flex-col justify-between">
-        <TouchableOpacity onPress={() => navigation.goBack()} className="p-4">
-          <View className="flex flex-row items-center bg-dark rounded-full p-2 h-10 w-10">
-            <FontAwesome name="chevron-left" size={24} color="#EAF4F4" />
-          </View>
-        </TouchableOpacity>
+        <View className="flex flex-row justify-between items-center">
+          <TouchableOpacity onPress={() => navigation.goBack()} className="p-4">
+            <View className="flex flex-row items-center bg-dark rounded-full p-2 h-10 w-10">
+              <FontAwesome name="chevron-left" size={24} color="#EAF4F4" />
+            </View>
+          </TouchableOpacity>
+          <Menu style={{ borderRadius: 10 }}>
+            <MenuTrigger>
+              <View className="mr-2 flex flex-row items-center bg-dark rounded-full p-2 h-10 w-10">
+                <Entypo name="dots-three-horizontal" size={24} color="#EAF4F4" />
+              </View>
+            </MenuTrigger>
+            <MenuOptions
+              customStyles={{
+                optionsContainer: {
+                  backgroundColor: '#272828',
+                  padding: 5,
+                  borderRadius: 5
+                },
+                optionsWrapper: {
+                  backgroundColor: '#272828',
+                },
+                optionText: {
+                  color: '#EAF4F4',
+                },
+              }}
+            >
+              <MenuOption onSelect={() => alert(`Share`)}>
+                <View className="flex flex-row items-center">
+                  <MaterialIcons name="ios-share" size={16} color="#EAF4F4" />
+                  <Text className="ml-2 text-light font-sm" style={{ fontFamily: "Metropolis-Regular" }}>Share</Text>
+                </View>
+                {libraryBook && <View className="border-b border-b-lightest py-1"></View>}                
+              </MenuOption>
+              {
+                libraryBook &&
+                <MenuOption onSelect={removeFromLibrary} >
+                  <View className="flex flex-row items-center">
+                    <MaterialIcons name="delete" size={16} color="#EAF4F4" />
+                    <Text className="ml-2 text-light font-sm" style={{ fontFamily: "Metropolis-Regular" }}>Remove from library</Text>
+                  </View>
+                </MenuOption>
+              }
+            </MenuOptions>
+          </Menu>
+        </View>
         <View className="mx-auto justify-end relative">
           <Image
             className="w-52 h-60 mx-auto justify-end"
@@ -187,7 +259,6 @@ const BookHeader = ({ book, navigation }: BookHeaderProps) => {
         <View className="absolute -bottom-4 w-[95%] left-[2.5%] m-auto">
           <View className="flex w-full flex-row bg-accent py-4 px-6 rounded-md m-auto justify-center">
             {renderLibraryAction()}
-
             <Text className="text-light mx-4 text-2xl" style={{ fontFamily: "Metropolis-Light" }}>|</Text>
             <TouchableOpacity onPress={userState?.fid ? () => navigation.navigate("Review", { book, libraryBook }) : () => navigation.navigate("Auth")}>
               <View className="flex flex-row items-center">

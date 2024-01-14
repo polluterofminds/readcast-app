@@ -1,3 +1,4 @@
+//  @ts-ignore
 import { REACT_APP_API_URL } from "@env"
 import { Book, ReviewWithUser } from "types";
 import useError from "./useError";
@@ -17,7 +18,8 @@ const useReviews = () => {
 
       const data = await res.json();
       setReviews(data);
-    } catch (error) {      
+    } catch (error) {  
+      console.log("Review fetch error")    
       console.log(error);
       submitError(error);
     }
@@ -41,6 +43,7 @@ const useReviews = () => {
       })
       await fetchReviews(book);
     } catch (error) {
+      console.log("Cast review error");
       console.log(error);
       //  @TODO handle errors in app
       throw error;

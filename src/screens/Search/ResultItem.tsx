@@ -23,6 +23,7 @@ const ResultItem = ({ book, submitError }: ResultItemProps) => {
       }
       navigation.navigate('BookDetails', { book })
     } catch (error) {
+      console.log("Select book error")
       console.log(error);
       submitError(error);
     }

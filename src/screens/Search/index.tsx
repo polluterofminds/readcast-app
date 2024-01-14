@@ -59,6 +59,7 @@ const Search = () => {
       setSearching(false); 
       setEllipsisState("");
     } catch (error) {
+      console.log("Search error")
       console.log(error);
       submitError(error);
       setSearching(false);

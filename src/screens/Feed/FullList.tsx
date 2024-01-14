@@ -29,6 +29,7 @@ const FullList = ({ route }: FullListProps) => {
       setBooks(data)
       setLoading(false);
     } catch (error) {
+      console.log("Loading books error")
       console.log(error);
       submitError(error);
       setLoading(false);
@@ -37,21 +38,23 @@ const FullList = ({ route }: FullListProps) => {
 
   return (
     <View className="w-screen p-4 bg-dark">
-      <SafeAreaView style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
-        <TouchableOpacity onPress={() => navigation.goBack()} className="p-4">
-          <View className="flex flex-row items-center bg-dark rounded-full p-2 h-10 w-10">
-            <FontAwesome name="chevron-left" size={24} color="#EAF4F4" />
-          </View>
-        </TouchableOpacity>
-        <Text className="text-light font-bold text-2xl" style={{ fontFamily: "Metropolis-Bold" }}>{category}</Text>
+      <SafeAreaView>
+        <View style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
+          <TouchableOpacity onPress={() => navigation.goBack()} className="p-4">
+            <View className="flex flex-row items-center bg-dark rounded-full p-2 h-10 w-10">
+              <FontAwesome name="chevron-left" size={24} color="#EAF4F4" />
+            </View>
+          </TouchableOpacity>
+          <Text className="text-light font-bold text-2xl" style={{ fontFamily: "Metropolis-Bold" }}>{category}</Text>
+        </View>
+        <View>
+          {
+            loading ?
+              <Text className="text-light" style={{ fontFamily: "Metropolis-Regular" }}>Loading...</Text> :
+              <BookFeed books={books} />
+          }
+        </View>
       </SafeAreaView>
-      <View>
-        {
-          loading ?
-            <Text className="text-light" style={{ fontFamily: "Metropolis-Regular" }}>Loading...</Text> :
-            <BookFeed books={books} />
-        }
-      </View>
     </View>
   )
 }

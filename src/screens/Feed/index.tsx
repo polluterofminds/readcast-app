@@ -47,6 +47,7 @@ export default function Feed() {
       setNewest(data?.newest)
       setLoading(false);
     } catch (error) {
+      console.log("Fetching feed error")
       console.log(error);
       submitError(error);
       setLoading(false);

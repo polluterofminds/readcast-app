@@ -8,6 +8,7 @@ import 'text-encoding-polyfill';
 import { UserProvider } from 'contexts/UserContext';
 import FlashMessage from "react-native-flash-message";
 import { LibraryProvider } from 'contexts/LibraryContext';
+import { MenuProvider } from 'react-native-popup-menu';
 
 export default function App() {
   const { submitError } = useError();
@@ -37,16 +38,21 @@ export default function App() {
       </View>
     )
   }
-  
+
 
   return (
     <ErrorBoundary FallbackComponent={FallbackComponent} onError={onError}>
-      <FlashMessage position="top" />
+      <FlashMessage 
+        position="bottom" 
+        floating={true}
+      />
+      <MenuProvider>
         <UserProvider>
           <LibraryProvider>
             <RootStack />
           </LibraryProvider>
         </UserProvider>
+      </MenuProvider>
     </ErrorBoundary>
   );
 }
