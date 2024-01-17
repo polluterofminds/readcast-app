@@ -4,8 +4,11 @@ export interface Book {
   author: string;
   description: string;
   thumbnail: string;
-  reviews: number;
+  review_count?: number;
   category: string;
+  reviews: [{
+    count: number
+  }]
 }
 
 export interface Review {

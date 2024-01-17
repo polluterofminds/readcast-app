@@ -42,6 +42,7 @@ export default function Feed() {
     try {
       const res = await fetch(`${REACT_APP_API_URL}/books/home`)
       const data = await res.json();
+      console.log(data.trending[0])
       setTrending(data?.trending);
       setFiction(data?.fiction);
       setNewest(data?.newest)

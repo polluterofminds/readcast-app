@@ -44,7 +44,7 @@ const ResultItem = ({ book, submitError }: ResultItemProps) => {
           </View>
           <View className="mt-4 bg-primary rounded-lg p-1 w-10 justify-center flex flex-row items-center">
             <EvilIcons name="comment" size={16} color="#181A1A" />
-            <Text className="text-dark" style={{ fontFamily: "Metropolis-Regular" }}>{book.reviews}</Text>
+            <Text className="text-dark" style={{ fontFamily: "Metropolis-Regular" }}>{book.reviews[0].count}</Text>
           </View>
         </View>
       </TouchableOpacity>
