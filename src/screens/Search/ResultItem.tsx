@@ -6,10 +6,9 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 interface ResultItemProps {
   book: Book;
-  submitError: Function;
 }
 
-const ResultItem = ({ book, submitError }: ResultItemProps) => {
+const ResultItem = ({ book }: ResultItemProps) => {
   const navigation = useNavigation();
 
   const handleSelection = async () => {
@@ -25,7 +24,6 @@ const ResultItem = ({ book, submitError }: ResultItemProps) => {
     } catch (error) {
       console.log("Select book error")
       console.log(error);
-      submitError(error);
     }
   }
   return (
@@ -44,7 +42,7 @@ const ResultItem = ({ book, submitError }: ResultItemProps) => {
           </View>
           <View className="mt-4 bg-primary rounded-lg p-1 w-10 justify-center flex flex-row items-center">
             <EvilIcons name="comment" size={16} color="#181A1A" />
-            <Text className="text-dark" style={{ fontFamily: "Metropolis-Regular" }}>{book.reviews[0].count}</Text>
+            <Text className="text-dark" style={{ fontFamily: "Metropolis-Regular" }}>{book?.reviews}</Text>
           </View>
         </View>
       </TouchableOpacity>

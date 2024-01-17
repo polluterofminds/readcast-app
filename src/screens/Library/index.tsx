@@ -52,20 +52,56 @@ const Library = () => {
   }, [isFocused]);
 
   useEffect(() => {
-    setLibrary([...libraryState.tbr.slice(0, 3), ...libraryState.inProgress.slice(0, 3), ...libraryState.completed.slice(0, 3)]);
+    setLibrary([...libraryState.tbr, ...libraryState.inProgress, ...libraryState.completed]);
   }, [libraryState]);
 
   const handleSelectSection = (selection: string) => {
     setTab(selection)
-    switch (selection) {
-      case "in-progress":
-        return setLibrary(libraryState.inProgress)
-      case "completed":
-        setLibrary(libraryState.completed)
+  }
+
+  const renderList = () => {
+    switch (selectedTab) {
       case "tbr":
-        return setLibrary(libraryState.tbr)
+        return <FlatList
+          data={libraryState.tbr}
+          renderItem={({ item }) => (
+            <LibraryItem item={item} />
+          )}
+          keyExtractor={item => item.id}
+          numColumns={2}
+          contentContainerStyle={{ paddingBottom: 250, margin: "auto", marginTop: 20 }}
+        />
+      case "in-progress":
+        <FlatList
+          data={libraryState.inProgress}
+          renderItem={({ item }) => (
+            <LibraryItem item={item} />
+          )}
+          keyExtractor={item => item.id}
+          numColumns={2}
+          contentContainerStyle={{ paddingBottom: 250, margin: "auto", marginTop: 20 }}
+        />
+      case "completed":
+        return <FlatList
+          data={libraryState.completed}
+          renderItem={({ item }) => (
+            <LibraryItem item={item} />
+          )}
+          keyExtractor={item => item.id}
+          numColumns={2}
+          contentContainerStyle={{ paddingBottom: 250, margin: "auto", marginTop: 20 }}
+        />
+      case "all":
       default:
-        return setLibrary([...libraryState.tbr.slice(0, 3), ...libraryState.inProgress.slice(0, 3), ...libraryState.completed.slice(0, 3)])
+        return <FlatList
+          data={[...libraryState.tbr, ...libraryState.inProgress, ...libraryState.completed]}
+          renderItem={({ item }) => (
+            <LibraryItem item={item} />
+          )}
+          keyExtractor={item => item.id}
+          numColumns={2}
+          contentContainerStyle={{ paddingBottom: 250, margin: "auto", marginTop: 20 }}
+        />
     }
   }
 
@@ -79,17 +115,9 @@ const Library = () => {
             <TouchableOpacity onPress={() => handleSelectSection("in-progress")}><View className={selectedTab === "in-progress" ? "flex flex-row items-center px-6 py-2 rounded rounded-full bg-primary mr-2" : "flex flex-row items-center px-6 py-2 rounded rounded-full bg-transparent border border-light mr-2"}><MaterialCommunityIcons name="book" size={24} color={selectedTab === "in-progress" ? "#181A1A" : "#EAF4F4"} /><Text style={{ fontFamily: "Metropolis-Light" }} className={selectedTab === "in-progress" ? "ml-2 text-md" : "ml-2 text-md text-light"}>In Progress</Text></View></TouchableOpacity>
             <TouchableOpacity onPress={() => handleSelectSection("completed")}><View className={selectedTab === "completed" ? "flex flex-row items-center px-6 py-2 rounded rounded-full bg-primary mr-2" : "flex flex-row items-center px-6 py-2 rounded rounded-full bg-transparent border border-light mr-2"}><FontAwesome5 name="check" size={24} color={selectedTab === "completed" ? "#181A1A" : "#EAF4F4"} /><Text style={{ fontFamily: "Metropolis-Light" }} className={selectedTab === "completed" ? "ml-2 text-md" : "ml-2 text-md text-light"}>Completed</Text></View></TouchableOpacity>
           </ScrollView>
-        </View>        
-          <FlatList
-            data={library}
-            renderItem={({ item }) => (
-              <LibraryItem item={item} />
-            )}
-            keyExtractor={item => item.id}
-            numColumns={2}
-            contentContainerStyle={{ paddingBottom: 250, margin: "auto", marginTop: 20 }}
-          />
         </View>
+        {renderList()}
+      </View>
     </View>
   )
 }

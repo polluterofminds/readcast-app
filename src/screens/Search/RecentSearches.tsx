@@ -29,7 +29,7 @@ const RecentSearches = () => {
       </View>      
       <FlatList
         data={recent}
-        renderItem={({ item }) => (
+        renderItem={({ item }: { item: Book}) => (
           <ResultItem book={item} />
         )}
         keyExtractor={item => item.id}

@@ -6,9 +6,7 @@ export interface Book {
   thumbnail: string;
   review_count?: number;
   category: string;
-  reviews: [{
-    count: number
-  }]
+  reviews: number;
 }
 
 export interface Review {

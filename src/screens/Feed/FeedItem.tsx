@@ -20,7 +20,7 @@ const FeedItem = ({ book, handleBookPress }: { book: Book, handleBookPress: Func
           <View className="flex flex-row items-center">
             <View className="mt-4 bg-primary rounded-lg p-1 w-10 justify-center flex flex-row items-center">
               <EvilIcons name="comment" size={16} color="#181A1A" />
-              <Text className="text-dark" style={{ fontFamily: "Metropolis-Regular" }}>{book.reviews[0].count}</Text>
+              <Text className="text-dark" style={{ fontFamily: "Metropolis-Regular" }}>{book.reviews}</Text>
             </View>
             <Text className="ml-2 text-light text-xs overflow-hidden" numberOfLines={1}>{book?.category}</Text>
           </View>
