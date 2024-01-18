@@ -6,15 +6,21 @@ import { useState } from "react";
 import useSecureStorage from "./useSecureStorage";
 import { StorageKeys } from "constants/storageKeys";
 import useWarpcastConnection from "./useWarpcast";
+import Constants from 'expo-constants'
+const apiUrl = Constants?.expoConfig?.hostUri
+? `http://${Constants?.expoConfig?.hostUri?.split(`:`)?.shift()?.concat(`:3000`)}`
+: REACT_APP_API_URL
 
 const useReviews = () => {
   const { submitError } = useError();
   const { connectedUserFid } = useWarpcastConnection();
   const { getSecureValue } = useSecureStorage();
   const [reviews, setReviews] = useState<ReviewWithUser[]>([]);
+
   const fetchReviews = async (book: Book) => {
     try {
-      const res = await fetch(`${REACT_APP_API_URL}/books/reviews/${encodeURI(book.title)}`)
+      console.log(`${apiUrl}/books/reviews/${encodeURI(book.title)}`)
+      const res = await fetch(`${apiUrl}/books/reviews/${encodeURI(book.title)}`)
 
       const data = await res.json();
       setReviews(data);
@@ -28,7 +34,7 @@ const useReviews = () => {
   const castReview = async (text: string, book: Book, stars?: number) => {
     try {
       const signerString = await getSecureValue(StorageKeys.SIGNING_KEY);
-      await fetch(`${REACT_APP_API_URL}/reviews`, {
+      await fetch(`${apiUrl}/reviews`, {
         method: "POST", 
         headers: {
           'Content-Type': 'application/json', 

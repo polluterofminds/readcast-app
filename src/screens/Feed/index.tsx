@@ -11,6 +11,10 @@ import { TouchableOpacity } from 'react-native';
 import { useIsFocused, useNavigation } from '@react-navigation/native';
 import useError from 'hooks/useError';
 import { useLibrary } from 'hooks/useLibrary';
+import Constants from 'expo-constants'
+const apiUrl = Constants?.expoConfig?.hostUri
+? `http://${Constants?.expoConfig?.hostUri?.split(`:`)?.shift()?.concat(`:3000`)}`
+: REACT_APP_API_URL
 
 export default function Feed() {
   const [loading, setLoading] = useState(true);
@@ -33,15 +37,15 @@ export default function Feed() {
   const { fetchLibraryData } = useLibrary();
 
   useEffect(() => {
-    if(isFocused) {
+    if(isFocused && apiUrl) {
       fetchFeed();
       fetchLibraryData();
     }
-  }, [isFocused]);
+  }, [isFocused, apiUrl]);
 
   const fetchFeed = async () => {
     try {
-      const res = await fetch(`${REACT_APP_API_URL}/books/home`)
+      const res = await fetch(`${apiUrl}/books/home`)
       const data = await res.json();
       setTrending(data?.trending);
       setFiction(data?.fiction);

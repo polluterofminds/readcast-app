@@ -5,6 +5,10 @@ import useSecureStorage from "hooks/useSecureStorage";
 import { StorageKeys } from "constants/storageKeys";
 import { Library } from "types";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import Constants from 'expo-constants'
+const apiUrl = Constants?.expoConfig?.hostUri
+? `http://${Constants?.expoConfig?.hostUri?.split(`:`)?.shift()?.concat(`:3000`)}`
+: REACT_APP_API_URL
 
 
 
@@ -40,8 +44,9 @@ export const LibraryProvider = (
   const fetchLibraryData = async () => {
     try {
       const signer = await getSecureValue(StorageKeys.SIGNING_KEY);
+      console.log(signer)
       if(signer) {
-        const res = await fetch(`${REACT_APP_API_URL}/books/library`, {
+        const res = await fetch(`${apiUrl}/books/library`, {
           headers: {
             'Authorization': `Bearer ${signer}`
           }

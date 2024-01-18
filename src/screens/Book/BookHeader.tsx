@@ -25,6 +25,10 @@ import {
 import useSecureStorage from 'hooks/useSecureStorage';
 import { StorageKeys } from 'constants/storageKeys';
 import useToast from 'hooks/useToast';
+import Constants from 'expo-constants'
+const apiUrl = Constants?.expoConfig?.hostUri
+? `http://${Constants?.expoConfig?.hostUri?.split(`:`)?.shift()?.concat(`:3000`)}`
+: REACT_APP_API_URL
 
 // const { ContextMenu, SlideInMenu, Popover } = renderers;
 
@@ -67,7 +71,7 @@ const BookHeader = ({ book, navigation }: BookHeaderProps) => {
     const signerUUID = await getSecureValue(StorageKeys.SIGNING_KEY)
     setToastMessage("info", "Adding to library...");
     try {
-      await fetch(`${REACT_APP_API_URL}/books/library`, {
+      await fetch(`${apiUrl}/books/library`, {
         method: "POST",
         headers: {
           'Content-Type': 'application/json', 
@@ -93,7 +97,7 @@ const BookHeader = ({ book, navigation }: BookHeaderProps) => {
     setModalVisible(false);
     setToastMessage("info", "Updating library...");
     try {
-      await fetch(`${REACT_APP_API_URL}/books/library/${libraryBook?.id}`, {
+      await fetch(`${apiUrl}/books/library/${libraryBook?.id}`, {
         method: "PUT",
         headers: {
           'Content-Type': 'application/json', 
@@ -120,7 +124,7 @@ const BookHeader = ({ book, navigation }: BookHeaderProps) => {
   const removeFromLibrary = async () => {
     const signerUUID = await getSecureValue(StorageKeys.SIGNING_KEY)
     try {
-      await fetch(`${REACT_APP_API_URL}/books/library/${libraryBook?.id}`, {
+      await fetch(`${apiUrl}/books/library/${libraryBook?.id}`, {
         method: "DELETE", 
         headers: {
           'Authorization': `Bearer ${signerUUID}`

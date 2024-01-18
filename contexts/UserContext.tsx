@@ -3,6 +3,10 @@ import React, { useEffect, useState, createContext } from "react";
 import { REACT_APP_API_URL } from "@env";
 import { StorageKeys } from "constants/storageKeys";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import Constants from 'expo-constants'
+const apiUrl = Constants?.expoConfig?.hostUri
+? `http://${Constants?.expoConfig?.hostUri?.split(`:`)?.shift()?.concat(`:3000`)}`
+: REACT_APP_API_URL
 
 export interface UserState {
   username: string; 
@@ -47,7 +51,7 @@ export const UserProvider = (
     try {
       const userFid = await AsyncStorage.getItem(StorageKeys.CONNECTED_FID);
       if(userFid) {
-        const res = await fetch(`${REACT_APP_API_URL}/users/${userFid}`)
+        const res = await fetch(`${apiUrl}/users/${userFid}`)
         const data = await res.json();
         updateState(data);
       }    

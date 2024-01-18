@@ -6,6 +6,10 @@ import { REACT_APP_API_URL } from "@env";
 import useSecureStorage from "./useSecureStorage";
 import { StorageKeys } from "../constants/storageKeys";
 import { useUser } from "./useUser";
+import Constants from 'expo-constants'
+const apiUrl = Constants?.expoConfig?.hostUri
+? `http://${Constants?.expoConfig?.hostUri?.split(`:`)?.shift()?.concat(`:3000`)}`
+: REACT_APP_API_URL
 
 interface UseWarpcastConnection {
   connectedUserFid: string;
@@ -96,7 +100,7 @@ export default function useWarpcastConnection(): UseWarpcastConnection {
         console.log("polling signed key request");
         // const keyPoll = await fetch(`https://api.warpcast.com/v2/signed-key-request?token=${token}`)
         console.log(token);
-        const keyPoll = await fetch(`${REACT_APP_API_URL}/users/signer-status?token=${token}`)
+        const keyPoll = await fetch(`${apiUrl}/users/signer-status?token=${token}`)
 
         const data = await keyPoll.json();
         // const {signedKeyRequest} = data.result;
@@ -158,7 +162,7 @@ export default function useWarpcastConnection(): UseWarpcastConnection {
 
   const connectWithWarpcast = async () => {
     try {
-      const res = await fetch(`${REACT_APP_API_URL}/users/sign-in`, {
+      const res = await fetch(`${apiUrl}/users/sign-in`, {
         method: "POST",
         headers: {
           'Content-Type': 'application/json'

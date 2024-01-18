@@ -4,8 +4,13 @@ import { TouchableOpacity, View, SafeAreaView, ScrollView, Text } from 'react-na
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { Book } from 'types';
 import BookFeed from './BookFeed';
+//  @ts-ignore
 import { REACT_APP_API_URL } from "@env"
 import useError from 'hooks/useError';
+import Constants from 'expo-constants'
+const apiUrl = Constants?.expoConfig?.hostUri
+? `http://${Constants?.expoConfig?.hostUri?.split(`:`)?.shift()?.concat(`:3000`)}`
+: REACT_APP_API_URL
 
 interface FullListProps {
   route: any;
@@ -24,7 +29,7 @@ const FullList = ({ route }: FullListProps) => {
 
   const loadBooks = async () => {
     try {
-      const res = await fetch(`${REACT_APP_API_URL}/books/${category}`);
+      const res = await fetch(`${apiUrl}/books/${category}`);
       const data = await res.json();
       setBooks(data)
       setLoading(false);

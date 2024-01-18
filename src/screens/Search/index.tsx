@@ -6,6 +6,10 @@ import { Book } from 'types';
 import Results from './Results';
 import RecentSearches from './RecentSearches';
 import useError from 'hooks/useError';
+import Constants from 'expo-constants'
+const apiUrl = Constants?.expoConfig?.hostUri
+? `http://${Constants?.expoConfig?.hostUri?.split(`:`)?.shift()?.concat(`:3000`)}`
+: REACT_APP_API_URL
 
 const Search = () => {
   const [searchText, setSearchText] = useState("");
@@ -50,7 +54,7 @@ const Search = () => {
       setEmptyState(false);
       setSearching(true);
       generateEllipsis();
-      const res = await fetch(`${REACT_APP_API_URL}/books/search?title=${debouncedValue}`)
+      const res = await fetch(`${apiUrl}/books/search?title=${debouncedValue}`)
       const data = await res.json();
       if(data.length === 0) {
         setEmptyState(true);

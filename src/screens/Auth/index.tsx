@@ -1,26 +1,44 @@
 import { ImageBackground, Text, TouchableOpacity, View, Linking, Image } from 'react-native'
 import { REACT_APP_API_URL, REACT_APP_ENVIRONMENT } from "@env"
-import QRCode from 'react-native-qrcode-svg';
+// import QRCode from 'react-native-qrcode-svg';
 import { useEffect, useState } from 'react';
 import 'react-native-get-random-values';
 import { sha512 } from '@noble/hashes/sha512';
 import useWarpcastConnection from 'hooks/useWarpcast';
 import Profile from './Profile';
 import { useUser } from 'hooks/useUser';
+import { useIsFocused } from '@react-navigation/native';
+import Siwn from './Siwn';
 
 const Auth = () => {
-  const { connectWithWarpcast, connectedUserFid, deeplinkUrl } = useWarpcastConnection();
+  const [authenticated, setAuthenticated] = useState(false);
+  const { connectWithWarpcast, connectedUserFid, deeplinkUrl, setConnectedUserFid, disconnectFromWarpcast } = useWarpcastConnection();
+  const { userState, fetchUserData } = useUser();
+  const isFocused = useIsFocused();
+  useEffect(() => {
+    if (connectedUserFid && userState.fid) {
+      setAuthenticated(true);
+    } else {
+      setAuthenticated(false);
+    }
+  }, [isFocused, connectedUserFid, userState]);
   const handleSignIn = async () => {
     await connectWithWarpcast();
   }
 
-  const DeepLinkQRCode = () => <QRCode color={"black"} backgroundColor='white' value={deeplinkUrl} />
+  const handleLogOut = async () => {
+    setConnectedUserFid("");
+    setAuthenticated(false);
+    await disconnectFromWarpcast();
+  }
+
+  // const DeepLinkQRCode = () => <QRCode color={"black"} backgroundColor='white' value={deeplinkUrl} />
   return (
     <View className="bg-dark min-h-screen">
       {
-        connectedUserFid !== "" ?
+        authenticated ?
           <View>
-            <Profile />
+            <Profile handleLogOut={handleLogOut} userState={userState} />
           </View> :
           <View className="h-full flex justify-center align-center items-center">
             <View>
@@ -30,14 +48,18 @@ const Auth = () => {
               />
               <Text className="text-2xl text-light text-center" style={{ fontFamily: "Metropolis-Bold" }}>Welcome, to ReadCast!</Text>
               <Text className="text-md text-light text-center" style={{ fontFamily: "Metropolis-Regular" }}>Let's get you signed in.</Text>
+
               {
                 !deeplinkUrl &&
-                <TouchableOpacity className="mt-4 bg-primary px-4 py-2 rounded-md" onPress={() => handleSignIn()}>
-                  <Text className="text-dark font-bold text-xl text-center" style={{ fontFamily: "Metropolis-Bold" }}>Get started</Text>
-                </TouchableOpacity>
+                <View>
+                  <Siwn fetchUserData={fetchUserData} setConnectedUserFid={setConnectedUserFid} />
+                  <TouchableOpacity className="mt-4 bg-primary px-4 py-2 rounded-md" onPress={() => handleSignIn()}>
+                    <Text className="text-dark font-bold text-xl text-center" style={{ fontFamily: "Metropolis-Bold" }}>Sign in with Warpcast</Text>
+                  </TouchableOpacity>
+                </View>
               }
             </View>
-            {
+            {/* {
               deeplinkUrl ?
                 <View className="flex items-center mt-4">
                   {
@@ -48,7 +70,7 @@ const Auth = () => {
                   }
                 </View> :
                 null
-            }
+            } */}
           </View>
       }
     </View>
