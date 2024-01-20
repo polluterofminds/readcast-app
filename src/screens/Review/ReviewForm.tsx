@@ -2,13 +2,14 @@ import React, { useState } from 'react'
 import { View, Text, TextInput, TouchableOpacity, Switch } from 'react-native'
 import { AntDesign } from '@expo/vector-icons';
 import { Star } from './index';
-import DateTimePicker from 'react-native-ui-datepicker';
+import DateTimePicker, { DateType } from 'react-native-ui-datepicker';
 import dayjs from 'dayjs';
 import { Book, LibraryWithBook } from 'types';
 import useError from 'hooks/useError';
 import { useNavigation } from '@react-navigation/native';
 import useReviews from 'hooks/useReviews';
 import useToast from 'hooks/useToast';
+import { useLibrary } from 'hooks/useLibrary';
 
 interface ReviewFormProps {
   book: Book;
@@ -40,12 +41,14 @@ const ReviewForm = ({ book, libraryBook }: ReviewFormProps) => {
   const [reviewText, setReviewText] = useState("");
   const [stars, setStars] = useState<Star[]>(initialRating)
   const [markComplete, setMarkComplete] = useState(false);
+  const [hasDateChanged, setHasDateChanged] = useState(false);
   const [date, setDate] = useState<any>(dayjs());
   const [submitting, setSubmitting] = useState(false);
   const { submitError } = useError();
   const { castReview } = useReviews();
   const navigation = useNavigation();
   const { setToastMessage, hideToastMessage } = useToast();
+  const { addToLibrary, updateLibraryStatus } = useLibrary();
   const handleStarSelection = (s: Star) => {
     const cloned = JSON.parse(JSON.stringify(stars));
     const index = s.index;
@@ -81,8 +84,19 @@ const ReviewForm = ({ book, libraryBook }: ReviewFormProps) => {
     try {
       setSubmitting(true);
       setToastMessage("info", "Submitting review...");
-      if (markComplete) {
-        //  Add book to library
+      if (markComplete && libraryBook) {        
+        const res = await updateLibraryStatus("completed", libraryBook, book, {
+          date_completed: hasDateChanged ? date : null, 
+          status: "completed"
+        });
+        if(!res.ok) {
+          throw new Error("Trouble submitting review")
+        }
+      } else if(markComplete) {        
+        const res = await addToLibrary(book, { status: "completed", date_completed: hasDateChanged ? date : null })
+        if(!res.ok) {
+          throw new Error("Trouble submitting review")
+        }
       }
       //  Post review
       let starRatings = ""
@@ -105,6 +119,11 @@ const ReviewForm = ({ book, libraryBook }: ReviewFormProps) => {
     }
   }
 
+  const handleDateChange = (d: DateType) => {
+    setDate(d);
+    setHasDateChanged(true);
+  }
+
   const clear = () => {
     setReviewText("");
     setStars(initialRating);
@@ -113,7 +132,7 @@ const ReviewForm = ({ book, libraryBook }: ReviewFormProps) => {
   }
 
   return (
-    <View>
+    <View className="pb-8">
       <Text className="text-3xl text-light" style={{ fontFamily: "Metropolis-Bold" }}>Add your review</Text>
       <Text className="text-xl text-light" style={{ fontFamily: "Metropolis-Regular" }}>Write a few senteces about your thoughts on this book, star ratings are optional.</Text>
       <View className="mt-4">
@@ -138,7 +157,7 @@ const ReviewForm = ({ book, libraryBook }: ReviewFormProps) => {
             <TouchableOpacity onPress={() => handleClear()} className="m-4"><Text className="text-xs text-light">Clear</Text></TouchableOpacity>
           </View>
           {
-            !libraryBook || libraryBook.status !== "completed" &&
+            (!libraryBook || libraryBook.status !== "completed") &&
             <View className="flex flex-row items-center mt-4">
               <Switch
                 trackColor={{ false: '#767577', true: '#767577' }}
@@ -153,11 +172,11 @@ const ReviewForm = ({ book, libraryBook }: ReviewFormProps) => {
           {
             markComplete &&
             <View className="mt-4 pb-6">
-              <Text className="ml-2 text-lg text-light" style={{ fontFamily: "Metropolis-Bold" }}>Date finished</Text>
+              <Text className="ml-2 text-lg text-light" style={{ fontFamily: "Metropolis-Bold" }}>Date finished (optional)</Text>
               <View className="mt-2 bg-lightest text-dark rounded-md">
                 <DateTimePicker
                   value={date}
-                  onValueChange={(d) => setDate(d)}
+                  onValueChange={(d) => handleDateChange(d)}
                 />
               </View>
             </View>

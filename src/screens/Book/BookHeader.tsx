@@ -47,7 +47,7 @@ const BookHeader = ({ book, navigation }: BookHeaderProps) => {
   const [libraryBook, setLibraryBook] = useState<LibraryWithBook | null>(null);
   const { connectedUserFid } = useWarpcastConnection();
   const { getSecureValue } = useSecureStorage();
-  const { libraryState, fetchLibraryData } = useLibrary();
+  const { libraryState, fetchLibraryData, addToLibrary } = useLibrary();
   const { userState } = useUser();
   const isFocused = useIsFocused();
   const { setToastMessage, hideToastMessage } = useToast();
@@ -64,35 +64,6 @@ const BookHeader = ({ book, navigation }: BookHeaderProps) => {
 
   const fetchAndUpdate = async () => {
     await fetchLibraryData();
-  }
-
-  const addToLibrary = async () => {
-    if(!userState.fid) {
-      setToastMessage("info", "You need to be signed in to do this")
-      return;
-    }
-    const signerUUID = await getSecureValue(StorageKeys.SIGNING_KEY)
-    setToastMessage("info", "Adding to library...");
-    try {
-      await fetch(`${apiUrl}/books/library`, {
-        method: "POST",
-        headers: {
-          'Content-Type': 'application/json', 
-          'Authorization': `Bearer ${signerUUID}`
-        },
-        body: JSON.stringify({
-          book,
-          fid: connectedUserFid,
-          details: {
-            status: "tbr"
-          }
-        })
-      })
-      await fetchAndUpdate()
-    } catch (error) {
-      console.log("Add to library error");
-      console.log(error);
-    }
   }
 
   const removeFromLibrary = async () => {
@@ -147,7 +118,7 @@ const BookHeader = ({ book, navigation }: BookHeaderProps) => {
     }
 
     return (
-      <TouchableOpacity onPress={() => addToLibrary()}>
+      <TouchableOpacity onPress={() => addToLibrary(book, { status: "tbr" })}>
         <View className="flex flex-row items-center">
           <Foundation name="book-bookmark" size={24} color="#EAF4F4" />
           <Text style={{ fontFamily: "Metropolis-Bold" }} className="mx-2 text-lg font-bold text-light">Want to read</Text>

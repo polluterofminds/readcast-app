@@ -33,7 +33,7 @@ const useReviews = () => {
   const castReview = async (text: string, book: Book, stars?: number) => {
     try {
       const signerString = await getSecureValue(StorageKeys.SIGNING_KEY);
-      await fetch(`${apiUrl}/reviews`, {
+      const res = await fetch(`${apiUrl}/reviews`, {
         method: "POST", 
         headers: {
           'Content-Type': 'application/json', 
@@ -46,6 +46,9 @@ const useReviews = () => {
           fid: connectedUserFid
         })
       })
+      if(!res.ok) {
+        throw new Error("Trouble submitting cast")
+      }
       await fetchReviews(book);
     } catch (error) {
       console.log("Cast review error");

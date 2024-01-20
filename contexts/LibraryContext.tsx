@@ -3,9 +3,11 @@ import React, { useEffect, useState, createContext } from "react";
 import { REACT_APP_API_URL } from "@env";
 import useSecureStorage from "hooks/useSecureStorage";
 import { StorageKeys } from "constants/storageKeys";
-import { Library } from "types";
+import { Book, Library, LibraryWithBook } from "types";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Constants from 'expo-constants'
+import useToast from "hooks/useToast";
+import { useUser } from "hooks/useUser";
 const apiUrl = Constants?.expoConfig?.hostUri
 ? `http://${Constants?.expoConfig?.hostUri?.split(`:`)?.shift()?.concat(`:3000`)}`
 : REACT_APP_API_URL
@@ -16,6 +18,12 @@ interface LibraryProviderProps {
   libraryState: Library;
   fetchLibraryData: Function;
   children: any;
+}
+
+interface BookDetails {
+  status: string;
+  date_completed?: Date;
+  book_type?: string;
 }
 
 export const LibraryStateContext = createContext({});
@@ -32,6 +40,8 @@ export const LibraryProvider = (
 
   const [libraryState, setState] = useState(initialState);
   const { getSecureValue } = useSecureStorage();
+  const { setToastMessage } = useToast();
+  const { userState } = useUser();
 
   const updateState = (newState: any) => {
     setState((prevState) => ({ ...prevState, ...newState }));
@@ -63,8 +73,70 @@ export const LibraryProvider = (
     }    
   }
 
+  const addToLibrary = async (book: Book, details: BookDetails) => {
+    if(!userState.fid) {
+      setToastMessage("info", "You need to be signed in to do this")
+      return;
+    }
+    const signerUUID = await getSecureValue(StorageKeys.SIGNING_KEY)
+    setToastMessage("info", "Adding to library...");
+    try {
+      await fetch(`${apiUrl}/books/library`, {
+        method: "POST",
+        headers: {
+          'Content-Type': 'application/json', 
+          'Authorization': `Bearer ${signerUUID}`
+        },
+        body: JSON.stringify({
+          book,
+          fid: userState.fid,
+          details: {
+            status: details.status,
+            bookFormat: details?.book_type,
+            dateCompleted: details?.date_completed
+          }
+        })
+      })
+      await fetchLibraryData()
+    } catch (error) {
+      console.log("Add to library error");
+      console.log(error);
+    }
+  }
+
+  const updateLibraryStatus = async (newStatus: string, libraryBook: LibraryWithBook, book: Book, details?: BookDetails) => {
+    if(!userState.fid) {
+      setToastMessage("info", "You need to be signed in to do this")
+      return;
+    }
+    const signerUUID = await getSecureValue(StorageKeys.SIGNING_KEY)
+    setToastMessage("info", "Updating library...");
+    try {
+      await fetch(`${apiUrl}/books/library/${libraryBook?.id}`, {
+        method: "PUT",
+        headers: {
+          'Content-Type': 'application/json', 
+          'Authorization': `Bearer ${signerUUID}`
+        },
+        body: JSON.stringify({
+          book,
+          fid: userState.fid,
+          details: {
+            status: newStatus,
+            bookFormat: details?.book_type,
+            dateCompleted: details?.date_completed
+          }
+        })
+      })
+      setToastMessage("success", "Updated!");
+    } catch (error) {
+      console.log("Update library error")
+      console.log(error);
+    }
+  }
+
   return (
-    <LibraryStateContext.Provider value={{ libraryState, fetchLibraryData }}>
+    <LibraryStateContext.Provider value={{ libraryState, fetchLibraryData, addToLibrary, updateLibraryStatus }}>
       {props.children}
     </LibraryStateContext.Provider>
   );
