@@ -39,7 +39,7 @@ const Siwn = ({ setConnectedUserFid, fetchUserData }: { setConnectedUserFid: Fun
       color="black"
       fontSize={20}
       theme={Theme.DARK}
-      text="Sign in with Neynar"
+      text="Sign in with Warpcast"
       
       fontWeight="300"
       buttonStyles={{

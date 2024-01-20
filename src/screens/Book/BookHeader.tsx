@@ -6,9 +6,8 @@ import { Book } from 'types';
 import { NavigationProp, ParamListBase, useIsFocused } from '@react-navigation/native';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import { MaterialIcons } from '@expo/vector-icons';
+import { Feather } from '@expo/vector-icons';
 import useWarpcastConnection from 'hooks/useWarpcast';
-import DateTimePicker from 'react-native-ui-datepicker';
-import dayjs from 'dayjs';
 //  @ts-ignore
 import { REACT_APP_API_URL } from "@env";
 import { LibraryWithBook } from '../Library';
@@ -26,6 +25,9 @@ import useSecureStorage from 'hooks/useSecureStorage';
 import { StorageKeys } from 'constants/storageKeys';
 import useToast from 'hooks/useToast';
 import Constants from 'expo-constants'
+import { TextInput } from 'react-native-gesture-handler';
+import CorrectionsModal from './CorrectionsModal';
+import LibraryModal from './LibraryModal';
 const apiUrl = Constants?.expoConfig?.hostUri
 ? `http://${Constants?.expoConfig?.hostUri?.split(`:`)?.shift()?.concat(`:3000`)}`
 : REACT_APP_API_URL
@@ -41,9 +43,7 @@ interface BookHeaderProps {
 
 const BookHeader = ({ book, navigation }: BookHeaderProps) => {
   const [modalVisible, setModalVisible] = useState(false);
-  // const [renderer, setRenderer] = useState(ContextMenu);
-  const [bookFormat, setBookFormat] = useState("paperback");
-  const [dateCompleted, setDateCompleted] = useState<any>(dayjs());
+  const [correctionModalVisible, setCorrectionModalVisible] = useState(false);
   const [libraryBook, setLibraryBook] = useState<LibraryWithBook | null>(null);
   const { connectedUserFid } = useWarpcastConnection();
   const { getSecureValue } = useSecureStorage();
@@ -57,7 +57,6 @@ const BookHeader = ({ book, navigation }: BookHeaderProps) => {
     const foundBook = fullList.find((l: LibraryWithBook) => l.book_id === book.id);
     if (foundBook) {
       setLibraryBook(foundBook)
-      setBookFormat(foundBook.book_type || "paperback");
     } else {
       setLibraryBook(null);
     }
@@ -68,6 +67,10 @@ const BookHeader = ({ book, navigation }: BookHeaderProps) => {
   }
 
   const addToLibrary = async () => {
+    if(!userState.fid) {
+      setToastMessage("info", "You need to be signed in to do this")
+      return;
+    }
     const signerUUID = await getSecureValue(StorageKeys.SIGNING_KEY)
     setToastMessage("info", "Adding to library...");
     try {
@@ -92,36 +95,11 @@ const BookHeader = ({ book, navigation }: BookHeaderProps) => {
     }
   }
 
-  const updateLibraryStatus = async (newStatus: string) => {
-    const signerUUID = await getSecureValue(StorageKeys.SIGNING_KEY)
-    setModalVisible(false);
-    setToastMessage("info", "Updating library...");
-    try {
-      await fetch(`${apiUrl}/books/library/${libraryBook?.id}`, {
-        method: "PUT",
-        headers: {
-          'Content-Type': 'application/json', 
-          'Authorization': `Bearer ${signerUUID}`
-        },
-        body: JSON.stringify({
-          book,
-          fid: connectedUserFid,
-          details: {
-            status: newStatus,
-            bookFormat,
-            dateCompleted
-          }
-        })
-      })
-      setToastMessage("success", "Updated!");
-      await fetchAndUpdate();
-    } catch (error) {
-      console.log("Update library error")
-      console.log(error);
-    }
-  }
-
   const removeFromLibrary = async () => {
+    if(!userState.fid) {
+      setToastMessage("info", "You need to be signed in to do this")
+      return;
+    }
     const signerUUID = await getSecureValue(StorageKeys.SIGNING_KEY)
     try {
       await fetch(`${apiUrl}/books/library/${libraryBook?.id}`, {
@@ -178,26 +156,6 @@ const BookHeader = ({ book, navigation }: BookHeaderProps) => {
     )
   }
 
-  const options = [{
-    text: "Paperback",
-    onClick: () => setBookFormat("paperback"),
-    isSelected: bookFormat === "paperback"
-  },
-  {
-    text: "Hardcover",
-    onClick: () => setBookFormat("hardcover"),
-    isSelected: bookFormat === "hardcover"
-  },
-  {
-    text: "Ebook",
-    onClick: () => setBookFormat("ebook"),
-    isSelected: bookFormat === "ebook"
-  }, {
-    text: "Audio",
-    onClick: () => setBookFormat("audio"),
-    isSelected: bookFormat === "audio"
-  }]
-
   return (
     <ImageBackground
       style={{ flex: 1 }}
@@ -240,6 +198,13 @@ const BookHeader = ({ book, navigation }: BookHeaderProps) => {
                 </View>
                 {libraryBook && <View className="border-b border-b-lightest py-1"></View>}                
               </MenuOption>
+              <MenuOption onSelect={() => setCorrectionModalVisible(true)}>
+                <View className="flex flex-row items-center">
+                  <Feather name="alert-circle" size={16} color="#EAF4F4" />
+                  <Text className="ml-2 text-light font-sm" style={{ fontFamily: "Metropolis-Regular" }}>Submit correction</Text>
+                </View>
+                {libraryBook && <View className="border-b border-b-lightest py-1"></View>}                
+              </MenuOption>
               {
                 libraryBook &&
                 <MenuOption onSelect={removeFromLibrary} >
@@ -273,56 +238,10 @@ const BookHeader = ({ book, navigation }: BookHeaderProps) => {
           </View>
         </View>
       </View>
-      <Modal
-        animationType="slide"
-        transparent={false}
-        visible={modalVisible}
-        presentationStyle='pageSheet'
-        onRequestClose={() => {
-          setModalVisible(!modalVisible);
-        }}>
-        <View className="bg-dark p-6 h-screen flex justify-center items-center">
-          <ScrollView>
-            <Text className="text-2xl text-light" style={{ fontFamily: "Metropolis-Bold" }}>What format {libraryBook && libraryBook.status === "tbr" ? "are you reading this book in?" : "did you read this book in?"}</Text>
-            {
-              options.map((o: any) => {
-                return (
-                  <TouchableOpacity onPress={o.onClick} key={o.text}>
-                    <View className="mt-2 flex flex-row items-center">
-                      <View className={o.isSelected ? "h-8 w-8 rounded-sm bg-primary" : "h-8 w-8 rounded-sm border border-primary"}></View>
-                      <Text className="ml-2 text-lg text-light" style={{ fontFamily: "Metropolis-Regular" }}>{o.text}</Text>
-                    </View>
-                  </TouchableOpacity>
-                )
-              })
-            }
-            {
-              libraryBook && libraryBook.status === "in-progress" &&
-              <View className="mt-4 pb-6">
-                <Text className="ml-2 text-lg text-light" style={{ fontFamily: "Metropolis-Bold" }}>Date finished</Text>
-                <View className="mt-2 bg-lightest text-dark rounded-md">
-                  <DateTimePicker
-                    value={dateCompleted}
-                    onValueChange={(d) => setDateCompleted(d)}
-                  />
-                </View>
-              </View>
-            }
-            <View className="flex flex-row justify-end mt-6">
-              <View className="flex flex-row items-center">
-                <TouchableOpacity
-                  onPress={() => setModalVisible(!modalVisible)}>
-                  <Text className="mr-2 text-lightest text-lg" style={{ fontFamily: "Metropolis-Bold" }}>Cancel</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  onPress={() => updateLibraryStatus(libraryBook && libraryBook.status === "tbr" ? "in-progress" : "completed")}>
-                  <Text className="text-dark bg-primary w-30 px-2 py-1 text-lg" style={{ fontFamily: "Metropolis-Bold" }}>{libraryBook && libraryBook.status === "tbr" ? "Mark as started" : "Mark as completed"}</Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-          </ScrollView>
-        </View>
-      </Modal>
+      {/* Library Modal */}
+      <LibraryModal fetchAndUpdate={fetchAndUpdate} book={book} userState={userState} libraryBook={libraryBook} setModalVisible={setModalVisible} modalVisible={modalVisible} />
+      {/* Submit correction modal */}
+      <CorrectionsModal book={book} userState={userState} setCorrectionModalVisible={setCorrectionModalVisible} correctionModalVisible={correctionModalVisible} />
     </ImageBackground>
   )
 }

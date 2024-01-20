@@ -14,8 +14,6 @@ const useApi = () => {
     setApiUrl(uri);
   }, []);
 
-  console.log({apiUrl})
-
   return { apiUrl }
 };
 

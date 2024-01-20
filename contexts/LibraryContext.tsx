@@ -43,8 +43,7 @@ export const LibraryProvider = (
 
   const fetchLibraryData = async () => {
     try {
-      const signer = await getSecureValue(StorageKeys.SIGNING_KEY);
-      console.log(signer)
+      const signer = await getSecureValue(StorageKeys.SIGNING_KEY);      
       if(signer) {
         const res = await fetch(`${apiUrl}/books/library`, {
           headers: {

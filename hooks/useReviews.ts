@@ -18,8 +18,7 @@ const useReviews = () => {
   const [reviews, setReviews] = useState<ReviewWithUser[]>([]);
 
   const fetchReviews = async (book: Book) => {
-    try {
-      console.log(`${apiUrl}/books/reviews/${encodeURI(book.title)}`)
+    try {      
       const res = await fetch(`${apiUrl}/books/reviews/${encodeURI(book.title)}`)
 
       const data = await res.json();

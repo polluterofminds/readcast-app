@@ -49,15 +49,15 @@ const Auth = () => {
               <Text className="text-2xl text-light text-center" style={{ fontFamily: "Metropolis-Bold" }}>Welcome, to ReadCast!</Text>
               <Text className="text-md text-light text-center" style={{ fontFamily: "Metropolis-Regular" }}>Let's get you signed in.</Text>
 
-              {
-                !deeplinkUrl &&
+              {/* {
+                !deeplinkUrl && */}
                 <View>
                   <Siwn fetchUserData={fetchUserData} setConnectedUserFid={setConnectedUserFid} />
-                  <TouchableOpacity className="mt-4 bg-primary px-4 py-2 rounded-md" onPress={() => handleSignIn()}>
+                  {/* <TouchableOpacity className="mt-4 bg-primary px-4 py-2 rounded-md" onPress={() => handleSignIn()}>
                     <Text className="text-dark font-bold text-xl text-center" style={{ fontFamily: "Metropolis-Bold" }}>Sign in with Warpcast</Text>
-                  </TouchableOpacity>
+                  </TouchableOpacity> */}
                 </View>
-              }
+              {/* } */}
             </View>
             {/* {
               deeplinkUrl ?

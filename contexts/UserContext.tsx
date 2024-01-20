@@ -43,7 +43,7 @@ export const UserProvider = (
     setState((prevState) => ({ ...prevState, ...newState }));
   };
 
-  useEffect(() => {
+  useEffect(() => {    
     fetchUserData();
   }, []);
 
@@ -52,7 +52,7 @@ export const UserProvider = (
       const userFid = await AsyncStorage.getItem(StorageKeys.CONNECTED_FID);
       if(userFid) {
         const res = await fetch(`${apiUrl}/users/${userFid}`)
-        const data = await res.json();
+        const data = await res.json();        
         updateState(data);
       }    
     } catch (error) {
