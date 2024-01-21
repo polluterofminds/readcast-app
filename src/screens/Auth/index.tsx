@@ -1,4 +1,4 @@
-import { ImageBackground, Text, TouchableOpacity, View, Linking, Image } from 'react-native'
+import { ImageBackground, Text, TouchableOpacity, View, Linking, Image, ScrollView, SafeAreaView } from 'react-native'
 import { REACT_APP_API_URL, REACT_APP_ENVIRONMENT } from "@env"
 // import QRCode from 'react-native-qrcode-svg';
 import { useEffect, useState } from 'react';
@@ -9,10 +9,13 @@ import Profile from './Profile';
 import { useUser } from 'hooks/useUser';
 import { useIsFocused } from '@react-navigation/native';
 import Siwn from './Siwn';
+import SignInWithEmail from './SignInWithEmail';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 const Auth = () => {
   const [authenticated, setAuthenticated] = useState(false);
-  const { connectWithWarpcast, connectedUserFid, deeplinkUrl, setConnectedUserFid, disconnectFromWarpcast } = useWarpcastConnection();
+  const [signInWithEmail, setSignInWithEmail] = useState(false);
+  const { connectWithWarpcast, connectWithEmail, connectedUserFid, deeplinkUrl, setConnectedUserFid, disconnectFromWarpcast } = useWarpcastConnection();
   const { userState, fetchUserData } = useUser();
   const isFocused = useIsFocused();
   useEffect(() => {
@@ -22,8 +25,9 @@ const Auth = () => {
       setAuthenticated(false);
     }
   }, [isFocused, connectedUserFid, userState]);
-  const handleSignIn = async () => {
-    await connectWithWarpcast();
+  const handleSignIn = async (email: string, password: string) => {
+    // await connectWithWarpcast();
+    await connectWithEmail(email, password);
   }
 
   const handleLogOut = async () => {
@@ -40,8 +44,8 @@ const Auth = () => {
           <View>
             <Profile handleLogOut={handleLogOut} userState={userState} />
           </View> :
-          <View className="h-full flex justify-center align-center items-center">
-            <View>
+          <SafeAreaView className="h-full flex justify-center align-center items-center">
+            <KeyboardAwareScrollView className="py-10">
               <Image
                 className="w-64 h-64 m-auto mb-10 rounded-full"
                 source={require("../../../assets/ReadCastLogoSmall.png")}
@@ -49,29 +53,20 @@ const Auth = () => {
               <Text className="text-2xl text-light text-center" style={{ fontFamily: "Metropolis-Bold" }}>Welcome, to ReadCast!</Text>
               <Text className="text-md text-light text-center" style={{ fontFamily: "Metropolis-Regular" }}>Let's get you signed in.</Text>
 
-              {/* {
-                !deeplinkUrl && */}
+              {
+                signInWithEmail ?
+                <SignInWithEmail setSignInWithEmail={setSignInWithEmail} handleSignIn={handleSignIn} /> : 
                 <View>
                   <Siwn fetchUserData={fetchUserData} setConnectedUserFid={setConnectedUserFid} />
-                  {/* <TouchableOpacity className="mt-4 bg-primary px-4 py-2 rounded-md" onPress={() => handleSignIn()}>
-                    <Text className="text-dark font-bold text-xl text-center" style={{ fontFamily: "Metropolis-Bold" }}>Sign in with Warpcast</Text>
-                  </TouchableOpacity> */}
+                  <View className="flex flex-row justify-center">
+                  <TouchableOpacity onPress={() => setSignInWithEmail(true)}>
+                    <Text className="text-md text-light" style={{fontFamily: "Metropolis-Bold"}}>Sign in with email</Text>
+                  </TouchableOpacity>
+                  </View>
                 </View>
-              {/* } */}
-            </View>
-            {/* {
-              deeplinkUrl ?
-                <View className="flex items-center mt-4">
-                  {
-                    REACT_APP_ENVIRONMENT === "simulator" ? <DeepLinkQRCode /> :
-                      <TouchableOpacity onPress={() => Linking.openURL(deeplinkUrl)} className="mt-4 bg-primary px-4 py-2 rounded-md" >
-                        <Text className="text-dark font-bold text-xl text-center" style={{ fontFamily: "Metropolis-Bold" }}>Sign in with Warpcast</Text>
-                      </TouchableOpacity>
-                  }
-                </View> :
-                null
-            } */}
-          </View>
+              }                
+            </KeyboardAwareScrollView>
+          </SafeAreaView>
       }
     </View>
   )

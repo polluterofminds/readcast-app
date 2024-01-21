@@ -13,7 +13,7 @@ const LibraryItem = ({ item }: LibraryItemProps) => {
 
   const renderBookType = () => {
     if (item.book_type && item.book_type === "audio") {
-      return <FontAwesome name="headphones" size={16} color="black" />
+      return <FontAwesome name="headphones" size={16} color="#92bcb0" />
     }
 
     if (item.book_type && (item.book_type === "paperback" || item.book_type === "hardcover")) {
