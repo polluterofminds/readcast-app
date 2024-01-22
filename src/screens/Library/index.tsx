@@ -1,6 +1,6 @@
 import { useIsFocused, useNavigation } from '@react-navigation/native'
 import React, { useEffect, useRef, useState } from 'react'
-import { View, TouchableOpacity, SafeAreaView, ScrollView, Text } from 'react-native'
+import { View, TouchableOpacity, SafeAreaView, ScrollView, Text, FlatList } from 'react-native'
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { FontAwesome5, AntDesign, MaterialCommunityIcons } from '@expo/vector-icons';
 import useSecureStorage from 'hooks/useSecureStorage';
@@ -11,7 +11,6 @@ import Results from './Results';
 import { useLibrary } from 'hooks/useLibrary';
 import BookFeed from '../Feed/BookFeed';
 import LibraryItem from './LibraryItem';
-import { FlatList } from 'react-native-gesture-handler';
 
 export type LibraryWithBook = {
   id: string;

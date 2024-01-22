@@ -1,6 +1,5 @@
 import React from 'react'
-import { View, Text } from 'react-native'
-import { FlatList } from 'react-native-gesture-handler'
+import { View, Text, FlatList } from 'react-native'
 import { Book } from 'types'
 import ResultItem from './ResultItem'
 import { Entypo } from '@expo/vector-icons';

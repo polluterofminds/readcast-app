@@ -18,9 +18,6 @@ export interface UserState {
 }
 
 interface UserProviderProps {
-  userState: UserState;
-  logOut: Function;
-  fetchUserData: Function;
   children: any;
 }
 

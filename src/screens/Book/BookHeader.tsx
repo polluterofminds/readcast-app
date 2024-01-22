@@ -25,7 +25,7 @@ import useSecureStorage from 'hooks/useSecureStorage';
 import { StorageKeys } from 'constants/storageKeys';
 import useToast from 'hooks/useToast';
 import Constants from 'expo-constants'
-import { TextInput } from 'react-native-gesture-handler';
+// import { TextInput } from 'react-native-gesture-handler';
 import CorrectionsModal from './CorrectionsModal';
 import LibraryModal from './LibraryModal';
 // const apiUrl = Constants?.expoConfig?.hostUri

@@ -1,8 +1,8 @@
 {
   "expo": {
-    "name": "readstack-app",
-    "slug": "readstack-app",
-    "version": "1.0.0",
+    "name": "ReadCast",
+    "slug": "readcast",
+    "version": "1.0.1",
     "scheme": "readcast",
     "ios": {
       "bundleIdentifier": "readcast",
@@ -33,7 +33,7 @@
     },
     "extra": {
       "eas": {
-        "projectId": "0017bbb2-6316-47b8-b973-9e3fb599855d"
+        "projectId": "aad65c14-8a49-4d9e-9bf2-b50617e73799"
       }
     },
     "plugins": [
