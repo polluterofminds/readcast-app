@@ -12,9 +12,10 @@ import { useIsFocused, useNavigation } from '@react-navigation/native';
 import useError from 'hooks/useError';
 import { useLibrary } from 'hooks/useLibrary';
 import Constants from 'expo-constants'
-const apiUrl = Constants?.expoConfig?.hostUri
-? `http://${Constants?.expoConfig?.hostUri?.split(`:`)?.shift()?.concat(`:3000`)}`
-: REACT_APP_API_URL
+// const apiUrl = Constants?.expoConfig?.hostUri
+// ? `http://${Constants?.expoConfig?.hostUri?.split(`:`)?.shift()?.concat(`:3000`)}`
+// : REACT_APP_API_URL
+const apiUrl = REACT_APP_API_URL;
 
 export default function Feed() {
   const [loading, setLoading] = useState(true);

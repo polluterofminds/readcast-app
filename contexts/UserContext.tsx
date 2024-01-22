@@ -4,9 +4,10 @@ import { REACT_APP_API_URL } from "@env";
 import { StorageKeys } from "constants/storageKeys";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Constants from 'expo-constants'
-const apiUrl = Constants?.expoConfig?.hostUri
-? `http://${Constants?.expoConfig?.hostUri?.split(`:`)?.shift()?.concat(`:3000`)}`
-: REACT_APP_API_URL
+// const apiUrl = Constants?.expoConfig?.hostUri
+// ? `http://${Constants?.expoConfig?.hostUri?.split(`:`)?.shift()?.concat(`:3000`)}`
+// : REACT_APP_API_URL
+const apiUrl = REACT_APP_API_URL;
 
 export interface UserState {
   username: string; 

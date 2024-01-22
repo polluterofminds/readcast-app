@@ -8,9 +8,10 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import Constants from 'expo-constants'
 import useToast from "hooks/useToast";
 import { useUser } from "hooks/useUser";
-const apiUrl = Constants?.expoConfig?.hostUri
-? `http://${Constants?.expoConfig?.hostUri?.split(`:`)?.shift()?.concat(`:3000`)}`
-: REACT_APP_API_URL
+// const apiUrl = Constants?.expoConfig?.hostUri
+// ? `http://${Constants?.expoConfig?.hostUri?.split(`:`)?.shift()?.concat(`:3000`)}`
+// : REACT_APP_API_URL
+const apiUrl = REACT_APP_API_URL;
 
 
 

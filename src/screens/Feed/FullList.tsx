@@ -8,9 +8,10 @@ import BookFeed from './BookFeed';
 import { REACT_APP_API_URL } from "@env"
 import useError from 'hooks/useError';
 import Constants from 'expo-constants'
-const apiUrl = Constants?.expoConfig?.hostUri
-? `http://${Constants?.expoConfig?.hostUri?.split(`:`)?.shift()?.concat(`:3000`)}`
-: REACT_APP_API_URL
+// const apiUrl = Constants?.expoConfig?.hostUri
+// ? `http://${Constants?.expoConfig?.hostUri?.split(`:`)?.shift()?.concat(`:3000`)}`
+// : REACT_APP_API_URL
+const apiUrl = REACT_APP_API_URL;
 
 interface FullListProps {
   route: any;
