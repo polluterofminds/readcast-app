@@ -1,6 +1,6 @@
 import React, { useEffect, useState, createContext } from "react";
 //  @ts-ignore
-import { REACT_APP_API_URL } from "@env";
+import { REACT_APP_API_URL } from "../config";
 import useSecureStorage from "hooks/useSecureStorage";
 import { StorageKeys } from "constants/storageKeys";
 import { Book, Library, LibraryWithBook } from "types";

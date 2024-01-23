@@ -1,6 +1,6 @@
 import { Text, View, Image, ScrollView } from 'react-native';
 //  @ts-ignore
-import { REACT_APP_API_URL } from "@env"
+import { REACT_APP_API_URL } from "../../../config"
 import { FontAwesome5, AntDesign, MaterialCommunityIcons } from '@expo/vector-icons';
 import { useEffect, useRef, useState } from 'react';
 import { Book } from 'types';

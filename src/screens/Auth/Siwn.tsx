@@ -1,6 +1,6 @@
 import { NeynarSigninButton, ISuccessMessage, Variant, Theme } from "@neynar/react-native-signin";
 //  @ts-ignore
-import { REACT_APP_NEYNAR_API_KEY, REACT_APP_NEYNAR_CLIENT_ID } from "@env";
+import { REACT_APP_NEYNAR_API_KEY, REACT_APP_NEYNAR_CLIENT_ID } from "../../../config";
 import { View } from "react-native";
 import useSecureStorage from "hooks/useSecureStorage";
 import { StorageKeys } from "constants/storageKeys";

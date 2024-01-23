@@ -1,7 +1,5 @@
-import { Text, View, Image, ScrollView, Pressable, TouchableOpacity } from 'react-native';
-import { REACT_APP_API_URL } from "@env"
+import { Text, View, ScrollView, TouchableOpacity } from 'react-native';
 import { EvilIcons } from '@expo/vector-icons';
-import { useEffect, useState } from 'react';
 import { Book } from 'types';
 import FeedItem from './FeedItem';
 import { useNavigation } from '@react-navigation/native';

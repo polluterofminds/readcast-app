@@ -5,7 +5,7 @@ import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { Book } from 'types';
 import BookFeed from './BookFeed';
 //  @ts-ignore
-import { REACT_APP_API_URL } from "@env"
+import { REACT_APP_API_URL } from "../../../config"
 import useError from 'hooks/useError';
 import Constants from 'expo-constants'
 // const apiUrl = Constants?.expoConfig?.hostUri

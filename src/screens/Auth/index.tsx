@@ -1,5 +1,4 @@
 import { ImageBackground, Text, TouchableOpacity, View, Linking, Image, ScrollView, SafeAreaView } from 'react-native'
-import { REACT_APP_API_URL, REACT_APP_ENVIRONMENT } from "@env"
 // import QRCode from 'react-native-qrcode-svg';
 import { useEffect, useState } from 'react';
 import 'react-native-get-random-values';

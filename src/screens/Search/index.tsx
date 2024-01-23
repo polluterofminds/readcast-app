@@ -1,7 +1,7 @@
 import useDebounce from 'hooks/debounce';
 import React, { useEffect, useState } from 'react'
 import { TextInput, View, Text } from 'react-native'
-import { REACT_APP_API_URL } from "@env"
+import { REACT_APP_API_URL } from "../../../config"
 import { Book } from 'types';
 import Results from './Results';
 import RecentSearches from './RecentSearches';

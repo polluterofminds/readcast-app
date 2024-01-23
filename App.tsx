@@ -9,7 +9,7 @@ import { UserProvider } from 'contexts/UserContext';
 import FlashMessage from "react-native-flash-message";
 import { LibraryProvider } from 'contexts/LibraryContext';
 import { MenuProvider } from 'react-native-popup-menu';
-import 'expo-dev-client';
+// import 'expo-dev-client';
 
 export default function App() {
   const { submitError } = useError();

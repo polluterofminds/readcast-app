@@ -5,7 +5,7 @@ import { TouchableOpacity, View, Text, Modal, ScrollView, TextInput } from 'reac
 import { Book } from 'types';
 import Constants from 'expo-constants'
 //  @ts-ignore
-import { REACT_APP_API_URL } from "@env";
+import { REACT_APP_API_URL } from "../../../config";
 
 // const apiUrl = Constants?.expoConfig?.hostUri
 // ? `http://${Constants?.expoConfig?.hostUri?.split(`:`)?.shift()?.concat(`:3000`)}`

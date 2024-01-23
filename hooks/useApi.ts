@@ -3,7 +3,7 @@ import Constants from "expo-constants";
 
 
 //  @ts-ignore
-import { REACT_APP_API_URL } from "@env";
+import { REACT_APP_API_URL } from "../config";
 
 const useApi = () => {
   const [apiUrl, setApiUrl] = useState("")

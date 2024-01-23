@@ -49,13 +49,19 @@
             "deploymentTarget": "16.0"
           }
         }
-      ], 
+      ],
       [
         "expo-updates",
         {
           "username": "polluterofminds"
         }
       ]
-    ]
+    ],
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/aad65c14-8a49-4d9e-9bf2-b50617e73799"
+    }
   }
 }

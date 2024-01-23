@@ -1,6 +1,6 @@
 import React, { useEffect, useState, createContext } from "react";
 //  @ts-ignore
-import { REACT_APP_API_URL } from "@env";
+import { REACT_APP_API_URL } from "../config";
 import { StorageKeys } from "constants/storageKeys";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Constants from 'expo-constants'

@@ -9,7 +9,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { Feather } from '@expo/vector-icons';
 import useWarpcastConnection from 'hooks/useWarpcast';
 //  @ts-ignore
-import { REACT_APP_API_URL } from "@env";
+import { REACT_APP_API_URL } from "../../../config";
 import { LibraryWithBook } from '../Library';
 import { useLibrary } from 'hooks/useLibrary';
 import { useUser } from 'hooks/useUser';

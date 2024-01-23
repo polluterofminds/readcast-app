@@ -1,5 +1,4 @@
 import { Text, View, Image, ScrollView, TouchableOpacity } from 'react-native';
-import { REACT_APP_API_URL } from "@env"
 import { EvilIcons } from '@expo/vector-icons';
 import { useEffect, useState } from 'react';
 import { Book } from 'types';

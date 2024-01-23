@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { AppState, Linking } from "react-native";
 //  @ts-ignore
-import { REACT_APP_API_URL } from "@env";
+import { REACT_APP_API_URL } from "../config";
 import useSecureStorage from "./useSecureStorage";
 import { StorageKeys } from "../constants/storageKeys";
 import { useUser } from "./useUser";

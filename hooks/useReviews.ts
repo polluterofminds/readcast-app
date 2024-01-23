@@ -1,5 +1,5 @@
 //  @ts-ignore
-import { REACT_APP_API_URL } from "@env"
+import { REACT_APP_API_URL } from "../config"
 import { Book, ReviewWithUser } from "types";
 import useError from "./useError";
 import { useState } from "react";

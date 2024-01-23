@@ -1,8 +1,6 @@
 import React from 'react';
-import { Text, View, Image, ScrollView, SafeAreaView } from 'react-native';
-import { REACT_APP_API_URL } from "@env"
+import { Text, View, ScrollView, SafeAreaView } from 'react-native';
 import { useEffect, useRef, useState } from 'react';
-import { ReviewWithUser } from 'types';
 import BookHeader from './BookHeader';
 import BookInfo from "./BookInfo";
 import {NavigationProp, ParamListBase, useIsFocused} from '@react-navigation/native';
