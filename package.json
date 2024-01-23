@@ -6,7 +6,9 @@
     "format": "eslint \"**/*.{js,jsx,ts,tsx}\" --fix && prettier \"**/*.{js,jsx,ts,tsx,json}\" --write",
     "ios": "expo run:ios",
     "start": "expo start",
-    "web": "expo start --web"
+    "web": "expo start --web", 
+    "ota:prod": "eas update --branch production --message \"Example update\"",
+    "ota:preview": "eas update --branch preview --message \"Example update\""
   },
   "dependencies": {
     "@exceptionless/react": "^3.0.5",

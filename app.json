@@ -2,7 +2,7 @@
   "expo": {
     "name": "ReadCast",
     "slug": "readcast",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "scheme": "readcast",
     "ios": {
       "bundleIdentifier": "readcast",
