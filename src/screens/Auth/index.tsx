@@ -54,17 +54,20 @@ const Auth = () => {
 
               {
                 signInWithEmail ?
-                <SignInWithEmail setSignInWithEmail={setSignInWithEmail} handleSignIn={handleSignIn} /> : 
-                <View>
-                  <Siwn fetchUserData={fetchUserData} setConnectedUserFid={setConnectedUserFid} />
-                  <View className="flex flex-row justify-center">
-                  <TouchableOpacity onPress={() => setSignInWithEmail(true)}>
-                    <Text className="text-md text-light" style={{fontFamily: "Metropolis-Bold"}}>Sign in with email</Text>
-                  </TouchableOpacity>
+                  <SignInWithEmail setSignInWithEmail={setSignInWithEmail} handleSignIn={handleSignIn} /> :
+                  <View>
+                    <Siwn fetchUserData={fetchUserData} setConnectedUserFid={setConnectedUserFid} />
+                    <View className="flex flex-row justify-center">
+                      <TouchableOpacity onPress={() => setSignInWithEmail(true)}>
+                        <Text className="text-md text-light" style={{ fontFamily: "Metropolis-Bold" }}>Sign in with email</Text>
+                      </TouchableOpacity>
+                    </View>
                   </View>
-                </View>
-              }                
+              }
             </KeyboardAwareScrollView>
+            <View className="mt-6">
+              <Text className="text-light text-xs" style={{ fontFamily: "Metropolis-Regular" }}>Build: {BUILD_NUMBER}</Text>
+            </View>
           </SafeAreaView>
       }
     </View>
