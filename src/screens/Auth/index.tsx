@@ -10,6 +10,7 @@ import { useIsFocused } from '@react-navigation/native';
 import Siwn from './Siwn';
 import SignInWithEmail from './SignInWithEmail';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { BUILD_NUMBER } from 'config';
 
 const Auth = () => {
   const [authenticated, setAuthenticated] = useState(false);
