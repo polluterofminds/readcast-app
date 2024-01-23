@@ -65,10 +65,10 @@ const Auth = () => {
                     </View>
                   </View>
               }
-            </KeyboardAwareScrollView>
-            <View className="mt-6">
-              <Text className="text-light text-xs" style={{ fontFamily: "Metropolis-Regular" }}>Build: {BUILD_NUMBER}</Text>
-            </View>
+            <View className="mb-6 flex justify-center">
+              <Text className="mt-10 text-center text-light text-xs" style={{ fontFamily: "Metropolis-Regular" }}>Build: {BUILD_NUMBER}</Text>
+            </View> 
+            </KeyboardAwareScrollView>           
           </SafeAreaView>
       }
     </View>
