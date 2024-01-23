@@ -4,6 +4,7 @@ import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { useNavigation } from '@react-navigation/native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { UserState } from 'contexts/UserContext';
+import { BUILD_NUMBER } from 'config';
 
 interface ProfileProps {
   handleLogOut: Function;
@@ -50,6 +51,9 @@ const Profile = ({ handleLogOut, userState }: ProfileProps) => {
             <Text className="bg-contrast p-2 rounded-md text-light font-bold ml-2 text-lg" style={{ fontFamily: "Metropolis-Bold" }}>Log out</Text>
           </View>
         </TouchableOpacity>
+      </View>
+      <View className="mt-6">
+        <Text className="text-light text-xs" style={{fontFamily: "Metropolis-Regular"}}>Build: {BUILD_NUMBER}</Text>
       </View>
     </SafeAreaView>
   )

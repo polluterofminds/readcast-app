@@ -43,7 +43,7 @@ const useReviews = () => {
         body: JSON.stringify({
           review: text, 
           book, 
-          stars, 
+          stars: stars ?  stars : null, 
           fid: connectedUserFid
         })
       })
