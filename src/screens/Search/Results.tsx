@@ -12,7 +12,7 @@ interface ResultsProps {
 
 const Results = ({ results, emptyState, submitError }: ResultsProps) => {
   return (
-    <View className="mt-4">
+    <View className="mt-4 pb-64">
       <Text className="text-light font-bold text-xl mb-4" style={{fontFamily: "Metropolis-Bold"}}>Search results</Text>
       {
         emptyState ?
@@ -26,7 +26,8 @@ const Results = ({ results, emptyState, submitError }: ResultsProps) => {
           <ResultItem submitError={submitError} book={item} />
         )}
         keyExtractor={item => item.id}
-        numColumns={2}
+        numColumns={1}
+        contentContainerStyle={{ paddingBottom: 250, margin: "auto" }}
       />
       }      
     </View>

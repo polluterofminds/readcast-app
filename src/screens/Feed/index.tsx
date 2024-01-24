@@ -17,6 +17,8 @@ import Constants from 'expo-constants'
 // : REACT_APP_API_URL
 const apiUrl = REACT_APP_API_URL;
 
+console.log(Constants.expoConfig?.hostUri)
+
 export default function Feed() {
   const [loading, setLoading] = useState(true);
   const [offset, setOffset] = useState(0);
