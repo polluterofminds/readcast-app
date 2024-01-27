@@ -22,7 +22,7 @@ const Newest = ({ newest, setNewestCoords, handleBookPress } : { newest: Book[],
         {
           newest.map((b: Book) => {
             return (
-              <FeedItem handleBookPress={handleBookPress} key={b?.title} book={b} />
+              <FeedItem handleBookPress={handleBookPress} key={b?.id} book={b} />
             )
           })
         }

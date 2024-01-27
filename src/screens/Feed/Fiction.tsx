@@ -22,7 +22,7 @@ const Fiction = ({ fiction, setFictionCoords, handleBookPress } : { fiction: Boo
         {
           fiction.map((b: Book) => {
             return (
-              <FeedItem handleBookPress={handleBookPress} key={b.title} book={b} />
+              <FeedItem handleBookPress={handleBookPress} key={b.id} book={b} />
             )
           })
         }

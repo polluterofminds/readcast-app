@@ -22,7 +22,7 @@ const Trending = ({ trending, setTrendingCoords, handleBookPress }: { trending: 
         {
           trending.map((b: Book) => {
             return (
-              <FeedItem handleBookPress={handleBookPress} key={b.title} book={b} />
+              <FeedItem handleBookPress={handleBookPress} key={b.id} book={b} />
             )
           })
         }
