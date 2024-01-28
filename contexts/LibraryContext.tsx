@@ -97,6 +97,7 @@ export const LibraryProvider = (
           }
         })
       })
+      setToastMessage("success", "Added!");
       await fetchLibraryData()
     } catch (error) {
       console.log("Add to library error");

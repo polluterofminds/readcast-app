@@ -37,6 +37,7 @@ export default function App() {
         showMessage({
           type: "info", 
           message: "A new update is available, click to install",
+          autoHide: false,
           onPress: async () => {
             await Updates.fetchUpdateAsync();
             await Updates.reloadAsync();

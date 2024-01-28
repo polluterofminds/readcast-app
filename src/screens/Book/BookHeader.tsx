@@ -53,9 +53,9 @@ const BookHeader = ({ book, navigation }: BookHeaderProps) => {
   const isFocused = useIsFocused();
   const { setToastMessage, hideToastMessage } = useToast();
 
-  useEffect(() => {
+  useEffect(() => {  
     const fullList = [...libraryState.tbr, ...libraryState.inProgress, ...libraryState.completed];
-    const foundBook = fullList.find((l: LibraryWithBook) => l.book_id === book.id);
+    const foundBook = fullList.find((l: LibraryWithBook) => l.books.title_author_key === `${book.title}-${book.author}`);    
     if (foundBook) {
       setLibraryBook(foundBook)
     } else {
@@ -89,7 +89,7 @@ const BookHeader = ({ book, navigation }: BookHeaderProps) => {
   }
 
   const renderLibraryAction = () => {
-    if (libraryBook && libraryBook.status === "tbr") {
+    if (libraryBook && (libraryBook.status === "tbr" || libraryBook.status === null)) {
       return (
         <TouchableOpacity onPress={() => setModalVisible(true)}>
           <View className="flex flex-row items-center">

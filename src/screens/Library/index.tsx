@@ -15,7 +15,8 @@ export type LibraryWithBook = {
   book_id: string;
   book_type?: string;
   date_completed?: string;
-  books: Book
+  books: Book, 
+  title_author_key: string;
 }
 
 type LibraryState = {

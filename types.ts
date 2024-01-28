@@ -7,6 +7,7 @@ export interface Book {
   review_count?: number;
   category: string;
   reviews: number;
+  title_author_key: string;
 }
 
 export interface Review {
