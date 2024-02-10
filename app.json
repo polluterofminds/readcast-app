@@ -29,7 +29,8 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/ReadCastLogoSmall.png",
         "backgroundColor": "#181A1A"
-      }
+      },
+      "package": "com.polluterofminds.readcast"
     },
     "extra": {
       "eas": {
