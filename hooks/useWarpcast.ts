@@ -6,7 +6,6 @@ import { REACT_APP_API_URL } from "../config";
 import useSecureStorage from "./useSecureStorage";
 import { StorageKeys } from "../constants/storageKeys";
 import { useUser } from "./useUser";
-import Constants from 'expo-constants'
 // const apiUrl = Constants?.expoConfig?.hostUri
 //   ? `http://${Constants?.expoConfig?.hostUri?.split(`:`)?.shift()?.concat(`:3000`)}`
 //   : REACT_APP_API_URL

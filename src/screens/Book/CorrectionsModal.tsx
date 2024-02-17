@@ -3,7 +3,6 @@ import useToast from 'hooks/useToast';
 import React, { useState } from 'react'
 import { TouchableOpacity, View, Text, Modal, ScrollView, TextInput } from 'react-native'
 import { Book } from 'types';
-import Constants from 'expo-constants'
 //  @ts-ignore
 import { REACT_APP_API_URL } from "../../../config";
 

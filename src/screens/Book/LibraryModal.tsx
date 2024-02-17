@@ -4,7 +4,6 @@ import { Book, LibraryWithBook } from 'types';
 import DateTimePicker, { DateType } from 'react-native-ui-datepicker';
 import dayjs from 'dayjs';
 import { UserState } from 'contexts/UserContext';
-import Constants from 'expo-constants'
 //  @ts-ignore
 import { REACT_APP_API_URL } from "@env";
 import { useLibrary } from 'hooks/useLibrary';

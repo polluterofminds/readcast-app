@@ -4,8 +4,6 @@ import { REACT_APP_API_URL } from "../config";
 import useSecureStorage from "hooks/useSecureStorage";
 import { StorageKeys } from "constants/storageKeys";
 import { Book, Library, LibraryWithBook } from "types";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import Constants from 'expo-constants'
 import useToast from "hooks/useToast";
 import { useUser } from "hooks/useUser";
 // const apiUrl = Constants?.expoConfig?.hostUri

@@ -36,6 +36,7 @@
     "react-native-dotenv": "^3.4.9",
     "react-native-error-boundary": "^1.2.4",
     "react-native-flash-message": "^0.4.2",
+    "react-native-gesture-handler": "~2.12.0",
     "react-native-get-random-values": "~1.9.0",
     "react-native-keyboard-aware-scroll-view": "^0.9.5",
     "react-native-popup-menu": "^0.16.1",
@@ -46,8 +47,7 @@
     "react-native-svg": "13.9.0",
     "react-native-ui-datepicker": "^1.0.11",
     "react-native-webview": "13.2.2",
-    "text-encoding-polyfill": "^0.6.7",
-    "react-native-gesture-handler": "~2.12.0"
+    "text-encoding-polyfill": "^0.6.7"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

@@ -7,7 +7,6 @@ import BookFeed from './BookFeed';
 //  @ts-ignore
 import { REACT_APP_API_URL } from "../../../config"
 import useError from 'hooks/useError';
-import Constants from 'expo-constants'
 // const apiUrl = Constants?.expoConfig?.hostUri
 // ? `http://${Constants?.expoConfig?.hostUri?.split(`:`)?.shift()?.concat(`:3000`)}`
 // : REACT_APP_API_URL

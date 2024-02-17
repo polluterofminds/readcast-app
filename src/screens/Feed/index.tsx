@@ -1,16 +1,11 @@
-import { Text, View, Image, ScrollView } from 'react-native';
+import { Text, View, ScrollView } from 'react-native';
 //  @ts-ignore
 import { REACT_APP_API_URL } from "../../../config"
 import { useEffect, useRef, useState } from 'react';
 import { Book } from 'types';
-import Trending from './Trending';
-import Newest from './Newest';
-import Fiction from './Fiction';
-import { TouchableOpacity } from 'react-native';
 import { useIsFocused, useNavigation } from '@react-navigation/native';
 import useError from 'hooks/useError';
 import { useLibrary } from 'hooks/useLibrary';
-import Constants from 'expo-constants'
 import CategorySelector from './CategorySelector';
 import Category from './Category';
 // const apiUrl = Constants?.expoConfig?.hostUri
