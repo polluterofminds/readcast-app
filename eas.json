@@ -13,7 +13,11 @@
       "channel": "preview"
     },
     "production": {
-      "channel": "production"
+      "channel": "production", 
+      "android": {
+        "buildType": "app-bundle",
+        "image": "latest"
+      }
     }
   },
   "submit": {

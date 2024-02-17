@@ -24,17 +24,10 @@ import {
 import useSecureStorage from 'hooks/useSecureStorage';
 import { StorageKeys } from 'constants/storageKeys';
 import useToast from 'hooks/useToast';
-import Constants from 'expo-constants'
-// import { TextInput } from 'react-native-gesture-handler';
 import CorrectionsModal from './CorrectionsModal';
 import LibraryModal from './LibraryModal';
-// const apiUrl = Constants?.expoConfig?.hostUri
-// ? `http://${Constants?.expoConfig?.hostUri?.split(`:`)?.shift()?.concat(`:3000`)}`
-// : REACT_APP_API_URL
+
 const apiUrl = REACT_APP_API_URL;
-
-// const { ContextMenu, SlideInMenu, Popover } = renderers;
-
 
 interface BookHeaderProps {
   book: Book;
