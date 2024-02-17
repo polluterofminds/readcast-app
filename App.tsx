@@ -9,9 +9,12 @@ import { UserProvider } from 'contexts/UserContext';
 import FlashMessage, { hideMessage, showMessage } from "react-native-flash-message";
 import { LibraryProvider } from 'contexts/LibraryContext';
 import { MenuProvider } from 'react-native-popup-menu';
+import * as SplashScreen from 'expo-splash-screen';
 // import 'expo-dev-client';
 import * as Updates from 'expo-updates';
 import { useEffect } from 'react';
+
+SplashScreen.preventAutoHideAsync();
 
 export default function App() {
   const { submitError } = useError();
@@ -26,8 +29,14 @@ export default function App() {
   });
 
   useEffect(() => {
-    checkForUpdates();
-  }, []);
+    const prepare = async () => {      
+      checkForUpdates();
+      await SplashScreen.hideAsync();
+    }
+    if(fontsLoaded) {
+      prepare();
+    }
+  }, [fontsLoaded]);
 
   const checkForUpdates = async () => {
     try {

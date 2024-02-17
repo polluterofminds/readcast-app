@@ -48,7 +48,7 @@ const CategorySelector = ({ handleSelectSection, selectedTab }: CategorySelector
       <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
         {categories.map((c: CategoryOptions) => {
           return (
-            <CategoryOption selection={c.name} icon={c.icon} />
+            <CategoryOption key={c.name} selection={c.name} icon={c.icon} />
           )
         })}
       </ScrollView>

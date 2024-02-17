@@ -1,4 +1,4 @@
-import Constants from 'expo-constants'
+// import Constants from 'expo-constants'
 
 export const REACT_APP_API_URL = "https://api.readcast.xyz"
 // export const REACT_APP_API_URL = `http://${Constants?.expoConfig?.hostUri?.split(`:`)?.shift()?.concat(`:3000`)}`
