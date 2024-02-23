@@ -29,14 +29,9 @@ export default function App() {
   });
 
   useEffect(() => {
-    const prepare = async () => {      
       checkForUpdates();
-      await SplashScreen.hideAsync();
-    }
-    if(fontsLoaded) {
-      prepare();
-    }
-  }, [fontsLoaded]);
+      // await SplashScreen.hideAsync();
+  }, []);
 
   const checkForUpdates = async () => {
     try {
