@@ -66,8 +66,8 @@ const Library = () => {
           numColumns={2}
           contentContainerStyle={{ paddingBottom: 250, margin: "auto", marginTop: 20 }}
         />
-      case "in-progress":
-        <FlatList
+      case "in-progress":        
+        return <FlatList
           data={libraryState.inProgress}
           renderItem={({ item }) => (
             <LibraryItem item={item} />

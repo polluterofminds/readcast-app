@@ -26,6 +26,7 @@
       "**/*"
     ],
     "android": {
+      "versionCode": 3,
       "adaptiveIcon": {
         "foregroundImage": "./assets/ReadCastLogoSmall.png",
         "backgroundColor": "#181A1A"

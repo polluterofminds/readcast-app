@@ -26,6 +26,7 @@ import { StorageKeys } from 'constants/storageKeys';
 import useToast from 'hooks/useToast';
 import CorrectionsModal from './CorrectionsModal';
 import LibraryModal from './LibraryModal';
+import LibraryAction from './LibraryAction';
 
 const apiUrl = REACT_APP_API_URL;
 
@@ -38,6 +39,7 @@ interface BookHeaderProps {
 const BookHeader = ({ book, navigation }: BookHeaderProps) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [correctionModalVisible, setCorrectionModalVisible] = useState(false);
+  const [newStatus, setStatus] = useState("");
   const [libraryBook, setLibraryBook] = useState<LibraryWithBook | null>(null);
   const { connectedUserFid } = useWarpcastConnection();
   const { getSecureValue } = useSecureStorage();
@@ -45,6 +47,8 @@ const BookHeader = ({ book, navigation }: BookHeaderProps) => {
   const { userState } = useUser();
   const isFocused = useIsFocused();
   const { setToastMessage, hideToastMessage } = useToast();
+
+  console.log(libraryBook?.status)
 
   useEffect(() => {  
     const fullList = [...libraryState.tbr, ...libraryState.inProgress, ...libraryState.completed];
@@ -79,6 +83,11 @@ const BookHeader = ({ book, navigation }: BookHeaderProps) => {
       console.log("Remove from library error");
       console.log(error);
     }
+  }
+
+  const setNewStatus = (newStatus: string) => {
+    setStatus(newStatus)
+    setModalVisible(true);
   }
 
   const renderLibraryAction = () => {
@@ -192,7 +201,8 @@ const BookHeader = ({ book, navigation }: BookHeaderProps) => {
         </View>
         <View className="absolute -bottom-4 w-[95%] left-[2.5%] m-auto">
           <View className="flex w-full flex-row bg-accent py-4 px-6 rounded-md m-auto justify-center">
-            {renderLibraryAction()}
+            {/* {renderLibraryAction()} */}
+            <LibraryAction book={book} setNewStatus={setNewStatus} libraryBook={libraryBook} />
             <Text className="text-light mx-4 text-2xl" style={{ fontFamily: "Metropolis-Light" }}>|</Text>
             <TouchableOpacity onPress={userState?.fid ? () => navigation.navigate("Review", { book, libraryBook }) : () => navigation.navigate("Auth")}>
               <View className="flex flex-row items-center">
@@ -204,7 +214,7 @@ const BookHeader = ({ book, navigation }: BookHeaderProps) => {
         </View>
       </View>
       {/* Library Modal */}
-      <LibraryModal fetchAndUpdate={fetchAndUpdate} book={book} userState={userState} libraryBook={libraryBook} setModalVisible={setModalVisible} modalVisible={modalVisible} />
+      <LibraryModal newStatus={newStatus} fetchAndUpdate={fetchAndUpdate} book={book} userState={userState} libraryBook={libraryBook} setModalVisible={setModalVisible} modalVisible={modalVisible} />
       {/* Submit correction modal */}
       <CorrectionsModal book={book} userState={userState} setCorrectionModalVisible={setCorrectionModalVisible} correctionModalVisible={correctionModalVisible} />
     </ImageBackground>

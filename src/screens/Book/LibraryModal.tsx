@@ -21,9 +21,10 @@ interface LibraryModalProps {
   userState: UserState;
   book: Book;
   fetchAndUpdate: Function;
+  newStatus: string;
 }
 
-const LibraryModal = ({ modalVisible, setModalVisible, libraryBook, userState, book, fetchAndUpdate }: LibraryModalProps) => {
+const LibraryModal = ({ modalVisible, setModalVisible, libraryBook, userState, book, fetchAndUpdate, newStatus }: LibraryModalProps) => {
   const [bookFormat, setBookFormat] = useState("paperback");
   const [dateCompleted, setDateCompleted] = useState<any>(dayjs());
   const [hasDateChanged, setHasDateChanged] = useState(false);
@@ -94,7 +95,7 @@ const LibraryModal = ({ modalVisible, setModalVisible, libraryBook, userState, b
             })
           }
           {
-            libraryBook && libraryBook.status === "in-progress" &&
+            newStatus === "completed" &&
             <View className="mt-4 pb-6">
               <Text className="ml-2 text-lg text-light" style={{ fontFamily: "Metropolis-Bold" }}>Date finished (optional)</Text>
               <View className="mt-2 bg-lightest text-dark rounded-md">
@@ -112,9 +113,9 @@ const LibraryModal = ({ modalVisible, setModalVisible, libraryBook, userState, b
                 <Text className="mr-4 text-lightest text-lg" style={{ fontFamily: "Metropolis-Bold" }}>Cancel</Text>
               </TouchableOpacity>
               <TouchableOpacity
-                onPress={() => updateLibrary(libraryBook && libraryBook.status === "tbr" ? "in-progress" : "completed")}>
+                onPress={() => updateLibrary(newStatus)}>
                 <View className="bg-primary w-30 px-2 py-1 rounded-lg">
-                  <Text className="text-dark text-lg" style={{ fontFamily: "Metropolis-Bold" }}>{libraryBook && libraryBook.status === "tbr" ? "Mark as started" : "Mark as completed"}</Text>
+                  <Text className="text-dark text-lg" style={{ fontFamily: "Metropolis-Bold" }}>{newStatus === "in-progress" ? "Mark as in-progress" : "Mark as completed"}</Text>
                 </View>
               </TouchableOpacity>
             </View>

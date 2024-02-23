@@ -52,6 +52,7 @@ const Search = () => {
       setEmptyState(false);
       setSearching(true);
       generateEllipsis();
+      console.log("searching...")
       const res = await fetch(`${apiUrl}/books/search?terms=${debouncedValue}`)
       const data = await res.json();
       if (data.length === 0) {

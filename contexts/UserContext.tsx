@@ -46,6 +46,7 @@ export const UserProvider = (
 
   const fetchUserData = async () => {
     try {
+      console.log("Fetching...")
       const userFid = await AsyncStorage.getItem(StorageKeys.CONNECTED_FID);
       if(userFid) {
         const res = await fetch(`${apiUrl}/users/${userFid}`)
