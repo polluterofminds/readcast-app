@@ -48,8 +48,6 @@ const BookHeader = ({ book, navigation }: BookHeaderProps) => {
   const isFocused = useIsFocused();
   const { setToastMessage, hideToastMessage } = useToast();
 
-  console.log(libraryBook?.status)
-
   useEffect(() => {  
     const fullList = [...libraryState.tbr, ...libraryState.inProgress, ...libraryState.completed];
     const foundBook = fullList.find((l: LibraryWithBook) => l.books.title_author_key === `${book.title}-${book.author}`);    

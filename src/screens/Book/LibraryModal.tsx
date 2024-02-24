@@ -28,18 +28,22 @@ const LibraryModal = ({ modalVisible, setModalVisible, libraryBook, userState, b
   const [bookFormat, setBookFormat] = useState("paperback");
   const [dateCompleted, setDateCompleted] = useState<any>(dayjs());
   const [hasDateChanged, setHasDateChanged] = useState(false);
-  const { updateLibraryStatus } = useLibrary();
+  const { updateLibraryStatus, addToLibrary } = useLibrary();
 
   useEffect(() => {
     setBookFormat(libraryBook?.book_type || "paperback");
   }, [libraryBook]);
 
   const updateLibrary = async (newStatus: string) => {
-    await updateLibraryStatus(newStatus, libraryBook, book, {
+    const status = {
       status: newStatus,
       book_type: bookFormat,
       date_completed: hasDateChanged ? dateCompleted : null
-    })
+    }
+    if(!libraryBook) {
+      await addToLibrary(book, status)
+    }
+    await updateLibraryStatus(newStatus, libraryBook, book, status)
     setModalVisible(false);
     await fetchAndUpdate();
     setHasDateChanged(false);
