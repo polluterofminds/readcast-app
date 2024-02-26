@@ -10,6 +10,7 @@ import { useNavigation } from '@react-navigation/native';
 import useReviews from 'hooks/useReviews';
 import useToast from 'hooks/useToast';
 import { useLibrary } from 'hooks/useLibrary';
+import { FONTS } from 'constants/fonts';
 
 interface ReviewFormProps {
   book: Book;
@@ -133,15 +134,15 @@ const ReviewForm = ({ book, libraryBook }: ReviewFormProps) => {
 
   return (
     <View className="pb-8">
-      <Text className="text-3xl text-light" style={{ fontFamily: "Metropolis-Bold" }}>Add your review</Text>
-      <Text className="text-xl text-light" style={{ fontFamily: "Metropolis-Regular" }}>Write a few senteces about your thoughts on this book, star ratings are optional.</Text>
+      <Text className="text-3xl text-light" style={{ fontFamily: FONTS.Heavy }}>Add your review</Text>
+      <Text className="text-xl text-light" style={{ fontFamily: FONTS.Middle }}>Write a few senteces about your thoughts on this book, star ratings are optional.</Text>
       <View className="mt-4">
-        <TextInput onChangeText={(text) => setReviewText(text)} value={reviewText} placeholderTextColor="#dfebeb" className="h-28 text-light text-lg border border-light rounded-md p-4" multiline={true} maxLength={240} placeholder='Your review' style={{ fontFamily: "Metropolis-Regular" }}></TextInput>
+        <TextInput onChangeText={(text) => setReviewText(text)} value={reviewText} placeholderTextColor="#dfebeb" className="h-28 text-light text-lg border border-light rounded-md p-4" multiline={true} maxLength={240} placeholder='Your review' style={{ fontFamily: FONTS.Middle }}></TextInput>
         <View className="flex flex-row justify-end">
-          <Text className="text-xs text-light" style={{ fontFamily: "Metropolis-Regular" }}>{reviewText.length}/240</Text>
+          <Text className="text-xs text-light" style={{ fontFamily: FONTS.Middle }}>{reviewText.length}/240</Text>
         </View>
         <View className="mt-2">
-          <Text className="text-light text-lg" style={{ fontFamily: "Metropolis-Bold" }}>How many stars do you give this book?</Text>
+          <Text className="text-light text-lg" style={{ fontFamily: FONTS.Heavy }}>How many stars do you give this book?</Text>
           <View className="flex flex-row justify-around mt-2">
             {
               stars.map((s: any, index: number) => {
@@ -166,13 +167,13 @@ const ReviewForm = ({ book, libraryBook }: ReviewFormProps) => {
                 onValueChange={toggleComplete}
                 value={markComplete}
               />
-              <Text className="ml-2 text-lg text-light" style={{ fontFamily: "Metropolis-Bold" }}>Mark as read in your library?</Text>
+              <Text className="ml-2 text-lg text-light" style={{ fontFamily: FONTS.Heavy }}>Mark as read in your library?</Text>
             </View>
           }
           {
             markComplete &&
             <View className="mt-4 pb-6">
-              <Text className="ml-2 text-lg text-light" style={{ fontFamily: "Metropolis-Bold" }}>Date finished (optional)</Text>
+              <Text className="ml-2 text-lg text-light" style={{ fontFamily: FONTS.Heavy }}>Date finished (optional)</Text>
               <View className="mt-2 bg-lightest text-dark rounded-md">
                 <DateTimePicker
                   value={date}
@@ -183,7 +184,7 @@ const ReviewForm = ({ book, libraryBook }: ReviewFormProps) => {
           }
           <View className="mt-6 flex flex-row justify-end">
             <TouchableOpacity onPress={() => handleSubmit()} disabled={isDisabled()} className={isDisabled() ? "w-44 rounded-md px-4 py-2 bg-lightest" : "bg-primary w-44 rounded-md px-4 py-2"}>
-              <Text className="text-center text-dark" style={{ fontFamily: "Metropolis-Bold" }}>Add review</Text>
+              <Text className="text-center text-dark" style={{ fontFamily: FONTS.Heavy }}>Add review</Text>
             </TouchableOpacity>
           </View>
         </View>

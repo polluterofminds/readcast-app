@@ -5,6 +5,7 @@ import Search from '../screens/Search';
 import HomeStackComponent from './home-stack';
 import Library from '~/screens/Library';
 import { Ionicons } from '@expo/vector-icons';
+import { FONTS } from 'constants/fonts';
 
 const Tab = createBottomTabNavigator();
 // const HomeStack = createStackNavigator();
@@ -24,9 +25,9 @@ export default function TabLayout({ navigation }: TabLayoutProps) {
   return (
     <Tab.Navigator
       screenOptions={{
-        tabBarActiveTintColor: '#EAF4F4',
+        tabBarActiveTintColor: '#0E0E0E',
         tabBarStyle: {
-          backgroundColor: '#181A1A',
+          backgroundColor: '#fff',
           paddingTop: 10
         },
       }}
@@ -57,7 +58,7 @@ export default function TabLayout({ navigation }: TabLayoutProps) {
             <View className="w-full p-4 flex flex-row h-20 items-center mt-2">
               <TouchableOpacity onPress={() => navigation.goBack()}><TabBarIcon name="chevron-left" color="#EAF4F4" /></TouchableOpacity>
               <View className="ml-4">
-                <Text className="text-3xl font-bold text-light" style={{fontFamily: "Metropolis-Bold"}}>Library</Text>
+                <Text className="text-3xl font-bold text-light" style={{fontFamily: FONTS.Heavy}}>Library</Text>
                 <View className="border-b-4 border-primary"></View>
               </View>
             </View>

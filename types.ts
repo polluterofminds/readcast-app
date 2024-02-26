@@ -5,7 +5,7 @@ export interface Book {
   description: string;
   thumbnail: string;
   review_count?: number;
-  category: string;
+  categories: string;
   reviews: number;
   title_author_key: string;
 }

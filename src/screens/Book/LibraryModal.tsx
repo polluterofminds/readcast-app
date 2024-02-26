@@ -7,6 +7,7 @@ import { UserState } from 'contexts/UserContext';
 //  @ts-ignore
 import { REACT_APP_API_URL } from "@env";
 import { useLibrary } from 'hooks/useLibrary';
+import { FONTS } from 'constants/fonts';
 
 // const apiUrl = Constants?.expoConfig?.hostUri
 //   ? `http://${Constants?.expoConfig?.hostUri?.split(`:`)?.shift()?.concat(`:3000`)}`
@@ -85,14 +86,14 @@ const LibraryModal = ({ modalVisible, setModalVisible, libraryBook, userState, b
       }}>
       <View className="bg-dark p-6 h-screen flex justify-center items-center">
         <ScrollView>
-          <Text className="text-2xl text-light" style={{ fontFamily: "Metropolis-Bold" }}>What format {libraryBook && libraryBook.status === "tbr" ? "are you reading this book in?" : "did you read this book in?"}</Text>
+          <Text className="text-2xl text-light" style={{ fontFamily: FONTS.Heavy }}>What format {libraryBook && libraryBook.status === "tbr" ? "are you reading this book in?" : "did you read this book in?"}</Text>
           {
             options.map((o: any) => {
               return (
                 <TouchableOpacity onPress={o.onClick} key={o.text}>
                   <View className="mt-2 flex flex-row items-center">
                     <View className={o.isSelected ? "h-8 w-8 rounded-lg bg-primary" : "h-8 w-8 rounded-lg border border-primary"}></View>
-                    <Text className="ml-2 text-lg text-light" style={{ fontFamily: "Metropolis-Regular" }}>{o.text}</Text>
+                    <Text className="ml-2 text-lg text-light" style={{ fontFamily: FONTS.Middle }}>{o.text}</Text>
                   </View>
                 </TouchableOpacity>
               )
@@ -101,7 +102,7 @@ const LibraryModal = ({ modalVisible, setModalVisible, libraryBook, userState, b
           {
             newStatus === "completed" &&
             <View className="mt-4 pb-6">
-              <Text className="ml-2 text-lg text-light" style={{ fontFamily: "Metropolis-Bold" }}>Date finished (optional)</Text>
+              <Text className="ml-2 text-lg text-light" style={{ fontFamily: FONTS.Heavy }}>Date finished (optional)</Text>
               <View className="mt-2 bg-lightest text-dark rounded-md">
                 <DateTimePicker
                   value={dateCompleted}
@@ -114,12 +115,12 @@ const LibraryModal = ({ modalVisible, setModalVisible, libraryBook, userState, b
             <View className="flex flex-row items-center">
               <TouchableOpacity
                 onPress={() => setModalVisible(!modalVisible)}>
-                <Text className="mr-4 text-lightest text-lg" style={{ fontFamily: "Metropolis-Bold" }}>Cancel</Text>
+                <Text className="mr-4 text-lightest text-lg" style={{ fontFamily: FONTS.Heavy }}>Cancel</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 onPress={() => updateLibrary(newStatus)}>
                 <View className="bg-primary w-30 px-2 py-1 rounded-lg">
-                  <Text className="text-dark text-lg" style={{ fontFamily: "Metropolis-Bold" }}>{newStatus === "in-progress" ? "Mark as in-progress" : "Mark as completed"}</Text>
+                  <Text className="text-dark text-lg" style={{ fontFamily: FONTS.Heavy }}>{newStatus === "in-progress" ? "Mark as in-progress" : "Mark as completed"}</Text>
                 </View>
               </TouchableOpacity>
             </View>

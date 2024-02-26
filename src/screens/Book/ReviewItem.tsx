@@ -2,6 +2,7 @@ import React from 'react'
 import { Image, View, Text } from 'react-native';
 import { ReviewWithUser } from 'types'
 import { Ionicons } from '@expo/vector-icons';
+import { FONTS } from 'constants/fonts';
 
 interface ReviewItemProps {
   review: ReviewWithUser;
@@ -24,9 +25,9 @@ const ReviewItem = ({ review }: ReviewItemProps) => {
           />
       }
       <View className="ml-4" style={{ flexShrink: 1 }}>
-        <Text style={{fontFamily: "Metropolis-Bold", flexShrink: 1}} className="text-lg font-semibold text-light">{review?.users?.display_name || review?.users?.username}</Text>
-        <Text style={{fontFamily: "Metropolis-Regular", flexShrink: 1}} className="text-light text-md">{review?.users?.display_name && review?.users?.username ? review?.users?.username : review?.users?.fid}</Text>
-        <Text style={{fontFamily: "Metropolis-Regular", flexShrink: 1}} className="mt-2 text-light text-md">{review.review}</Text>
+        <Text style={{fontFamily: FONTS.Heavy, flexShrink: 1}} className="text-lg font-semibold text-light">{review?.users?.display_name || review?.users?.username}</Text>
+        <Text style={{fontFamily: FONTS.Middle, flexShrink: 1}} className="text-light text-md">{review?.users?.display_name && review?.users?.username ? review?.users?.username : review?.users?.fid}</Text>
+        <Text style={{fontFamily: FONTS.Middle, flexShrink: 1}} className="mt-2 text-light text-md">{review.review}</Text>
       </View>
     </View>
   )

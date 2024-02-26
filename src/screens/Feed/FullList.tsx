@@ -7,6 +7,7 @@ import BookFeed from './BookFeed';
 //  @ts-ignore
 import { REACT_APP_API_URL } from "../../../config"
 import useError from 'hooks/useError';
+import { FONTS } from 'constants/fonts';
 // const apiUrl = Constants?.expoConfig?.hostUri
 // ? `http://${Constants?.expoConfig?.hostUri?.split(`:`)?.shift()?.concat(`:3000`)}`
 // : REACT_APP_API_URL
@@ -50,12 +51,12 @@ const FullList = ({ route }: FullListProps) => {
               <FontAwesome name="chevron-left" size={24} color="#EAF4F4" />
             </View>
           </TouchableOpacity>
-          <Text className="text-light font-bold text-2xl" style={{ fontFamily: "Metropolis-Bold" }}>{category}</Text>
+          <Text className="text-light font-bold text-2xl" style={{ fontFamily: FONTS.Heavy }}>{category}</Text>
         </View>
         <View>
           {
             loading ?
-              <Text className="text-light" style={{ fontFamily: "Metropolis-Regular" }}>Loading...</Text> :
+              <Text className="text-light" style={{ fontFamily: FONTS.Middle }}>Loading...</Text> :
               <BookFeed books={books} />
           }
         </View>

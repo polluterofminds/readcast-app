@@ -10,6 +10,7 @@ import {
 import { Book, LibraryWithBook } from 'types';
 import { FontAwesome5, MaterialCommunityIcons } from '@expo/vector-icons';
 import { useLibrary } from 'hooks/useLibrary';
+import { FONTS } from 'constants/fonts';
 
 interface LibraryActionProps {
   libraryBook: LibraryWithBook | null;
@@ -34,7 +35,7 @@ const LibraryAction = ({ libraryBook, book, setNewStatus }: LibraryActionProps) 
     <Menu style={{ borderRadius: 10 }}>
       <MenuTrigger>
 
-        <Text style={{ fontFamily: "Metropolis-Bold" }} className="mx-2 text-lg font-bold text-light">{libraryBook ? "Update status" : "Add to library"}</Text>
+        <Text style={{ fontFamily: FONTS.Heavy }} className="mx-2 text-lg font-bold text-light">{libraryBook ? "Update status" : "Add to library"}</Text>
 
       </MenuTrigger>
       <MenuOptions
@@ -55,21 +56,21 @@ const LibraryAction = ({ libraryBook, book, setNewStatus }: LibraryActionProps) 
         <MenuOption onSelect={() => setToBeRead()}>
           <View className="flex flex-row items-center">
             <FontAwesome5 name="bookmark" size={18} color={"#EAF4F4"} />
-            <Text className="ml-2 text-light font-sm" style={{ fontFamily: "Metropolis-Regular" }}>Want to read</Text>
+            <Text className="ml-2 text-light font-sm" style={{ fontFamily: FONTS.Middle }}>Want to read</Text>
           </View>
           {libraryBook && <View className="border-b border-b-lightest py-1"></View>}
         </MenuOption>
         <MenuOption onSelect={() => setNewStatus("in-progress")}>
           <View className="flex flex-row items-center">
             <MaterialCommunityIcons name="book" size={18} color={"#EAF4F4"} />
-            <Text className="ml-2 text-light font-sm" style={{ fontFamily: "Metropolis-Regular" }}>Mark as in-progress</Text>
+            <Text className="ml-2 text-light font-sm" style={{ fontFamily: FONTS.Middle }}>Mark as in-progress</Text>
           </View>
           {libraryBook && <View className="border-b border-b-lightest py-1"></View>}
         </MenuOption>
           <MenuOption onSelect={() => setNewStatus("completed")} >
             <View className="flex flex-row items-center">
               <FontAwesome5 name="check" size={18} color={"#EAF4F4"} />
-              <Text className="ml-2 text-light font-sm" style={{ fontFamily: "Metropolis-Regular" }}>Mark as complete</Text>
+              <Text className="ml-2 text-light font-sm" style={{ fontFamily: FONTS.Middle }}>Mark as complete</Text>
             </View>
           </MenuOption>
       </MenuOptions>

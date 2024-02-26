@@ -1,26 +1,26 @@
 {
   "expo": {
-    "name": "ReadCast",
+    "name": "Readcast",
     "slug": "readcast",
-    "version": "1.0.4",
+    "version": "1.1.0",
     "scheme": "readcast",
     "ios": {
       "bundleIdentifier": "readcast",
       "supportsTablet": true
     },
     "web": {
-      "favicon": "./assets/ReadCastLogoSmall.png"
+      "favicon": "./assets/readcast_icon.png"
     },
     "experiments": {
       "tsconfigPaths": true
     },
     "orientation": "portrait",
-    "icon": "./assets/ReadCastLogoSmall.png",
+    "icon": "./assets/readcast_icon.png",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./assets/ReadCastLogoSmall.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#181A1A"
+      "image": "./assets/Splash_Screen.png",
+      "resizeMode": "cover",
+      "backgroundColor": "#CEFF41"
     },
     "assetBundlePatterns": [
       "**/*"
@@ -28,8 +28,8 @@
     "android": {
       "versionCode": 3,
       "adaptiveIcon": {
-        "foregroundImage": "./assets/ReadCastLogoSmall.png",
-        "backgroundColor": "#181A1A"
+        "foregroundImage": "./assets/readcast_icon.png",
+        "backgroundColor": "#CEFF41"
       },
       "package": "com.polluterofminds.readcast"
     },

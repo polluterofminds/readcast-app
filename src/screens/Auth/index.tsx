@@ -11,6 +11,7 @@ import Siwn from './Siwn';
 import SignInWithEmail from './SignInWithEmail';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { BUILD_NUMBER } from 'config';
+import { FONTS } from 'constants/fonts';
 
 const Auth = () => {
   const [authenticated, setAuthenticated] = useState(false);
@@ -48,10 +49,10 @@ const Auth = () => {
             <KeyboardAwareScrollView className="py-10">
               <Image
                 className="w-64 h-64 m-auto mb-10 rounded-full"
-                source={require("../../../assets/ReadCastLogoSmall.png")}
+                source={require("../../../assets/readcast_icon.png")}
               />
-              <Text className="text-2xl text-light text-center" style={{ fontFamily: "Metropolis-Bold" }}>Welcome, to ReadCast!</Text>
-              <Text className="text-md text-light text-center" style={{ fontFamily: "Metropolis-Regular" }}>Let's get you signed in.</Text>
+              <Text className="text-2xl text-light text-center" style={{ fontFamily: FONTS.Heavy }}>Welcome, to ReadCast!</Text>
+              <Text className="text-md text-light text-center" style={{ fontFamily: FONTS.Middle }}>Let's get you signed in.</Text>
 
               {
                 signInWithEmail ?
@@ -60,13 +61,13 @@ const Auth = () => {
                     <Siwn fetchUserData={fetchUserData} setConnectedUserFid={setConnectedUserFid} />
                     <View className="flex flex-row justify-center">
                       <TouchableOpacity onPress={() => setSignInWithEmail(true)}>
-                        <Text className="text-md text-light" style={{ fontFamily: "Metropolis-Bold" }}>Sign in with email</Text>
+                        <Text className="text-md text-light" style={{ fontFamily: FONTS.Heavy }}>Sign in with email</Text>
                       </TouchableOpacity>
                     </View>
                   </View>
               }
             <View className="mb-6 flex justify-center">
-              <Text className="mt-10 text-center text-light text-xs" style={{ fontFamily: "Metropolis-Regular" }}>Build: {BUILD_NUMBER}</Text>
+              <Text className="mt-10 text-center text-light text-xs" style={{ fontFamily: FONTS.Middle }}>Build: {BUILD_NUMBER}</Text>
             </View> 
             </KeyboardAwareScrollView>           
           </SafeAreaView>

@@ -3,6 +3,7 @@ import { Image, Text, TouchableOpacity, View } from 'react-native'
 import { Book, LibraryWithBook } from 'types'
 import { FontAwesome } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
+import { FONTS } from 'constants/fonts';
 
 interface LibraryItemProps {
   item: LibraryWithBook;
@@ -37,13 +38,13 @@ const LibraryItem = ({ item }: LibraryItemProps) => {
         }}
       />
       <View className="mt-4">
-        <Text className="text-xl font-bold text-light" style={{ fontFamily: "Metropolis-Bold" }}>{item?.books?.title}</Text>
-        <Text className="text-lg text-light" style={{ fontFamily: "Metropolis-Regular" }}>{item?.books?.author}</Text>
-        <Text className="mt-2 text-sm font-bold text-light" style={{ fontFamily: "Metropolis-Regular" }}>{item?.books?.description?.substring(0, 60) + "..."}</Text>
+        <Text className="text-xl font-bold text-light" style={{ fontFamily: FONTS.Heavy }}>{item?.books?.title}</Text>
+        <Text className="text-lg text-light" style={{ fontFamily: FONTS.Middle }}>{item?.books?.author}</Text>
+        <Text className="mt-2 text-sm font-bold text-light" style={{ fontFamily: FONTS.Middle }}>{item?.books?.description?.substring(0, 60) + "..."}</Text>
       </View>
       <View className="flex flex-row items-center mt-2">
         {renderBookType()}
-        <Text className="ml-2 text-light text-sm uppercase" style={{fontFamily: "Metropolis-Regular"}}>{item.book_type ? item.book_type : "paperback"}</Text>
+        <Text className="ml-2 text-light text-sm uppercase" style={{fontFamily: FONTS.Middle}}>{item.book_type ? item.book_type : "paperback"}</Text>
       </View>
     </TouchableOpacity>
   )

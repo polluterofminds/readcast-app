@@ -5,6 +5,7 @@ import { useNavigation } from '@react-navigation/native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { UserState } from 'contexts/UserContext';
 import { BUILD_NUMBER } from 'config';
+import { FONTS } from 'constants/fonts';
 
 interface ProfileProps {
   handleLogOut: Function;
@@ -18,7 +19,7 @@ const Profile = ({ handleLogOut, userState }: ProfileProps) => {
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <View className="flex flex-row items-center bg-dark rounded-full p-2">
             <FontAwesome name="chevron-left" size={20} color="#EAF4F4" />
-            <Text className="ml-4 text-xl text-light" style={{ fontFamily: "Metropolis-Bold" }}>Home</Text>
+            <Text className="ml-4 text-xl text-light" style={{ fontFamily: FONTS.Heavy }}>Home</Text>
           </View>
         </TouchableOpacity>
 
@@ -31,16 +32,16 @@ const Profile = ({ handleLogOut, userState }: ProfileProps) => {
             className="h-16 w-16 rounded-full"
           />
           <View className="ml-4">
-            <Text className="text-2xl font-bold text-light" style={{ fontFamily: "Metropolis-Bold" }}>
+            <Text className="text-2xl font-bold text-light" style={{ fontFamily: FONTS.Heavy }}>
               {userState?.display_name}
             </Text>
-            <Text className="text-lg text-light" style={{ fontFamily: "Metropolis-Regular" }}>
+            <Text className="text-lg text-light" style={{ fontFamily: FONTS.Middle }}>
               {userState?.username ? `@${userState.username}` : userState.fid}
             </Text>
           </View>
         </View>
         <View className="mt-4">
-          <Text className="text-lg text-light" style={{ fontFamily: "Metropolis-Regular" }}>
+          <Text className="text-lg text-light" style={{ fontFamily: FONTS.Middle }}>
             {userState?.bio}
           </Text>
         </View>
@@ -48,11 +49,11 @@ const Profile = ({ handleLogOut, userState }: ProfileProps) => {
         <TouchableOpacity onPress={() => handleLogOut()}>
           <View className="mt-6 flex flex-row items-center">
             <MaterialIcons name="logout" size={24} color="#92bcb0" />
-            <Text className="bg-contrast p-2 rounded-md text-light font-bold ml-2 text-lg" style={{ fontFamily: "Metropolis-Bold" }}>Log out</Text>
+            <Text className="bg-contrast p-2 rounded-md text-light font-bold ml-2 text-lg" style={{ fontFamily: FONTS.Heavy }}>Log out</Text>
           </View>
         </TouchableOpacity>
         <View className="mt-6">
-          <Text className="text-light text-xs" style={{ fontFamily: "Metropolis-Regular" }}>Build: {BUILD_NUMBER}</Text>
+          <Text className="text-light text-xs" style={{ fontFamily: FONTS.Middle }}>Build: {BUILD_NUMBER}</Text>
         </View>
       </View>
     </SafeAreaView>

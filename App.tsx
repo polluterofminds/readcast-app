@@ -26,7 +26,13 @@ export default function App() {
     'Metropolis-LightItalic': require('./assets/fonts/Metropolis-LightItalic.otf'),
     'Metropolis-Medium': require('./assets/fonts/Metropolis-Medium.otf'),
     'Metropolis-Regular': require('./assets/fonts/Metropolis-Regular.otf'),
+    'Shapiro-Middle': require('./assets/fonts/shapiro/Shapiro-55-Middle.otf'),
+    'Shapiro-Light': require('./assets/fonts/shapiro/Shapiro-65-Light-Heavy.otf'),
+    'Shapiro-Heavy': require('./assets/fonts/shapiro/Shapiro-75-Heavy.otf'),
+    'Shapiro-Super-Heavy': require('./assets/fonts/shapiro/Shapiro-95-Super.otf'),
   });
+
+  console.log(fontsLoaded);
 
   useEffect(() => {
       checkForUpdates();

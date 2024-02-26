@@ -6,12 +6,12 @@ module.exports = {
     extend: {
       colors: {
         "lightest": "#dfebeb",
-        "light": "#EAF4F4", 
-        "dark": "#181A1A", 
+        "light": "#FFF", 
+        "dark": "#0E0E0E", 
         "contrast": "#272828",
         "accent": "#232538",
         "primary": "#CEFF41", 
-        "pill": "#313333"
+        "pill": "#313333",
       }
     },
   },

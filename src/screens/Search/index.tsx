@@ -7,6 +7,7 @@ import Results from './Results';
 import RecentSearches from './RecentSearches';
 import useError from 'hooks/useError';
 import { MaterialIcons } from '@expo/vector-icons';
+import { FONTS } from 'constants/fonts';
 const apiUrl = REACT_APP_API_URL;
 
 const Search = () => {
@@ -76,7 +77,7 @@ const Search = () => {
           placeholderTextColor={'#dfebeb'}
           autoFocus
           autoComplete='off'
-          style={{ fontFamily: "Metropolis-Regular" }}
+          style={{ fontFamily: FONTS.Middle }}
           className="mt-6 w-full border border-primary h-16 rounded-md px-2 text-light"
           onChangeText={handleChange}
           value={searchText}
@@ -96,7 +97,7 @@ const Search = () => {
           <Results submitError={submitError} results={results} emptyState={emptyState} /> :
           searchText.length > 0 && searching ?
             <View className="mt-4">
-              <Text className="text-lg text-light" style={{ fontFamily: "Metropolis-Regular" }}>Searching {ellipsisState}</Text>
+              <Text className="text-lg text-light" style={{ fontFamily: FONTS.Middle }}>Searching {ellipsisState}</Text>
             </View> :
             <RecentSearches />
       }

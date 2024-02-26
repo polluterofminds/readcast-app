@@ -5,6 +5,7 @@ import { View } from "react-native";
 import useSecureStorage from "hooks/useSecureStorage";
 import { StorageKeys } from "constants/storageKeys";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { FONTS } from "constants/fonts";
 
 const Siwn = ({ setConnectedUserFid, fetchUserData }: { setConnectedUserFid: Function, fetchUserData: Function}) => {
   const { saveSecureValue } = useSecureStorage();
@@ -49,7 +50,7 @@ const Siwn = ({ setConnectedUserFid, fetchUserData }: { setConnectedUserFid: Fun
       textStyles={{
         // textStyles will override all the textStyles above
         color: "#181A1A",
-        fontFamily: "Metropolis-Bold"
+        fontFamily: FONTS.Heavy
       }}
       backgroundColor="#92bcb0"
     />

@@ -5,6 +5,7 @@ import { TouchableOpacity, View, Text, Modal, ScrollView, TextInput } from 'reac
 import { Book } from 'types';
 //  @ts-ignore
 import { REACT_APP_API_URL } from "../../../config";
+import { FONTS } from 'constants/fonts';
 
 // const apiUrl = Constants?.expoConfig?.hostUri
 // ? `http://${Constants?.expoConfig?.hostUri?.split(`:`)?.shift()?.concat(`:3000`)}`
@@ -97,32 +98,32 @@ const CorrectionsModal = ({ setCorrectionModalVisible, correctionModalVisible, u
     }}>
     <View className="bg-dark p-6 h-screen flex justify-center items-center">
       <ScrollView>            
-        <Text className="text-2xl text-light" style={{ fontFamily: "Metropolis-Bold" }}>What corrections need to be made?</Text>
+        <Text className="text-2xl text-light" style={{ fontFamily: FONTS.Heavy }}>What corrections need to be made?</Text>
         {
           correctionOptions.map((o: any) => {
             return (
               <TouchableOpacity onPress={o.onClick} key={o.text}>
                 <View className="mt-2 flex flex-row items-center">
                   <View className={o.isSelected ? "h-8 w-8 rounded-lg bg-primary" : "h-8 w-8 rounded-lg border border-primary"}></View>
-                  <Text className="ml-2 text-lg text-light" style={{ fontFamily: "Metropolis-Regular" }}>{o.text}</Text>
+                  <Text className="ml-2 text-lg text-light" style={{ fontFamily: FONTS.Middle }}>{o.text}</Text>
                 </View>
               </TouchableOpacity>
             )
           })
         }            
         <View className="mt-4">
-          <TextInput onChangeText={(text: string) => setCorrectionText(text)} value={correctionText} placeholderTextColor="#dfebeb" className="h-28 text-light text-lg border border-light rounded-md p-4" multiline={true} maxLength={240} placeholder='Optionally include additional information' style={{ fontFamily: "Metropolis-Regular" }}></TextInput>
+          <TextInput onChangeText={(text: string) => setCorrectionText(text)} value={correctionText} placeholderTextColor="#dfebeb" className="h-28 text-light text-lg border border-light rounded-md p-4" multiline={true} maxLength={240} placeholder='Optionally include additional information' style={{ fontFamily: FONTS.Middle }}></TextInput>
         </View>
         <View className="flex flex-row justify-end mt-6">
           <View className="flex flex-row items-center">
             <TouchableOpacity
               onPress={() => setCorrectionModalVisible(!correctionModalVisible)}>
-              <Text className="mr-4 text-lightest text-lg" style={{ fontFamily: "Metropolis-Bold" }}>Cancel</Text>
+              <Text className="mr-4 text-lightest text-lg" style={{ fontFamily: FONTS.Heavy }}>Cancel</Text>
             </TouchableOpacity>                
             <TouchableOpacity                  
               onPress={() => submitCorrection()}>
               <View className="bg-primary w-30 px-2 py-1 rounded-lg">
-                <Text className="text-dark text-lg" style={{ fontFamily: "Metropolis-Bold" }}>Submit correction</Text>
+                <Text className="text-dark text-lg" style={{ fontFamily: FONTS.Heavy }}>Submit correction</Text>
               </View>
             </TouchableOpacity>
           </View>

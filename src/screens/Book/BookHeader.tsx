@@ -27,6 +27,7 @@ import useToast from 'hooks/useToast';
 import CorrectionsModal from './CorrectionsModal';
 import LibraryModal from './LibraryModal';
 import LibraryAction from './LibraryAction';
+import { FONTS } from 'constants/fonts';
 
 const apiUrl = REACT_APP_API_URL;
 
@@ -94,7 +95,7 @@ const BookHeader = ({ book, navigation }: BookHeaderProps) => {
         <TouchableOpacity onPress={() => setModalVisible(true)}>
           <View className="flex flex-row items-center">
             <Foundation name="book-bookmark" size={24} color="#EAF4F4" />
-            <Text style={{ fontFamily: "Metropolis-Bold" }} className="mx-2 text-lg font-bold text-light">Mark started</Text>
+            <Text style={{ fontFamily: FONTS.Heavy }} className="mx-2 text-lg font-bold text-light">Mark started</Text>
           </View>
         </TouchableOpacity>
       )
@@ -103,7 +104,7 @@ const BookHeader = ({ book, navigation }: BookHeaderProps) => {
         <TouchableOpacity onPress={() => setModalVisible(true)}>
           <View className="flex flex-row items-center">
             <Foundation name="book-bookmark" size={24} color="#EAF4F4" />
-            <Text style={{ fontFamily: "Metropolis-Bold" }} className="mx-2 text-lg font-bold text-light">Mark completed</Text>
+            <Text style={{ fontFamily: FONTS.Heavy }} className="mx-2 text-lg font-bold text-light">Mark completed</Text>
           </View>
         </TouchableOpacity>
       )
@@ -112,7 +113,7 @@ const BookHeader = ({ book, navigation }: BookHeaderProps) => {
         <TouchableOpacity>
           <View className="flex flex-row items-center">
             <Foundation name="book-bookmark" size={24} color="#EAF4F4" />
-            <Text style={{ fontFamily: "Metropolis-Bold" }} className="mx-2 text-lg font-bold text-light">Completed</Text>
+            <Text style={{ fontFamily: FONTS.Heavy }} className="mx-2 text-lg font-bold text-light">Completed</Text>
           </View>
         </TouchableOpacity>
       )
@@ -122,7 +123,7 @@ const BookHeader = ({ book, navigation }: BookHeaderProps) => {
       <TouchableOpacity onPress={() => addToLibrary(book, { status: "tbr" })}>
         <View className="flex flex-row items-center">
           <Foundation name="book-bookmark" size={24} color="#EAF4F4" />
-          <Text style={{ fontFamily: "Metropolis-Bold" }} className="mx-2 text-lg font-bold text-light">Want to read</Text>
+          <Text style={{ fontFamily: FONTS.Heavy }} className="mx-2 text-lg font-bold text-light">Want to read</Text>
         </View>
       </TouchableOpacity>
     )
@@ -166,14 +167,14 @@ const BookHeader = ({ book, navigation }: BookHeaderProps) => {
               <MenuOption onSelect={() => alert(`Share`)}>
                 <View className="flex flex-row items-center">
                   <MaterialIcons name="ios-share" size={16} color="#EAF4F4" />
-                  <Text className="ml-2 text-light font-sm" style={{ fontFamily: "Metropolis-Regular" }}>Share</Text>
+                  <Text className="ml-2 text-light font-sm" style={{ fontFamily: FONTS.Middle }}>Share</Text>
                 </View>
                 {libraryBook && <View className="border-b border-b-lightest py-1"></View>}                
               </MenuOption>
               <MenuOption onSelect={() => setCorrectionModalVisible(true)}>
                 <View className="flex flex-row items-center">
                   <Feather name="alert-circle" size={16} color="#EAF4F4" />
-                  <Text className="ml-2 text-light font-sm" style={{ fontFamily: "Metropolis-Regular" }}>Submit correction</Text>
+                  <Text className="ml-2 text-light font-sm" style={{ fontFamily: FONTS.Middle }}>Submit correction</Text>
                 </View>
                 {libraryBook && <View className="border-b border-b-lightest py-1"></View>}                
               </MenuOption>
@@ -182,7 +183,7 @@ const BookHeader = ({ book, navigation }: BookHeaderProps) => {
                 <MenuOption onSelect={removeFromLibrary} >
                   <View className="flex flex-row items-center">
                     <MaterialIcons name="delete" size={16} color="#EAF4F4" />
-                    <Text className="ml-2 text-light font-sm" style={{ fontFamily: "Metropolis-Regular" }}>Remove from library</Text>
+                    <Text className="ml-2 text-light font-sm" style={{ fontFamily: FONTS.Middle }}>Remove from library</Text>
                   </View>
                 </MenuOption>
               }
@@ -201,11 +202,11 @@ const BookHeader = ({ book, navigation }: BookHeaderProps) => {
           <View className="flex w-full flex-row bg-accent py-4 px-6 rounded-md m-auto justify-center">
             {/* {renderLibraryAction()} */}
             <LibraryAction book={book} setNewStatus={setNewStatus} libraryBook={libraryBook} />
-            <Text className="text-light mx-4 text-2xl" style={{ fontFamily: "Metropolis-Light" }}>|</Text>
+            <Text className="text-light mx-4 text-2xl" style={{ fontFamily: FONTS.Light }}>|</Text>
             <TouchableOpacity onPress={userState?.fid ? () => navigation.navigate("Review", { book, libraryBook }) : () => navigation.navigate("Auth")}>
               <View className="flex flex-row items-center">
                 <AntDesign name="staro" size={24} color="#EAF4F4" />
-                <Text style={{ fontFamily: "Metropolis-Bold" }} className="mx-2 text-lg font-bold text-light">Add review</Text>
+                <Text style={{ fontFamily: FONTS.Heavy }} className="mx-2 text-lg font-bold text-light">Add review</Text>
               </View>
             </TouchableOpacity>
           </View>

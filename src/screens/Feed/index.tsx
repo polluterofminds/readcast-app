@@ -8,6 +8,7 @@ import useError from 'hooks/useError';
 import { useLibrary } from 'hooks/useLibrary';
 import CategorySelector from './CategorySelector';
 import Category from './Category';
+import { FONTS } from 'constants/fonts';
 // const apiUrl = Constants?.expoConfig?.hostUri
 // ? `http://${Constants?.expoConfig?.hostUri?.split(`:`)?.shift()?.concat(`:3000`)}`
 // : REACT_APP_API_URL
@@ -83,12 +84,12 @@ export default function Feed() {
   }
 
   return (
-    <View className="bg-dark">
+    <View className="bg-light border border-t-[#000]">
       <View className="w-[95%] m-auto">
         <ScrollView ref={scrollViewRef}>          
           {
             loading ?
-              <Text>Loading...</Text> :
+              <Text className="text-2xl font-bold" style={{fontFamily: FONTS.Middle}}>Loading...</Text> :
               <View className="py-6">
                 <CategorySelector handleSelectSection={handleSelectSection} selectedTab={selectedTab} />
                 <Category handleBookPress={handleBookPress} books={getResults()} selectedTab={selectedTab} />

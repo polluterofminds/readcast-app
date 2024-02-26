@@ -9,15 +9,11 @@ import Auth from "~/screens/Auth";
 import { useUser } from "hooks/useUser";
 import Review from "~/screens/Review";
 import Library from "~/screens/Library";
+import { FONTS } from "constants/fonts";
+import { LinearGradient } from 'expo-linear-gradient';
+
 
 const HomeStack = createStackNavigator();
-
-function TabBarIcon(props: {
-  name: React.ComponentProps<typeof FontAwesome>['name'];
-  color: string;
-}) {
-  return <FontAwesome size={28} style={styles.tabBarIcon} {...props} />;
-}
 
 const getTimeOfDay = () => {
   const hours = new Date().getHours()
@@ -45,16 +41,18 @@ const HomeStackComponent = () => {
       <HomeStack.Screen
         options={{
           title: '',
-          headerStyle: {
-            backgroundColor: '#181A1A',
-          },
-          headerTitleStyle: {
-            color: '#EAF4F4',
-          },
+          headerBackground: () => (            
+            <LinearGradient
+              colors={['#CEFF41', '#EEFFBC']}
+              style={{ flex: 1 }}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 0, y: 1 }}
+              className="border border-b-dark"
+            />
+          ),            
           headerShadowVisible: false,
-          
           headerRight: () => (
-            <TouchableOpacity className="pb-2" onPress={() => navigation.navigate('Auth')}>
+            <TouchableOpacity className="pb-4" onPress={() => navigation.navigate('Auth')}>
               {
                 userState.pfp !== "" ?
                   <View>
@@ -73,11 +71,11 @@ const HomeStackComponent = () => {
           ),
           headerLeft: () => (
             <View className="w-full ml-2 flex flex-row pb-2">
-              <View className="border-b border-b-primary">
-                <Text className="text-2xl text-light font-bold" style={{ fontFamily: 'Metropolis-Black' }}>Good</Text>
+              <View className="">
+                <Text className="text-3xl text-dark font-black tracking-tighter" style={{ fontFamily: FONTS.Super }}>Good</Text>
               </View>
               <View>
-                <Text className="text-2xl text-light font-bold" style={{ fontFamily: 'Metropolis-Black' }}>{" "}{getTimeOfDay()}</Text>
+                <Text className="text-3xl text-dark font-black tracking-tighter" style={{ fontFamily: FONTS.Super }}>{" "}{getTimeOfDay()}</Text>
               </View>
             </View>
           ),
@@ -122,7 +120,7 @@ const styles = StyleSheet.create({
   },
   tabBarIcon: {
     marginBottom: -3,
-  },
+  }
 });
 
 export default HomeStackComponent

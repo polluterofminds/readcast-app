@@ -47,7 +47,8 @@
     "react-native-svg": "13.9.0",
     "react-native-ui-datepicker": "^1.0.11",
     "react-native-webview": "13.2.2",
-    "text-encoding-polyfill": "^0.6.7"
+    "text-encoding-polyfill": "^0.6.7",
+    "expo-linear-gradient": "~12.3.0"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

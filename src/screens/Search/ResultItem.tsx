@@ -3,6 +3,7 @@ import { Book } from 'types'
 import { EvilIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { FONTS } from 'constants/fonts';
 
 interface ResultItemProps {
   book: Book;
@@ -37,8 +38,8 @@ const ResultItem = ({ book }: ResultItemProps) => {
         />
         <View className="ml-2 flex flex-col justify-between">
           <View>
-            <Text className="text-light text-lg" style={{ fontFamily: "Metropolis-Bold" }}>{book.title}</Text>
-            <Text className="text-light text-md italic" style={{ fontFamily: "Metropolis-Regular" }}>{book.author}</Text>
+            <Text className="text-light text-lg" style={{ fontFamily: FONTS.Heavy }}>{book.title}</Text>
+            <Text className="text-light text-md italic" style={{ fontFamily: FONTS.Middle }}>{book.author}</Text>
           </View>          
         </View>
       </TouchableOpacity>

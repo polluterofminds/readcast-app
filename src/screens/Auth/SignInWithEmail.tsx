@@ -1,3 +1,4 @@
+import { FONTS } from 'constants/fonts';
 import React, { useState } from 'react'
 import { View, TextInput, Text, TouchableOpacity, KeyboardAvoidingView } from 'react-native'
 
@@ -16,7 +17,7 @@ const SignInWithEmail = ({ handleSignIn, setSignInWithEmail }: SignInWithEmailPr
         placeholderTextColor={'#dfebeb'}
         autoFocus
         autoComplete='off'
-        style={{ fontFamily: "Metropolis-Regular" }}
+        style={{ fontFamily: FONTS.Middle }}
         className="mt-6 w-full border border-primary h-16 rounded-md px-2 text-light"
         onChangeText={(value: string) => setEmail(value)}
         value={email}
@@ -28,7 +29,7 @@ const SignInWithEmail = ({ handleSignIn, setSignInWithEmail }: SignInWithEmailPr
         placeholderTextColor={'#dfebeb'}
         autoFocus
         autoComplete='off'        
-        style={{ fontFamily: "Metropolis-Regular" }}
+        style={{ fontFamily: FONTS.Middle }}
         className="mt-6 w-full border border-primary h-16 rounded-md px-2 text-light"
         onChangeText={(value: string) => setPassword(value)}
         value={password}
@@ -38,11 +39,11 @@ const SignInWithEmail = ({ handleSignIn, setSignInWithEmail }: SignInWithEmailPr
 </KeyboardAvoidingView>
       <View className="mt-6 flex flex-row justify-end items-center">
         <TouchableOpacity onPress={() => setSignInWithEmail()}>
-          <Text className="text-center text-light" style={{ fontFamily: "Metropolis-Bold" }}>Go back</Text>
+          <Text className="text-center text-light" style={{ fontFamily: FONTS.Heavy }}>Go back</Text>
         </TouchableOpacity>
         <View className="ml-4">
           <TouchableOpacity onPress={() => handleSignIn(email, password)} disabled={!email || !password} className={(!email || !password) ? "w-44 rounded-md px-4 py-2 bg-lightest" : "bg-primary w-44 rounded-md px-4 py-2"}>
-            <Text className="text-center text-dark" style={{ fontFamily: "Metropolis-Bold" }}>Sign in</Text>
+            <Text className="text-center text-dark" style={{ fontFamily: FONTS.Heavy }}>Sign in</Text>
           </TouchableOpacity>
         </View>
       </View>
