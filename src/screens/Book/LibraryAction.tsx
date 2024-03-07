@@ -35,7 +35,7 @@ const LibraryAction = ({ libraryBook, book, setNewStatus }: LibraryActionProps) 
     <Menu style={{ borderRadius: 10 }}>
       <MenuTrigger>
 
-        <Text style={{ fontFamily: FONTS.Heavy }} className="mx-2 text-lg font-bold text-light">{libraryBook ? "Update status" : "Add to library"}</Text>
+        <Text style={{ fontFamily: FONTS.Heavy }} className="mx-2 text-lg font-bold text-dark">{libraryBook ? "Update status" : "Add to library"}</Text>
 
       </MenuTrigger>
       <MenuOptions

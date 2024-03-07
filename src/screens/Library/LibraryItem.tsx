@@ -14,18 +14,18 @@ const LibraryItem = ({ item }: LibraryItemProps) => {
 
   const renderBookType = () => {
     if (item.book_type && item.book_type === "audio") {
-      return <FontAwesome name="headphones" size={16} color="#92bcb0" />
+      return <FontAwesome name="headphones" size={16} color="#0E0E0E" />
     }
 
     if (item.book_type && (item.book_type === "paperback" || item.book_type === "hardcover")) {
-      return <FontAwesome name="book" size={16} color="#92bcb0" />
+      return <FontAwesome name="book" size={16} color="#0E0E0E" />
     }
 
     if (item.book_type && item.book_type === "ebook") {
-      return <FontAwesome name="tablet" size={16} color="#92bcb0" />
+      return <FontAwesome name="tablet" size={16} color="#0E0E0E" />
     }
 
-    return <FontAwesome name="book" size={16} color="#92bcb0" />
+    return <FontAwesome name="book" size={16} color="#0E0E0E" />
   }
 
   return (
@@ -38,13 +38,13 @@ const LibraryItem = ({ item }: LibraryItemProps) => {
         }}
       />
       <View className="mt-4">
-        <Text className="text-xl font-bold text-light" style={{ fontFamily: FONTS.Heavy }}>{item?.books?.title}</Text>
-        <Text className="text-lg text-light" style={{ fontFamily: FONTS.Middle }}>{item?.books?.author}</Text>
-        <Text className="mt-2 text-sm font-bold text-light" style={{ fontFamily: FONTS.Middle }}>{item?.books?.description?.substring(0, 60) + "..."}</Text>
+        <Text className="text-xl font-bold text-dark" style={{ fontFamily: FONTS.Heavy }}>{item?.books?.title}</Text>
+        <Text className="text-lg text-dark" style={{ fontFamily: FONTS.Middle }}>{item?.books?.author}</Text>
+        <Text className="mt-2 text-sm font-bold text-dark" style={{ fontFamily: FONTS.Middle }}>{item?.books?.description?.substring(0, 60) + "..."}</Text>
       </View>
       <View className="flex flex-row items-center mt-2">
         {renderBookType()}
-        <Text className="ml-2 text-light text-sm uppercase" style={{fontFamily: FONTS.Middle}}>{item.book_type ? item.book_type : "paperback"}</Text>
+        <Text className="ml-2 text-dark text-sm uppercase" style={{fontFamily: FONTS.Middle}}>{item.book_type ? item.book_type : "paperback"}</Text>
       </View>
     </TouchableOpacity>
   )

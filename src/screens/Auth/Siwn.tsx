@@ -49,10 +49,10 @@ const Siwn = ({ setConnectedUserFid, fetchUserData }: { setConnectedUserFid: Fun
       }}
       textStyles={{
         // textStyles will override all the textStyles above
-        color: "#181A1A",
+        color: "#0E0E0E",
         fontFamily: FONTS.Heavy
       }}
-      backgroundColor="#92bcb0"
+      backgroundColor="#CEFF41"
     />
     </View>
   );

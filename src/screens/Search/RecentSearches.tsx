@@ -25,8 +25,8 @@ const RecentSearches = () => {
   return (
     <View className="mt-4">
       <View className="flex flex-row justify-between mb-4 items-center">
-        <Text className="text-light font-bold text-xl" style={{fontFamily: FONTS.Heavy}}>Recent searches</Text>
-        <TouchableOpacity onPress={clearHistory}><Text className="text-lightest text-sm">Clear history</Text></TouchableOpacity>
+        <Text className="text-dark font-bold text-xl" style={{fontFamily: FONTS.Heavy}}>Recent searches</Text>
+        <TouchableOpacity onPress={clearHistory}><Text className="text-dark text-sm">Clear history</Text></TouchableOpacity>
       </View>      
       <FlatList
         data={recent}

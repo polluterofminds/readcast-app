@@ -137,7 +137,7 @@ const BookHeader = ({ book, navigation }: BookHeaderProps) => {
       className="h-full"
     >
       <View className="h-full flex flex-col justify-between">
-        <View className="flex flex-row justify-between items-center">
+        <View className="flex flex-row justify-between items-center pt-12">
           <TouchableOpacity onPress={() => navigation.goBack()} className="p-4">
             <View className="flex flex-row items-center bg-dark rounded-full p-2 h-10 w-10">
               <FontAwesome name="chevron-left" size={24} color="#EAF4F4" />
@@ -199,14 +199,14 @@ const BookHeader = ({ book, navigation }: BookHeaderProps) => {
           />
         </View>
         <View className="absolute -bottom-4 w-[95%] left-[2.5%] m-auto">
-          <View className="flex w-full flex-row bg-accent py-4 px-6 rounded-md m-auto justify-center">
+          <View className="flex w-full flex-row bg-primary py-4 px-6 rounded-md m-auto justify-center">
             {/* {renderLibraryAction()} */}
             <LibraryAction book={book} setNewStatus={setNewStatus} libraryBook={libraryBook} />
-            <Text className="text-light mx-4 text-2xl" style={{ fontFamily: FONTS.Light }}>|</Text>
+            <Text className="text-dark mx-4 text-2xl" style={{ fontFamily: FONTS.Light }}>|</Text>
             <TouchableOpacity onPress={userState?.fid ? () => navigation.navigate("Review", { book, libraryBook }) : () => navigation.navigate("Auth")}>
               <View className="flex flex-row items-center">
-                <AntDesign name="staro" size={24} color="#EAF4F4" />
-                <Text style={{ fontFamily: FONTS.Heavy }} className="mx-2 text-lg font-bold text-light">Add review</Text>
+                <AntDesign name="staro" size={24} color="#0E0E0E" />
+                <Text style={{ fontFamily: FONTS.Heavy }} className="mx-2 text-lg font-bold text-dark">Add review</Text>
               </View>
             </TouchableOpacity>
           </View>

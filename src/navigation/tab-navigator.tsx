@@ -6,6 +6,7 @@ import HomeStackComponent from './home-stack';
 import Library from '~/screens/Library';
 import { Ionicons } from '@expo/vector-icons';
 import { FONTS } from 'constants/fonts';
+import { LinearGradient } from 'expo-linear-gradient';
 
 const Tab = createBottomTabNavigator();
 // const HomeStack = createStackNavigator();
@@ -48,19 +49,24 @@ export default function TabLayout({ navigation }: TabLayoutProps) {
           title: '',
           headerShadowVisible: false,
           tabBarIcon: ({ color }) => <Ionicons name="library" size={28} color={color} />,
-          headerStyle: {
-            backgroundColor: '#181A1A',
-          },
+          headerBackground: () => (            
+            <LinearGradient
+              colors={['#CEFF41', '#EEFFBC']}
+              style={{ flex: 1 }}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 0, y: 1 }}
+              className="border border-b-dark py-4"
+            />
+          ),            
           headerTitleStyle: {
             color: '#EAF4F4',
           },
           headerLeft: () => (
-            <View className="w-full p-4 flex flex-row h-20 items-center mt-2">
-              <TouchableOpacity onPress={() => navigation.goBack()}><TabBarIcon name="chevron-left" color="#EAF4F4" /></TouchableOpacity>
-              <View className="ml-4">
-                <Text className="text-3xl font-bold text-light" style={{fontFamily: FONTS.Heavy}}>Library</Text>
-                <View className="border-b-4 border-primary"></View>
-              </View>
+            <View className="w-full p-4 flex flex-row h-20 items-center mt-2 mb-2">
+              <TouchableOpacity onPress={() => navigation.goBack()}><TabBarIcon name="chevron-left" color="#0E0E0E" /></TouchableOpacity>
+              {/* <View className="ml-4">
+                <Text className="text-3xl font-bold text-dark" style={{fontFamily: FONTS.Heavy}}>Library</Text>
+              </View> */}
             </View>
           ),
         }}
@@ -72,15 +78,21 @@ export default function TabLayout({ navigation }: TabLayoutProps) {
           title: '',
           headerShadowVisible: false,
           tabBarIcon: ({ color }) => <Ionicons name="search-outline" size={28} color={color} />,
-          headerStyle: {
-            backgroundColor: '#181A1A',
-          },
+          headerBackground: () => (            
+            <LinearGradient
+              colors={['#CEFF41', '#EEFFBC']}
+              style={{ flex: 1 }}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 0, y: 1 }}
+              className="border border-b-dark py-4"
+            />
+          ),       
           headerTitleStyle: {
             color: '#EAF4F4',
           },
           headerLeft: () => (
-            <View className="w-full p-4 flex flex-row pb-2 h-12 mt-4">
-              <TouchableOpacity onPress={() => navigation.goBack()}><TabBarIcon name="chevron-left" color="#EAF4F4" /></TouchableOpacity>
+            <View className="w-full p-4 flex flex-row pb-2 h-20 mt-4">
+              <TouchableOpacity onPress={() => navigation.goBack()}><TabBarIcon name="chevron-left" color="#0E0E0E" /></TouchableOpacity>
             </View>
           ),
         }}

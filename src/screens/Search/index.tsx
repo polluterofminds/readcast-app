@@ -71,14 +71,14 @@ const Search = () => {
     }
   }
   return (
-    <View className="min-h-screen bg-dark p-4">
+    <View className="min-h-screen bg-light p-4">
       <View className="flex flex-row relative items-center">
         <TextInput
-          placeholderTextColor={'#dfebeb'}
+          placeholderTextColor={'#0E0E0E'}
           autoFocus
           autoComplete='off'
           style={{ fontFamily: FONTS.Middle }}
-          className="mt-6 w-full border border-primary h-16 rounded-md px-2 text-light"
+          className="mt-6 w-full border border-primary h-16 rounded-md px-2 text-dark"
           onChangeText={handleChange}
           value={searchText}
           placeholder='Search'
@@ -87,7 +87,7 @@ const Search = () => {
           searchText.length > 0 &&
           <View className="absolute right-5 bottom-5">
           <TouchableOpacity onPress={() => setSearchText("")}>
-            <MaterialIcons name="clear" size={24} color="#EAF4F4" />
+            <MaterialIcons name="clear" size={24} color="#0E0E0E" />
           </TouchableOpacity>
         </View>   
         }            
@@ -97,7 +97,7 @@ const Search = () => {
           <Results submitError={submitError} results={results} emptyState={emptyState} /> :
           searchText.length > 0 && searching ?
             <View className="mt-4">
-              <Text className="text-lg text-light" style={{ fontFamily: FONTS.Middle }}>Searching {ellipsisState}</Text>
+              <Text className="text-lg text-dark" style={{ fontFamily: FONTS.Middle }}>Searching {ellipsisState}</Text>
             </View> :
             <RecentSearches />
       }

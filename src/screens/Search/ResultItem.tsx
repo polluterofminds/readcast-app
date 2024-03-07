@@ -38,8 +38,8 @@ const ResultItem = ({ book }: ResultItemProps) => {
         />
         <View className="ml-2 flex flex-col justify-between">
           <View>
-            <Text className="text-light text-lg" style={{ fontFamily: FONTS.Heavy }}>{book.title}</Text>
-            <Text className="text-light text-md italic" style={{ fontFamily: FONTS.Middle }}>{book.author}</Text>
+            <Text className="text-dark text-lg" style={{ fontFamily: FONTS.Heavy }}>{book.title}</Text>
+            <Text className="text-dark text-md italic" style={{ fontFamily: FONTS.Middle }}>{book.author}</Text>
           </View>          
         </View>
       </TouchableOpacity>

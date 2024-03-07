@@ -37,20 +37,20 @@ export default function BookDetails({ navigation, route }: BookDetailsProps) {
   }
 
   return (
-    <View className="bg-dark w-screen">
+    <View className="bg-light w-screen">
       <View className="w-full m-auto">
         <ScrollView ref={scrollViewRef} scrollIndicatorInsets={{ right: 1 }}>          
           {
             loading ?
               <Text>Loading...</Text> :
-              <SafeAreaView className="py-6 bg-dark min-h-screen" forceInset={{ bottom: 'never', vertical: 'never'}}>
+              <View className="bg-light min-h-screen" forceInset={{ bottom: 'never', vertical: 'never'}}>
                 <View>
                   <BookHeader navigation={navigation} book={book} />
                 </View>
                 <View>
                   <BookInfo book={book} reviews={reviews} />
                 </View>
-              </SafeAreaView>
+              </View>
           }
         </ScrollView>
       </View>

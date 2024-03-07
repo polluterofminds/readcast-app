@@ -3,33 +3,42 @@ import { Image, View, Text } from 'react-native';
 import { ReviewWithUser } from 'types'
 import { Ionicons } from '@expo/vector-icons';
 import { FONTS } from 'constants/fonts';
+import { LinearGradient } from 'expo-linear-gradient';
 
 interface ReviewItemProps {
   review: ReviewWithUser;
 }
 const ReviewItem = ({ review }: ReviewItemProps) => {
   return (
-    <View className="flex flex-row items-center bg-accent p-2 rounded-lg mt-2">
-      {
-        review?.users?.pfp ?
-          <Image
-            className="w-20 h-20 rounded-full"
-            source={{
-              uri: review.users.pfp
-            }}
-          /> :
-          <Ionicons
-            name="person-outline"
-            size={24}
-            color="#EAF4F4"
-          />
-      }
-      <View className="ml-4" style={{ flexShrink: 1 }}>
-        <Text style={{fontFamily: FONTS.Heavy, flexShrink: 1}} className="text-lg font-semibold text-light">{review?.users?.display_name || review?.users?.username}</Text>
-        <Text style={{fontFamily: FONTS.Middle, flexShrink: 1}} className="text-light text-md">{review?.users?.display_name && review?.users?.username ? review?.users?.username : review?.users?.fid}</Text>
-        <Text style={{fontFamily: FONTS.Middle, flexShrink: 1}} className="mt-2 text-light text-md">{review.review}</Text>
+    <LinearGradient
+      colors={['#CEFF41', '#EEFFBC']}
+      style={{ flex: 1 }}
+      start={{ x: 0, y: 0 }}
+      end={{ x: 0, y: 1 }}
+      className="border border-b-dark mb-2"
+    >
+      <View className="flex flex-row items-center p-2 rounded-lg mt-2">
+        {
+          review?.users?.pfp ?
+            <Image
+              className="w-20 h-20 rounded-full"
+              source={{
+                uri: review.users.pfp
+              }}
+            /> :
+            <Ionicons
+              name="person-outline"
+              size={24}
+              color="#EAF4F4"
+            />
+        }
+        <View className="ml-4" style={{ flexShrink: 1 }}>
+          <Text style={{ fontFamily: FONTS.Heavy, flexShrink: 1 }} className="text-lg font-semibold text-dark">{review?.users?.display_name || review?.users?.username}</Text>
+          <Text style={{ fontFamily: FONTS.Middle, flexShrink: 1 }} className="text-dark text-md">{review?.users?.display_name && review?.users?.username ? review?.users?.username : review?.users?.fid}</Text>
+          <Text style={{ fontFamily: FONTS.Middle, flexShrink: 1 }} className="mt-2 text-dark text-md">{review.review}</Text>
+        </View>
       </View>
-    </View>
+    </LinearGradient>
   )
 }
 

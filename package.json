@@ -1,6 +1,6 @@
 {
   "name": "readcast-app",
-  "version": "1.0.1",
+  "version": "1.2.0",
   "scripts": {
     "android": "expo run:android",
     "format": "eslint \"**/*.{js,jsx,ts,tsx}\" --fix && prettier \"**/*.{js,jsx,ts,tsx,json}\" --write",
