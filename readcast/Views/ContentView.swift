@@ -13,9 +13,9 @@ struct ContentView: View {
             VStack {
                 HomeHeaderView()
                 BookFeedView()
-                Spacer()
-                //  Bottom nav
+                BottomNavView()
             }
+            .background(Color.white)
         }
     }
 }

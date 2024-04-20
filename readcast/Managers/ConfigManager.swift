@@ -9,6 +9,6 @@ import Foundation
 
 class ConfigManager {
     static let shared = ConfigManager()
-    var apiUrl: String = "https://api.readcast.xyz"
+    var apiUrl: String = "https://282c-66-68-201-142.ngrok-free.app"
     var primaryFont: String = "Shapiro 95 Super Extd"
 }

@@ -12,6 +12,8 @@ struct readcastApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .environmentObject(AppLifecycleWatcher())
+                .background(Color.white)
         }
     }
 }

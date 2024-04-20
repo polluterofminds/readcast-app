@@ -81,6 +81,7 @@ struct BookFeedView: View {
         }.onAppear {
             loadBookFeed()
         }
+        .background(Color.white)
     }
 }
 
