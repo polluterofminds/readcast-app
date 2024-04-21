@@ -27,6 +27,7 @@ struct SearchResultsView: View {
             NavigationLink(destination: BookView(book: Book(id: "", author: book.author, categories: book.category, createdAt: "", description: book.description, thumbnail: book.thumbnail, title: book.title, reviews: 0, titleAuthorKey: (book.title) + "-" + (book.author)))) {
                 BookHeaderView(book: Book(id: "", author: book.author, categories: book.category, createdAt: "", description: book.description, thumbnail: book.thumbnail, title: book.title, reviews: 0, titleAuthorKey: (book.title) + "-" + (book.author)))
             }
+            .background(.white)
         }
     }
 }

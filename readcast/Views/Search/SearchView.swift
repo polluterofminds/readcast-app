@@ -95,6 +95,7 @@ struct SearchView: View {
             } else if viewModel.results.isEmpty {
                 HStack {
                     Text("Recent searches")
+                        .foregroundColor(.black)
                         .padding()
                         .font(.system(size: 20))
                         .fontWeight(.bold)
@@ -122,6 +123,7 @@ struct SearchView: View {
             }
             Spacer()
         }
+        .background(.white)
         .navigationBarBackButtonHidden(true)
         .navigationBarItems(leading:
             SearchHeaderView()

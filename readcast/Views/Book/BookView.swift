@@ -10,6 +10,7 @@ import SwiftUI
 struct BookView: View {  
     @Environment(\.presentationMode) var presentationMode
     @State public var isPresented = false
+    @State public var showCommentModal = false
     @State public var book: Book
     @State public var reviews: [ReviewItem] = []
     @State public var reviewsLoading: Bool = true
@@ -17,6 +18,8 @@ struct BookView: View {
     @State public var options = [StatusValue(display: "To Read", value: "tbr", icon: "bookmark"), StatusValue(display: "In Progress", value: "in-progress", icon: "book"), StatusValue(display: "Completed", value: "completed", icon: "checkmark.seal")]
     @State public var selectedStatus = StatusValue(display: "Add to Library", value: "atl", icon: "bookmark")
     @State public var date = Date()
+    @State public var castText = ""
+    @State public var submitting = false
     
     func loadReviews(bookToLoad: Book) {
         BookManager.shared.fetchReviews(bookId: book.id ?? "") { result in
@@ -139,16 +142,32 @@ struct BookView: View {
                 }
             }
         } else {
-            print("Adding book to library")
             BookManager.shared.addBookToLibrary(book: book, bookStatus: selectedStatus.value, bookType: bookType) { result in
                 switch result {
-                case .success(let message):
+                case .success(_):
                     isPresented = false
-                    loadLibraryStatus(bookToLoad: book)
+                    loadBookByTitleAuthorKey()
                     break
                 case .failure(let error):
                     print("Failed to fetch books: \(error)")
                 }
+            }
+        }
+    }
+    
+    func submitCast() {
+        submitting = true
+        BookManager.shared.submitComment(book: book, commentText: castText) { result in
+            switch result {
+            case .success(_):
+                castText = ""
+                loadReviews(bookToLoad: book)
+                submitting = false
+                showCommentModal = false
+                break
+            case .failure(let error):
+                print("Failed to fetch books: \(error)")
+                submitting = false
             }
         }
     }
@@ -161,7 +180,24 @@ struct BookView: View {
                 BookDiscussionView(book: book, reviews: $reviews, reviewsLoading: $reviewsLoading)
                 Spacer()
             }
+            Button(action: {
+                    showCommentModal = true
+                }) {
+                    Text("Discuss Book")
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                        .background(hexToColor(hex: "#CEFF41"))
+                        .foregroundColor(.black)
+                        .font(Font.custom(ConfigManager.shared.primaryFont, size: 16))
+                }
         }
+        .edgesIgnoringSafeArea(.bottom)
+        .sheet(isPresented: $showCommentModal, content: {
+            BookReviewSheetView(isPresented: $showCommentModal, castText: $castText, submitting: $submitting, submitCast: submitCast)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .background(Color.white)
+                .edgesIgnoringSafeArea(.bottom)
+        })
         .sheet(isPresented: $isPresented, content: {
             BookStatusView(isPresented: $isPresented, date: $date, selectedStatus: $selectedStatus, updateStatus: updateBookInLibrary)
                         .frame(maxWidth: .infinity, maxHeight: .infinity)

@@ -68,7 +68,6 @@ struct AuthView: View {
                     link = signerDetails.data.deepLinkURL
                     pollingToken = signerDetails.data.token
                     gettingLink = false
-//                    poll(token: signerDetails.data.token)
                 }
                 break
             case .failure(let error):
@@ -87,9 +86,6 @@ struct AuthView: View {
     
     func getUserInfo() {
         let signerApproved: Bool = UserManager.shared.getAuthStatus()
-        print("signer approved: ", signerApproved)
-        print("polling", polling)
-        print("polling token", pollingToken)
         if !signerApproved && polling && pollingToken != "" {
             poll(token: pollingToken)
         }
@@ -114,6 +110,7 @@ struct AuthView: View {
                     Spacer()
                     Text("Build your reading list.")
                         .font(.system(size: 20))
+                        .foregroundColor(.black)
                     Spacer()
                     Spacer()
                     if link != "" && !signInError {
@@ -144,6 +141,7 @@ struct AuthView: View {
                         .cornerRadius(10)
                     } else {
                         Text("Error signing in")
+                            .foregroundColor(.black)
                         Button (action: {
                             polling = false
                             signInError = false
@@ -154,6 +152,7 @@ struct AuthView: View {
                                 .foregroundColor(.black)
                                 .font(.system(size: 18))
                                 .padding(.bottom, 5)
+                                .foregroundColor(.black)
                         }
                     }
                     Text("Powered by Pinata")

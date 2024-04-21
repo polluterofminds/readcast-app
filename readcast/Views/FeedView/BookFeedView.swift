@@ -15,10 +15,12 @@ struct BookFeedView: View {
     @State public var category: String = "Trending"
     @State public var books: [Book] = []
     @State public var showProgressView: Bool = true
-    var categories = [Category(name: "Trending"), Category(name: "Newest"), Category(name: "Fiction"), Category(name: "Business"), Category(name: "Biography")]
+    @State public var categories = [Category(name: "Trending"), Category(name: "Newest"), Category(name: "Fiction"), Category(name: "Business"), Category(name: "Biography")]
+    @State public var user = User(fid: 0, custodyAddress: "", recoveryAddress: "", followingCount: 0, followerCount: 0, verifications: [], bio: "", displayName: "", pfpURL: "", username: "", powerBadgeUser: false)
+    @State public var friendsBooks: [Book] = []
     
     func loadBookFeed() {
-        BookManager.shared.fetchBooks(category: category) { result in
+        BookManager.shared.fetchBooks(category: category, fid: user.fid) { result in
                     switch result {
                     case .success(let books):
                         self.books = books
@@ -32,14 +34,55 @@ struct BookFeedView: View {
     }
     
     func selectCategory(selectedCategory: String) {
+        books = []
+        showProgressView = true
         category = selectedCategory
-        loadBookFeed()
+        if selectedCategory == "Friends" {
+            print("Swapping books")
+            books = friendsBooks
+            showProgressView = false
+        } else {
+            loadBookFeed()
+        }
+    }
+    
+    func checkAuthStatus() {
+        UserManager.shared.getUserInfo() { result in
+            switch result {
+            case .success(let userData):
+                if(userData.fid != 0) {
+                    if !self.categories.contains(where: { $0.name == "Friends" }) {
+                        self.categories.append(Category(name: "Friends"))
+                    }
+                    user = userData
+                    BookManager.shared.fetchBooks(category: "Friends", fid: user.fid) { result in
+                                switch result {
+                                case .success(let books):
+                                    print("friend books loaded")
+                                    self.friendsBooks = books
+                                    showProgressView = false
+                                case .failure(let error):
+                                    // Handle error
+                                    showProgressView = false
+                                    print("Failed to fetch books: \(error)")
+                                }
+                            }
+                }
+                
+                break
+            case .failure(let error):
+                print("Failed to get user: \(error)")
+            }
+        }
     }
     
     var body: some View {
         VStack {
-            if showProgressView {
+            if showProgressView == true {
+                Spacer()
                 ProgressView()
+                    .progressViewStyle(CircularProgressViewStyle(tint: .black))
+                Spacer()
             } else {
                 ScrollView(.horizontal) {
                     HStack {
@@ -80,6 +123,7 @@ struct BookFeedView: View {
             }
         }.onAppear {
             loadBookFeed()
+            checkAuthStatus()
         }
         .background(Color.white)
     }

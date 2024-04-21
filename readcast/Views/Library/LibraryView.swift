@@ -22,6 +22,7 @@ struct LibraryView: View {
         } else {
             filteredLibrary = library.filter { $0.status == category.name }
         }
+        loading = false
     }
     func loadLibraryItems() {
         BookManager.shared.fetchBooksFromLibrary() { result in
@@ -32,9 +33,9 @@ struct LibraryView: View {
                         filterLibraryItems()
                     case .failure(let error):
                         print("Failed to fetch library: \(error)")
+                        loading = false
                     }
                 }
-        loading = false
     }
     var body: some View {
         VStack {
@@ -42,7 +43,9 @@ struct LibraryView: View {
                 Spacer()
                 HStack {
                     Spacer()
+                        .foregroundColor(.black)
                     ProgressView()
+                        .progressViewStyle(CircularProgressViewStyle(tint: .black))
                     Spacer()
                 }
                 Spacer()

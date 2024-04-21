@@ -17,7 +17,7 @@ struct SearchBarView: View {
 
             HStack {
                 Image(systemName: "magnifyingglass")
-                    .foregroundColor(.gray) // Placeholder text color
+                    .foregroundColor(.gray)
                 ZStack {
                     if searchText.isEmpty {
                         HStack {

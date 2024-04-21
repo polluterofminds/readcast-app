@@ -53,7 +53,7 @@ struct HomeHeaderView: View {
             Text(greeting)
                 .foregroundColor(.black)
                 .fontWeight(/*@START_MENU_TOKEN@*/.bold/*@END_MENU_TOKEN@*/)
-                .font(Font.custom(ConfigManager.shared.primaryFont, size: 26))
+                .font(Font.custom(ConfigManager.shared.primaryFont, size: 22))
             Spacer()
             if isLoggedIn && user.pfpURL != "" {
                 NavigationLink(destination: ProfileView()) {

@@ -43,6 +43,11 @@ struct Details: Codable {
     let dateCompleted: String?
 }
 
+struct CommentRequest: Codable {
+    let book: Book
+    let review: String
+}
+
 struct ReviewUser: Codable {
     let fid: Double
     let username: String?
@@ -109,8 +114,8 @@ class BookManager {
     var searchResults: [SearchItem] = []
     var libraryItem: LibraryItem = LibraryItem(book_id_fid_key: "", fid: 0, book_id: "", books: Book(id: "", author: "", categories: "", createdAt: "", description: "", thumbnail: "", title: "", reviews: 0, titleAuthorKey: ""))
     
-    func fetchBooks(category: String, completion: @escaping (Result<[Book], Error>) -> Void) {
-        guard let url = URL(string: "\(ConfigManager.shared.apiUrl)/books/\(category)") else {
+    func fetchBooks(category: String, fid: Int, completion: @escaping (Result<[Book], Error>) -> Void) {
+        guard let url = URL(string: "\(ConfigManager.shared.apiUrl)/books/\(category)?fid=\(fid)") else {
             completion(.failure(NSError(domain: "Invalid URL", code: 0, userInfo: nil)))
             return
         }
@@ -392,5 +397,42 @@ class BookManager {
                 completion(.failure(error))
             }
         }.resume()
+    }
+    
+    func submitComment(book: Book, commentText: String, completion: @escaping (Result<String, Error>) -> Void) {
+        let commentRequest = CommentRequest(book: book, review: commentText)
+
+        let token = UserManager.shared.getAuthToken()
+        guard let url = URL(string: "\(ConfigManager.shared.apiUrl)/reviews") else { return }
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.addValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        do {
+            let jsonData = try JSONEncoder().encode(commentRequest)
+            request.httpBody = jsonData
+            print(jsonData)
+            let task = URLSession.shared.dataTask(with: request) { data, response, error in
+                if let error = error {
+                    print("Error occurred: \(error)")
+                    completion(.failure(error))
+                    return
+                }
+                
+                guard let data = data else {
+                    completion(.failure(NSError(domain: "No data received", code: 1, userInfo: nil)))
+                    return
+                }
+    
+                completion(.success("Success"))
+            }
+            
+            task.resume()
+        } catch {
+            print("Error serializing JSON: \(error)")
+            completion(.failure(error))
+            return
+        }
     }
 }

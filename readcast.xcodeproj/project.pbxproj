@@ -11,6 +11,7 @@
 		4102A90D2BA07FF700D4B24C /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4102A90C2BA07FF700D4B24C /* Colors.swift */; };
 		4102A9112BA0CC7B00D4B24C /* ConfigManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4102A9102BA0CC7B00D4B24C /* ConfigManager.swift */; };
 		4158708D2BD4114B00A5DE73 /* BookStatusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4158708C2BD4114B00A5DE73 /* BookStatusView.swift */; };
+		4158708F2BD46B7600A5DE73 /* BookReviewSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4158708E2BD46B7600A5DE73 /* BookReviewSheetView.swift */; };
 		4173EFFC2BA72EF300BDB517 /* BottomNavView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4173EFFB2BA72EF300BDB517 /* BottomNavView.swift */; };
 		4173EFFE2BA7327E00BDB517 /* LibraryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4173EFFD2BA7327E00BDB517 /* LibraryView.swift */; };
 		4173F0002BA7329400BDB517 /* SearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4173EFFF2BA7329400BDB517 /* SearchView.swift */; };
@@ -45,6 +46,7 @@
 		4102A90C2BA07FF700D4B24C /* Colors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Colors.swift; sourceTree = "<group>"; };
 		4102A9102BA0CC7B00D4B24C /* ConfigManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigManager.swift; sourceTree = "<group>"; };
 		4158708C2BD4114B00A5DE73 /* BookStatusView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookStatusView.swift; sourceTree = "<group>"; };
+		4158708E2BD46B7600A5DE73 /* BookReviewSheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookReviewSheetView.swift; sourceTree = "<group>"; };
 		4173EFFB2BA72EF300BDB517 /* BottomNavView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomNavView.swift; sourceTree = "<group>"; };
 		4173EFFD2BA7327E00BDB517 /* LibraryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryView.swift; sourceTree = "<group>"; };
 		4173EFFF2BA7329400BDB517 /* SearchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchView.swift; sourceTree = "<group>"; };
@@ -110,6 +112,7 @@
 			isa = PBXGroup;
 			children = (
 				4173F0042BA7365A00BDB517 /* BookView.swift */,
+				4158708E2BD46B7600A5DE73 /* BookReviewSheetView.swift */,
 				4158708C2BD4114B00A5DE73 /* BookStatusView.swift */,
 				4173F00C2BAC558800BDB517 /* BookActionView.swift */,
 				4173F0062BA73A7000BDB517 /* BookHeaderView.swift */,
@@ -281,6 +284,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				41B9F78A2BBB2BC200377B75 /* SearchBarView.swift in Sources */,
+				4158708F2BD46B7600A5DE73 /* BookReviewSheetView.swift in Sources */,
 				418B97D72B3B671A00842309 /* ContentView.swift in Sources */,
 				41B9F7922BCD460E00377B75 /* LifecycleManager.swift in Sources */,
 				41B9F7902BC4918200377B75 /* LibraryResultsView.swift in Sources */,

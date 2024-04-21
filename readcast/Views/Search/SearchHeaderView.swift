@@ -20,7 +20,8 @@ struct SearchHeaderView: View {
             }
             Spacer()
             Spacer()
-        }        
+        }
+        .background(.white)
     }
 }
 
