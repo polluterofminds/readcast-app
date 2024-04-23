@@ -12,6 +12,7 @@ struct BookReviewSheetView: View {
     @Binding var castText: String
     @Binding var submitting: Bool
     @FocusState private var isTextFieldFocused: Bool
+    let characterLimit = 240
     
     var submitCast: () -> Void
 
@@ -32,7 +33,7 @@ struct BookReviewSheetView: View {
                         Text("Submit")
                             .foregroundColor(.white)
                             .padding()
-                            .background(.black)
+                            .background(castText.count > 0 && castText.count <= 240 ? .black : .gray)
                             .cornerRadius(10)
                     }
                     .padding(.vertical)
@@ -48,23 +49,25 @@ struct BookReviewSheetView: View {
                 // Submission in progress
                 SubmissionInProgressView()
             } else {
+                Text("\(castText.count) / \(characterLimit) characters")
+                                .foregroundColor(castText.count > characterLimit ? .red : .secondary)
+                                .padding(.horizontal)
                 VStack {
-                    if castText.isEmpty && isTextFieldFocused == false {
-                        HStack {
-                            Text("Add comment")
-                                .foregroundColor(.gray)
-                                .padding()
-                            Spacer()
-                        }
-                    }
-                    TextField("", text: $castText)
+                    TextEditor(text: $castText)
+                        .multilineTextAlignment(.leading)
                         .foregroundColor(.black)
+                        .scrollContentBackground(.hidden)
+                        .background(.white)
+                        .padding()
                         .onSubmit {
                             UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
                             isTextFieldFocused = false
                         }
                         .submitLabel(.send)
-                        .padding()
+                        .onAppear {
+                            isTextFieldFocused = true
+                        }
+                    
                     Spacer()
                 }
                 .frame(width: UIScreen.main.bounds.width * 0.80, height: UIScreen.main.bounds.height * 0.35)
@@ -78,10 +81,6 @@ struct BookReviewSheetView: View {
         .frame(maxWidth: UIScreen.main.bounds.width * 0.90, maxHeight: .infinity)
         .background(Color.white)
         .padding()
-        .onAppear {
-            // Ensure focus state is updated when view appears
-            isTextFieldFocused = true
-        }
         .toolbar {
             ToolbarItem(placement: .keyboard) {
                 // Show "Done" button when text field is focused

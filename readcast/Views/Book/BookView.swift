@@ -156,18 +156,20 @@ struct BookView: View {
     }
     
     func submitCast() {
-        submitting = true
-        BookManager.shared.submitComment(book: book, commentText: castText) { result in
-            switch result {
-            case .success(_):
-                castText = ""
-                loadReviews(bookToLoad: book)
-                submitting = false
-                showCommentModal = false
-                break
-            case .failure(let error):
-                print("Failed to fetch books: \(error)")
-                submitting = false
+        if castText.count <= 240 {
+            submitting = true
+            BookManager.shared.submitComment(book: book, commentText: castText) { result in
+                switch result {
+                case .success(_):
+                    castText = ""
+                    loadReviews(bookToLoad: book)
+                    submitting = false
+                    showCommentModal = false
+                    break
+                case .failure(let error):
+                    print("Failed to fetch books: \(error)")
+                    submitting = false
+                }
             }
         }
     }
