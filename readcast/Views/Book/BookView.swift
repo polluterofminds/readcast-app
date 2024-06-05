@@ -179,7 +179,7 @@ struct BookView: View {
             ScrollView {
                 BookHeaderView(book: book)
                 BookActionView(libraryItem: $libraryItem, options: options, selectedStatus: $selectedStatus, updateStatus: updateStatus)
-                BookDiscussionView(book: book, reviews: $reviews, reviewsLoading: $reviewsLoading)
+                BookDiscussionView(book: book, reviews: $reviews, reviewsLoading: $reviewsLoading, loadReviews: loadReviews)
                 Spacer()
             }
             Button(action: {

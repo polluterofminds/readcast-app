@@ -75,6 +75,10 @@ struct SignedKeyRequest: Codable {
     let isSponsored: Bool
 }
 
+struct Reported: Codable {
+    let fid: Int
+}
+
 class UserManager {
     static let shared = UserManager()
     
@@ -216,5 +220,48 @@ class UserManager {
                 completion(.failure(error))
             }
         }.resume()
+    }
+    
+    func storeReportedFid(fid: Int) {
+        var reportedArray: [Reported] = []
+        func parse<T: Codable>(_ jsonString: String, type: [T].Type) -> [T]? {
+            let decoder = JSONDecoder()
+            if let jsonData = jsonString.data(using: .utf8) {
+                do {
+                    let array = try decoder.decode(type, from: jsonData)
+                    return array
+                } catch {
+                    print("Failed to decode JSON: \(error.localizedDescription)")
+                }
+            }
+            return nil
+        }
+        
+        if let reported = UserDefaults.standard.value(forKey: "reported") as? String {
+            reportedArray = parse(reported, type: [Reported].self) ?? []
+        }
+        
+        reportedArray.append(Reported(fid: fid))
+        
+        //  Stringify and store in userdefaults
+        
+        func stringify<T: Codable>(_ array: [T]) -> String? {
+            let encoder = JSONEncoder()
+            encoder.outputFormatting = .prettyPrinted // Optional: for pretty-printed JSON
+            do {
+                let jsonData = try encoder.encode(array)
+                if let jsonString = String(data: jsonData, encoding: .utf8) {
+                    return jsonString
+                }
+            } catch {
+                print("Failed to encode array: \(error.localizedDescription)")
+            }
+            return nil
+        }
+
+        // Convert the array to a JSON string
+        if let jsonString = stringify(reportedArray) {
+            UserDefaults.standard.setValue(jsonString, forKey: "reported")
+        }
     }
 }

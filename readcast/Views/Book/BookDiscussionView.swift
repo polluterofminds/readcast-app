@@ -11,12 +11,13 @@ struct BookDiscussionView: View {
     @State public var book: Book
     @Binding public var reviews: [ReviewItem]
     @Binding public var reviewsLoading: Bool
+    let loadReviews: (Book) -> Void
     
     var body: some View {
         ScrollView {
             VStack(alignment: .leading) {
                 ForEach(reviews, id: \.id) { review in
-                    ReviewItemView(review: review)
+                    ReviewItemView(book: book, review: review, loadReviews: loadReviews)
                 }
             }
         }

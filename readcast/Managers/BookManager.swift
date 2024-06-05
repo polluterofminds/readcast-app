@@ -106,6 +106,11 @@ struct SearchItem: Codable, Hashable {
     }
 }
 
+struct ReportRequest: Codable {
+    let reviewId: String
+    let reporteeFid: Int
+}
+
 class BookManager {
     static let shared = BookManager()
     
@@ -316,9 +321,22 @@ class BookManager {
         }
     }
 
-
+    func parse<T: Codable>(_ jsonString: String, type: [T].Type) -> [T]? {
+        let decoder = JSONDecoder()
+        if let jsonData = jsonString.data(using: .utf8) {
+            do {
+                let array = try decoder.decode(type, from: jsonData)
+                return array
+            } catch {
+                print("Failed to decode JSON: \(error.localizedDescription)")
+            }
+        }
+        return nil
+    }
     
     func fetchReviews(bookId: String, completion: @escaping (Result<[ReviewItem], Error>) -> Void) {
+        var reportedArray: [Reported] = []
+        
         guard let url = URL(string: "\(ConfigManager.shared.apiUrl)/reviews/\(bookId)") else {
             completion(.failure(NSError(domain: "Invalid URL", code: 0, userInfo: nil)))
             return
@@ -337,8 +355,16 @@ class BookManager {
             
             do {
                 let decodedData = try JSONDecoder().decode([ReviewItem].self, from: data)
-                self.reviews = decodedData
-                completion(.success(decodedData))
+                if let reported = UserDefaults.standard.value(forKey: "reported") as? String {
+                    reportedArray = self.parse(reported, type: [Reported].self) ?? []
+                }
+                let reportedFids = reportedArray.map { $0.fid }
+                            
+                // Filter out reviews with fids in reportedFids
+                let filteredReviews = decodedData.filter { !reportedFids.contains(Int($0.fid)) }
+                
+                self.reviews = filteredReviews
+                completion(.success(filteredReviews))
             } catch {
                 completion(.failure(error))
             }
@@ -413,6 +439,42 @@ class BookManager {
             let jsonData = try JSONEncoder().encode(commentRequest)
             request.httpBody = jsonData
             print(jsonData)
+            let task = URLSession.shared.dataTask(with: request) { data, response, error in
+                if let error = error {
+                    print("Error occurred: \(error)")
+                    completion(.failure(error))
+                    return
+                }
+                
+                guard let data = data else {
+                    completion(.failure(NSError(domain: "No data received", code: 1, userInfo: nil)))
+                    return
+                }
+    
+                completion(.success("Success"))
+            }
+            
+            task.resume()
+        } catch {
+            print("Error serializing JSON: \(error)")
+            completion(.failure(error))
+            return
+        }
+    }
+    
+    func reportReview(review: ReviewItem, completion: @escaping (Result<String, Error>) -> Void) {
+        let token = UserManager.shared.getAuthToken()
+        let reportRequest = ReportRequest(reviewId: review.id, reporteeFid: Int(review.fid))
+        guard let url = URL(string: "\(ConfigManager.shared.apiUrl)/reviews/report") else { return }
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.addValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        do {
+            let jsonData = try JSONEncoder().encode(reportRequest)
+            request.httpBody = jsonData
+            
             let task = URLSession.shared.dataTask(with: request) { data, response, error in
                 if let error = error {
                     print("Error occurred: \(error)")
