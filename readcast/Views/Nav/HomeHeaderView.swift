@@ -10,12 +10,12 @@ import SwiftUI
 struct HomeHeaderView: View {
     @State public var user: User = User(fid: 0, custodyAddress: "", recoveryAddress: "", followingCount: 0, followerCount: 0, verifications: [], bio: "", displayName: "", pfpURL: "", username: "", powerBadgeUser: false)
     @State public var greeting: String = "Good Morning"
-    @State public var isLoggedIn: Bool = false
+    @State public var authStatus: AuthStatus = AuthStatus(isLoggedIn: false, isWarpcast: false)
     func getTimeOfDay() {
         let date = Date()
         let calendar = Calendar.current
         let hour = calendar.component(.hour, from: date)
-
+        
         switch hour {
         case 0..<12:
             greeting = "Good Morning"
@@ -29,10 +29,10 @@ struct HomeHeaderView: View {
         }
     }
     
-    func isAuthenticated() {
-        isLoggedIn = UserManager.shared.getAuthStatus()
-        print("is logged in: ", isLoggedIn)
-        if isLoggedIn {
+    func isAuthenticated() async {
+        authStatus = await UserManager.shared.getAuthStatus()
+        print("auth status: ", authStatus)
+        if authStatus.isLoggedIn && authStatus.isWarpcast {
             //  Get User Info
             UserManager.shared.getUserInfo() { result in
                 switch result {
@@ -45,6 +45,9 @@ struct HomeHeaderView: View {
                     break
                 }
             }
+        } else if authStatus.isLoggedIn {
+            let session = UserManager.shared.session
+            print(session)
         }
     }
     
@@ -55,14 +58,20 @@ struct HomeHeaderView: View {
                 .fontWeight(/*@START_MENU_TOKEN@*/.bold/*@END_MENU_TOKEN@*/)
                 .font(Font.custom(ConfigManager.shared.primaryFont, size: 22))
             Spacer()
-            if isLoggedIn && user.pfpURL != "" {
+            if authStatus.isLoggedIn {
                 NavigationLink(destination: ProfileView()) {
-                    AsyncImageView(imageUrl: user.pfpURL, fallback: "person", width: 30, height: 30).foregroundColor(.black)
-                        .clipShape(Circle())
+                    AsyncImageView(imageUrl: user.pfpURL, fallback: "gear", width: 30, height: 30).foregroundColor(.black)
+                        .clipShape(Circle())                        
                 }
             } else {
                 NavigationLink(destination: AuthView()){
-                    AsyncImageView(imageUrl: "", fallback: "person", width: 20, height: 20).foregroundColor(.black)
+                    AsyncImageView(imageUrl: "", fallback: "person", width: 30, height: 30).foregroundColor(.black)
+                        .clipShape(Circle())
+                        .padding(3)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 100)
+                                .stroke(Color.black, lineWidth: 2)
+                        )
                 }
             }
         }
@@ -79,7 +88,9 @@ struct HomeHeaderView: View {
         )
         .onAppear {
             getTimeOfDay()
-            isAuthenticated()
+            Task {
+                await isAuthenticated()
+            }
         }
         .overlay(Rectangle().frame(height: 1).foregroundColor(Color.black), alignment: .bottom)
     }

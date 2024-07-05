@@ -39,6 +39,18 @@
 		41B9F78E2BC40DF700377B75 /* LibraryCategoriesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41B9F78D2BC40DF700377B75 /* LibraryCategoriesView.swift */; };
 		41B9F7902BC4918200377B75 /* LibraryResultsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41B9F78F2BC4918200377B75 /* LibraryResultsView.swift */; };
 		41B9F7922BCD460E00377B75 /* LifecycleManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41B9F7912BCD460E00377B75 /* LifecycleManager.swift */; };
+		41EDE4932C3851DB008D0579 /* Auth in Frameworks */ = {isa = PBXBuildFile; productRef = 41EDE4922C3851DB008D0579 /* Auth */; };
+		41EDE4952C3851DB008D0579 /* Functions in Frameworks */ = {isa = PBXBuildFile; productRef = 41EDE4942C3851DB008D0579 /* Functions */; };
+		41EDE4972C3851DB008D0579 /* PostgREST in Frameworks */ = {isa = PBXBuildFile; productRef = 41EDE4962C3851DB008D0579 /* PostgREST */; };
+		41EDE4992C3851DB008D0579 /* Realtime in Frameworks */ = {isa = PBXBuildFile; productRef = 41EDE4982C3851DB008D0579 /* Realtime */; };
+		41EDE49B2C3851DB008D0579 /* Storage in Frameworks */ = {isa = PBXBuildFile; productRef = 41EDE49A2C3851DB008D0579 /* Storage */; };
+		41EDE4A02C38531E008D0579 /* Supabase in Frameworks */ = {isa = PBXBuildFile; productRef = 41EDE49F2C38531E008D0579 /* Supabase */; };
+		41EDE4A22C3853F3008D0579 /* SignInWithAppleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41EDE4A12C3853F3008D0579 /* SignInWithAppleView.swift */; };
+		41EDE4A52C385426008D0579 /* GoTrue in Frameworks */ = {isa = PBXBuildFile; productRef = 41EDE4A42C385426008D0579 /* GoTrue */; };
+		41EDE4AA2C386A98008D0579 /* WarpcastAuthView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41EDE4A92C386A98008D0579 /* WarpcastAuthView.swift */; };
+		41EDE4AC2C386AE0008D0579 /* CustomTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41EDE4AB2C386AE0008D0579 /* CustomTextField.swift */; };
+		41EDE4AF2C388A49008D0579 /* Gravatar in Frameworks */ = {isa = PBXBuildFile; productRef = 41EDE4AE2C388A49008D0579 /* Gravatar */; };
+		41EDE4B12C388A49008D0579 /* GravatarUI in Frameworks */ = {isa = PBXBuildFile; productRef = 41EDE4B02C388A49008D0579 /* GravatarUI */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -77,6 +89,9 @@
 		41B9F78D2BC40DF700377B75 /* LibraryCategoriesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryCategoriesView.swift; sourceTree = "<group>"; };
 		41B9F78F2BC4918200377B75 /* LibraryResultsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryResultsView.swift; sourceTree = "<group>"; };
 		41B9F7912BCD460E00377B75 /* LifecycleManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LifecycleManager.swift; sourceTree = "<group>"; };
+		41EDE4A12C3853F3008D0579 /* SignInWithAppleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInWithAppleView.swift; sourceTree = "<group>"; };
+		41EDE4A92C386A98008D0579 /* WarpcastAuthView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WarpcastAuthView.swift; sourceTree = "<group>"; };
+		41EDE4AB2C386AE0008D0579 /* CustomTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTextField.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -84,6 +99,15 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				41EDE4AF2C388A49008D0579 /* Gravatar in Frameworks */,
+				41EDE4972C3851DB008D0579 /* PostgREST in Frameworks */,
+				41EDE4952C3851DB008D0579 /* Functions in Frameworks */,
+				41EDE4A02C38531E008D0579 /* Supabase in Frameworks */,
+				41EDE4932C3851DB008D0579 /* Auth in Frameworks */,
+				41EDE49B2C3851DB008D0579 /* Storage in Frameworks */,
+				41EDE4B12C388A49008D0579 /* GravatarUI in Frameworks */,
+				41EDE4992C3851DB008D0579 /* Realtime in Frameworks */,
+				41EDE4A52C385426008D0579 /* GoTrue in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -127,6 +151,7 @@
 			children = (
 				418B97D32B3B671A00842309 /* readcast */,
 				418B97D22B3B671A00842309 /* Products */,
+				41EDE49E2C38531E008D0579 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -173,7 +198,8 @@
 				4173F0022BA7341100BDB517 /* Nav */,
 				4173F0012BA733EE00BDB517 /* FeedView */,
 				4197022F2B9FE54100372961 /* AsyncImageView.swift */,
-				4173F0102BAF7B3D00BDB517 /* AuthView.swift */,
+				41EDE4AB2C386AE0008D0579 /* CustomTextField.swift */,
+				41EDE4A82C386A7E008D0579 /* Auth */,
 				41B9F77F2BBAD52200377B75 /* ProfileView.swift */,
 			);
 			path = Views;
@@ -211,6 +237,23 @@
 			path = Library;
 			sourceTree = "<group>";
 		};
+		41EDE49E2C38531E008D0579 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		41EDE4A82C386A7E008D0579 /* Auth */ = {
+			isa = PBXGroup;
+			children = (
+				4173F0102BAF7B3D00BDB517 /* AuthView.swift */,
+				41EDE4A12C3853F3008D0579 /* SignInWithAppleView.swift */,
+				41EDE4A92C386A98008D0579 /* WarpcastAuthView.swift */,
+			);
+			path = Auth;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -227,6 +270,17 @@
 			dependencies = (
 			);
 			name = readcast;
+			packageProductDependencies = (
+				41EDE4922C3851DB008D0579 /* Auth */,
+				41EDE4942C3851DB008D0579 /* Functions */,
+				41EDE4962C3851DB008D0579 /* PostgREST */,
+				41EDE4982C3851DB008D0579 /* Realtime */,
+				41EDE49A2C3851DB008D0579 /* Storage */,
+				41EDE49F2C38531E008D0579 /* Supabase */,
+				41EDE4A42C385426008D0579 /* GoTrue */,
+				41EDE4AE2C388A49008D0579 /* Gravatar */,
+				41EDE4B02C388A49008D0579 /* GravatarUI */,
+			);
 			productName = readcast;
 			productReference = 418B97D12B3B671A00842309 /* readcast.app */;
 			productType = "com.apple.product-type.application";
@@ -255,6 +309,11 @@
 				Base,
 			);
 			mainGroup = 418B97C82B3B671A00842309;
+			packageReferences = (
+				41EDE4912C3851DB008D0579 /* XCRemoteSwiftPackageReference "supabase-swift" */,
+				41EDE4A32C385426008D0579 /* XCRemoteSwiftPackageReference "gotrue-swift" */,
+				41EDE4AD2C388A49008D0579 /* XCRemoteSwiftPackageReference "Gravatar-SDK-iOS" */,
+			);
 			productRefGroup = 418B97D22B3B671A00842309 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -292,14 +351,17 @@
 				4173F00F2BAF749600BDB517 /* UserManager.swift in Sources */,
 				4173EFFC2BA72EF300BDB517 /* BottomNavView.swift in Sources */,
 				4197022C2B9FE38900372961 /* BookFeedView.swift in Sources */,
+				41EDE4AA2C386A98008D0579 /* WarpcastAuthView.swift in Sources */,
 				4173EFFE2BA7327E00BDB517 /* LibraryView.swift in Sources */,
 				4173F0112BAF7B3D00BDB517 /* AuthView.swift in Sources */,
+				41EDE4A22C3853F3008D0579 /* SignInWithAppleView.swift in Sources */,
 				4173F0052BA7365A00BDB517 /* BookView.swift in Sources */,
 				4102A9112BA0CC7B00D4B24C /* ConfigManager.swift in Sources */,
 				4197022E2B9FE48F00372961 /* BookItemView.swift in Sources */,
 				4173F0002BA7329400BDB517 /* SearchView.swift in Sources */,
 				41B9F78E2BC40DF700377B75 /* LibraryCategoriesView.swift in Sources */,
 				4102A90B2BA07E2600D4B24C /* HomeHeaderView.swift in Sources */,
+				41EDE4AC2C386AE0008D0579 /* CustomTextField.swift in Sources */,
 				41B9F78C2BBB30BE00377B75 /* SearchResultsView.swift in Sources */,
 				4173F00B2BA752F500BDB517 /* ReviewItemView.swift in Sources */,
 				418B97D92B3B671A00842309 /* BookManager.swift in Sources */,
@@ -538,6 +600,81 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		41EDE4912C3851DB008D0579 /* XCRemoteSwiftPackageReference "supabase-swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/supabase/supabase-swift.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.5.1;
+			};
+		};
+		41EDE4A32C385426008D0579 /* XCRemoteSwiftPackageReference "gotrue-swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/supabase-community/gotrue-swift";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.3.0;
+			};
+		};
+		41EDE4AD2C388A49008D0579 /* XCRemoteSwiftPackageReference "Gravatar-SDK-iOS" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Automattic/Gravatar-SDK-iOS";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.1.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		41EDE4922C3851DB008D0579 /* Auth */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 41EDE4912C3851DB008D0579 /* XCRemoteSwiftPackageReference "supabase-swift" */;
+			productName = Auth;
+		};
+		41EDE4942C3851DB008D0579 /* Functions */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 41EDE4912C3851DB008D0579 /* XCRemoteSwiftPackageReference "supabase-swift" */;
+			productName = Functions;
+		};
+		41EDE4962C3851DB008D0579 /* PostgREST */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 41EDE4912C3851DB008D0579 /* XCRemoteSwiftPackageReference "supabase-swift" */;
+			productName = PostgREST;
+		};
+		41EDE4982C3851DB008D0579 /* Realtime */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 41EDE4912C3851DB008D0579 /* XCRemoteSwiftPackageReference "supabase-swift" */;
+			productName = Realtime;
+		};
+		41EDE49A2C3851DB008D0579 /* Storage */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 41EDE4912C3851DB008D0579 /* XCRemoteSwiftPackageReference "supabase-swift" */;
+			productName = Storage;
+		};
+		41EDE49F2C38531E008D0579 /* Supabase */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 41EDE4912C3851DB008D0579 /* XCRemoteSwiftPackageReference "supabase-swift" */;
+			productName = Supabase;
+		};
+		41EDE4A42C385426008D0579 /* GoTrue */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 41EDE4A32C385426008D0579 /* XCRemoteSwiftPackageReference "gotrue-swift" */;
+			productName = GoTrue;
+		};
+		41EDE4AE2C388A49008D0579 /* Gravatar */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 41EDE4AD2C388A49008D0579 /* XCRemoteSwiftPackageReference "Gravatar-SDK-iOS" */;
+			productName = Gravatar;
+		};
+		41EDE4B02C388A49008D0579 /* GravatarUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 41EDE4AD2C388A49008D0579 /* XCRemoteSwiftPackageReference "Gravatar-SDK-iOS" */;
+			productName = GravatarUI;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 418B97C92B3B671A00842309 /* Project object */;
 }

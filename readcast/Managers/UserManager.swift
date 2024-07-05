@@ -6,6 +6,8 @@
 //
 
 import Foundation
+import Supabase
+import Gravatar
 
 struct User: Codable {
     let fid: Int
@@ -95,8 +97,32 @@ struct EmailSignInResponse: Codable {
     }
 }
 
+struct AuthStatus {
+    let isLoggedIn: Bool
+    let isWarpcast: Bool
+}
+
 class UserManager {
     static let shared = UserManager()
+    let client: SupabaseClient
+    
+    var session: Session?
+    
+    private init() {
+        client = SupabaseClient(supabaseURL: URL(string: "https://zytztcmrhfyjwfsrjtmq.supabase.co")!, supabaseKey: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp5dHp0Y21yaGZ5andmc3JqdG1xIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDM2MzEzMzUsImV4cCI6MjAxOTIwNzMzNX0.kTYNOq2ATSzAMBfn94_vs6JqlWOa-r4HAmOXeVIKIDU")
+        
+        Task {
+            await initializeSession()
+        }
+    }
+    
+    private func initializeSession() async {
+        do {
+            session = try await client.auth.session
+        } catch {
+            print("Failed to get session: \(error.localizedDescription)")
+        }
+    }
     
     var token: String = ""
     var user: User = User(fid: 0, custodyAddress: "", recoveryAddress: "", followingCount: 0, followerCount: 0, verifications: [], bio: "", displayName: "", pfpURL: "", username: "", powerBadgeUser: false)
@@ -140,15 +166,37 @@ class UserManager {
         }.resume()
     }
     
-    func getAuthStatus() -> Bool {
-        var approved = false
+    func getAuthStatus() async -> AuthStatus {
+        var status = AuthStatus(isLoggedIn: false, isWarpcast: false)
         if let authApproved = UserDefaults.standard.value(forKey: "signer_approved") as? String {
+            print("Is auth approved?")
+            print(authApproved)
             if authApproved == "true" {
-                approved = true
+                print("Auth is approved")
+                status = AuthStatus(isLoggedIn: true, isWarpcast: true)
+            } else {
+                do {
+                    let sessionData: Session = try await client.auth.session
+                    if sessionData.user.email != "" && sessionData.user.email != nil {
+                        status = AuthStatus(isLoggedIn: true, isWarpcast: false)
+                    }
+                } catch {
+                    print("Error getting session data")
+                }
+            }
+        } else {
+            print("No auth approved data, checking Supabase")
+            do {
+                let sessionData: Session = try await client.auth.session
+                if sessionData.user.email != "" && sessionData.user.email != nil {
+                    status = AuthStatus(isLoggedIn: true, isWarpcast: false)
+                }
+            } catch {
+                print("Error getting session data")
             }
         }
         
-        return approved
+        return status
     }
     
     func getAuthToken() -> String {
@@ -167,50 +215,6 @@ class UserManager {
         UserDefaults.standard.removeObject(forKey: "auth_token")
         UserDefaults.standard.removeObject(forKey: "signer_approved")
         UserDefaults.standard.removeObject(forKey: "fid")
-    }
-    
-    func signInEmail(email: String, password: String, completion: @escaping (Result<EmailSignInResponse, Error>) -> Void) {
-        guard let url = URL(string: "\(ConfigManager.shared.apiUrl)/users/sign-in/email") else {
-            completion(.failure(NSError(domain: "Invalid URL", code: 0, userInfo: nil)))
-            return
-        }
-        
-        let credentials = Credentials(email: email, password: password)
-        
-        var request = URLRequest(url: url)
-        request.httpMethod = "POST"
-        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-        do {
-            let jsonData = try JSONEncoder().encode(credentials)
-            request.httpBody = jsonData
-        } catch {
-            completion(.failure(error))
-        }
-        
-        URLSession.shared.dataTask(with: request) { data, response, error in
-            if let error = error {
-                completion(.failure(error))
-                return
-            }
-            
-            guard let data = data else {
-                completion(.failure(NSError(domain: "No data received", code: 1, userInfo: nil)))
-                return
-            }
-            
-            do {
-                let decodedData = try JSONDecoder().decode(EmailSignInResponse.self, from: data)
-                //  Store the signer_id
-                print("signer id")
-                print(decodedData.signerId)
-                UserDefaults.standard.setValue(decodedData.signerId, forKey: "auth_token")
-                UserDefaults.standard.setValue("true", forKey: "signer_approved")
-                UserDefaults.standard.setValue(decodedData.fid, forKey: "fid")
-                completion(.success(decodedData))
-            } catch {
-                completion(.failure(error))
-            }
-        }.resume()
     }
     
     func signIn(completion: @escaping (Result<SignerData, Error>) -> Void) {

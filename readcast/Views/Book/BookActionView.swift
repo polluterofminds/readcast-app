@@ -22,9 +22,9 @@ struct BookActionView: View {
     
     var updateStatus: (StatusValue) -> Void
     
-    func isAuthenticated() {
-        let auth: Bool = UserManager.shared.getAuthStatus()
-        loggedIn = auth
+    func isAuthenticated() async {
+        let auth: AuthStatus = await UserManager.shared.getAuthStatus()
+        loggedIn = auth.isLoggedIn
     }
     
     var body: some View {
@@ -71,7 +71,9 @@ struct BookActionView: View {
             }
         }
         .onAppear {
-            isAuthenticated()
+            Task {
+             await isAuthenticated()
+            }
         }
         .background(
             LinearGradient(
