@@ -192,6 +192,13 @@ struct AuthView: View {
                                 Text("Log in with Warpcast")
                             }
                             .foregroundColor(.black)
+                            Text("By using ReadCast, you agree to the end user license agreement linked below.")
+                                .font(.system(size: 10))
+                                .foregroundColor(.black)
+                                .padding([.top, .leading, .trailing])
+                            Link("EULA", destination: URL(string: "https://readcast.xyz/#text11")!)
+                                .font(.system(size: 10))
+                                .foregroundColor(.blue)
                         }
                         .padding()
                     } else if link != "" && !signInError {
@@ -227,9 +234,16 @@ struct AuthView: View {
                             .padding(.top)
                             .font(.system(size: 12))
                         Button(action: setEmail) {
-                            Text("Log in with email (beta)")
+                            Text("Log in with email")
                         }
                         .foregroundColor(.black)
+                        Text("By using ReadCast, you agree to the end user license agreement linked below.")
+                            .font(.system(size: 10))
+                            .foregroundColor(.black)
+                            .padding([.top, .leading, .trailing])
+                        Link("EULA", destination: URL(string: "https://readcast.xyz/#text11")!)
+                            .font(.system(size: 10))
+                            .foregroundColor(.blue)
                     } else {
                         Text("Error signing in")
                             .foregroundColor(.black)
