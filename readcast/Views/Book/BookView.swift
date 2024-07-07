@@ -15,7 +15,7 @@ struct BookView: View {
     @State public var reviews: [ReviewItem] = []
     @State public var reviewsLoading: Bool = true
     @State public var libraryItem: LibraryItem = LibraryItem(book_id_fid_key: "", fid: 0, book_id: "", status: "", books: Book(id: "", author: "", categories: "", createdAt: "", description: "", thumbnail: "", title: "", reviews: 0, titleAuthorKey: ""), user_id: nil)
-    @State public var options = [StatusValue(display: "To Read", value: "tbr", icon: "bookmark"), StatusValue(display: "In Progress", value: "in-progress", icon: "book"), StatusValue(display: "Completed", value: "completed", icon: "checkmark.seal")]
+    @State public var options = [StatusValue(display: "To Read", value: "tbr", icon: "bookmark"), StatusValue(display: "In Progress", value: "in-progress", icon: "book"), StatusValue(display: "Completed", value: "completed", icon: "checkmark.seal"), StatusValue(display: "Remove From Library", value: "remove", icon: "minus.circle")]
     @State public var selectedStatus = StatusValue(display: "Add to Library", value: "atl", icon: "bookmark")
     @State public var date = Date()
     @State public var castText = ""
@@ -34,16 +34,17 @@ struct BookView: View {
     }
     
     func loadLibraryStatus(bookToLoad: Book) {
-        BookManager.shared.fetchBookFromLibrary(bookId: bookToLoad.id ?? "") { result in
-            switch result {
-            case .success(let item):
-                self.libraryItem = item
-                setStatus()
-                break
-            case .failure(let error):
-                // Handle error
-//                    showProgressView = false
-                print("Failed to fetch books: \(error)")
+        let authStatus = UserManager.shared.authStatus
+        if authStatus.isWarpcast {
+            BookManager.shared.fetchBookFromLibrary(bookId: bookToLoad.id ?? "") { result in
+                switch result {
+                case .success(let item):
+                    self.libraryItem = item
+                    setStatus()
+                    break
+                case .failure(let error):
+                    print("Failed to fetch books: \(error)")
+                }
             }
         }
     }
@@ -96,6 +97,10 @@ struct BookView: View {
         }
     }
     
+    func resetLibraryStatus() {
+        libraryItem = LibraryItem(book_id_fid_key: "", fid: 0, book_id: "", status: "", books: Book(id: "", author: "", categories: "", createdAt: "", description: "", thumbnail: "", title: "", reviews: 0, titleAuthorKey: ""), user_id: nil)
+    }
+    
     func loadBookByTitleAuthorKey() {
         saveItemsToUserDefaults(book)
         BookManager.shared.fetchBookByTitleAuthorKey(titleAuthorKey: book.titleAuthorKey ?? "") { result in
@@ -107,23 +112,48 @@ struct BookView: View {
                 loadLibraryStatus(bookToLoad: bookResult)
                 break
             case .failure(let error):
-                // Handle error
-//                    showProgressView = false
                 print("Failed to fetch books: \(error)")
             }
         }
     }
     
-    func updateStatus(newStatus: StatusValue) {
+    func updateStatus(newStatus: StatusValue) async {
         selectedStatus = newStatus
         if newStatus.value == "in-progress" || newStatus.value == "completed" {
             isPresented = true
         } else if newStatus.value == "tbr" {
-            updateBookInLibrary(bookType: "paperback")
+            await updateBookInLibrary(bookType: "paperback")
+        } else if newStatus.value == "remove" {
+            //  Remove from library
+            if UserManager.shared.authStatus.isWarpcast {
+                BookManager.shared.removeBookFromLibrary(bookId: book.id!) { result in
+                    switch result {
+                    case .success(let bookResult):
+                        resetLibraryStatus()
+                        selectedStatus = StatusValue(display: "Add to Library", value: "atl", icon: "bookmark")
+                        break
+                    case .failure(let error):
+                        // Handle error
+        //                    showProgressView = false
+                        print("Failed to fetch books: \(error)")
+                    }
+                }
+            } else {
+                await DBManager.shared.removeFromLibrary(bookId: book.id!)
+                let items = await DBManager.shared.loadSingLibraryItem(bookId: book.id!)
+                if !items.isEmpty {
+                    libraryItem = items.first ?? libraryItem
+                    setStatus()
+                } else {
+                    resetLibraryStatus()
+                    selectedStatus = StatusValue(display: "Add to Library", value: "atl", icon: "bookmark")
+                }
+            }
         }
     }
     
-    func updateBookInLibrary(bookType: String) {
+    func updateBookInLibrary(bookType: String) async {
+        let authStatus = UserManager.shared.authStatus
         //  Need to know if book was in Library or not
         if libraryItem.status != "" {
             //  It's in the library
@@ -139,15 +169,21 @@ struct BookView: View {
                 }
             }
         } else {
-            BookManager.shared.addBookToLibrary(book: book, bookStatus: selectedStatus.value, bookType: bookType) { result in
-                switch result {
-                case .success(_):
-                    isPresented = false
-                    loadBookByTitleAuthorKey()
-                    break
-                case .failure(let error):
-                    print("Failed to fetch books: \(error)")
+            if authStatus.isWarpcast {
+                BookManager.shared.addBookToLibrary(book: book, bookStatus: selectedStatus.value, bookType: bookType) { result in
+                    switch result {
+                    case .success(_):
+                        isPresented = false
+                        loadBookByTitleAuthorKey()
+                        break
+                    case .failure(let error):
+                        print("Failed to fetch books: \(error)")
+                    }
                 }
+            } else {
+                let user_id = UserManager.shared.session?.user.id
+                let email = UserManager.shared.session?.user.email
+                await DBManager.shared.upsertBookLibrary(item: LibraryInsert(book_id: book.id ?? "", status: selectedStatus.value, book_type: bookType, date_completed: nil, book_id_fid_key: book.id! + email!, user_id: user_id!))
             }
         }
     }
@@ -209,7 +245,18 @@ struct BookView: View {
                 loadBookByTitleAuthorKey()
             } else {
                 loadReviews(bookToLoad: book)
-                loadLibraryStatus(bookToLoad: book)
+                let authStatus = UserManager.shared.authStatus
+                if authStatus.isWarpcast {
+                    loadLibraryStatus(bookToLoad: book)
+                } else {
+                    Task {
+                        let items = await DBManager.shared.loadSingLibraryItem(bookId: book.id!)
+                        if !items.isEmpty {
+                            libraryItem = items.first ?? libraryItem
+                            setStatus()
+                        }
+                    }
+                }
             }
         }
         .navigationBarBackButtonHidden(true)

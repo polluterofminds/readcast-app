@@ -39,7 +39,7 @@ struct LibraryView: View {
         } else {
             let books = await DBManager.shared.loadLibrary()
             library = books
-            loading = false
+            filterLibraryItems()
         }
     }
     var body: some View {

@@ -27,7 +27,7 @@ struct BookStatusView: View {
     @Binding public var selectedStatus: StatusValue
     @State public var selectedBookType: Option = Option(name: "Paperback", value: "paperback")
     
-    var updateStatus: (String) -> Void
+    var updateStatus: (String) async -> Void
         
     var body: some View {
         VStack {
@@ -95,7 +95,9 @@ struct BookStatusView: View {
                 }
                 Spacer()
                 Button(action: {
-                    updateStatus(selectedBookType.value)
+                    Task {
+                     await updateStatus(selectedBookType.value)
+                    }
                 }) {
                     Text("Update")
                         .foregroundColor(.white)

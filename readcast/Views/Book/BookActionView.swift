@@ -20,7 +20,7 @@ struct BookActionView: View {
     @State private var loggedIn: Bool = false
     @State private var isContextMenuVisible = false
     
-    var updateStatus: (StatusValue) -> Void
+    var updateStatus: (StatusValue) async -> Void
     
     func isAuthenticated() async {
         let auth: AuthStatus = await UserManager.shared.getAuthStatus()
@@ -41,7 +41,9 @@ struct BookActionView: View {
                 Menu {
                     ForEach(options, id: \.value) { option in
                         Button(action: {
-                            updateStatus(option)
+                            Task {
+                                await updateStatus(option)
+                            }
                         }) {
                             Label(option.display, systemImage: option.icon)
                         }

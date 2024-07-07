@@ -64,7 +64,7 @@ struct ReviewItem: Codable {
     var created_at: String
     var fid: Double
     var stars: Int8?
-    var books: Book
+    var books: Book?
     var hash: String?
     var thread_hash: String?
     var parent_hash: String?
@@ -317,6 +317,38 @@ class BookManager {
             return
         }
     }
+    
+    func removeBookFromLibrary(bookId: String, completion: @escaping (Result<String, Error>) -> Void) {
+        let token = UserManager.shared.getAuthToken()
+        guard let url = URL(string: "\(ConfigManager.shared.apiUrl)/books/library/\(bookId)") else { return }
+        var request = URLRequest(url: url)
+        request.httpMethod = "DELETE"
+        request.addValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        do {
+            let task = URLSession.shared.dataTask(with: request) { data, response, error in
+                if let error = error {
+                    print("Error occurred: \(error)")
+                    completion(.failure(error))
+                    return
+                }
+                
+                guard let data = data else {
+                    completion(.failure(NSError(domain: "No data received", code: 1, userInfo: nil)))
+                    return
+                }
+    
+                completion(.success("Success"))
+            }
+            
+            task.resume()
+        } catch {
+            print("Error serializing JSON: \(error)")
+            completion(.failure(error))
+            return
+        }
+    }
 
     func parse<T: Codable>(_ jsonString: String, type: [T].Type) -> [T]? {
         let decoder = JSONDecoder()
@@ -359,7 +391,7 @@ class BookManager {
                             
                 // Filter out reviews with fids in reportedFids
                 let filteredReviews = decodedData.filter { !reportedFids.contains(Int($0.fid)) }
-                
+
                 self.reviews = filteredReviews
                 completion(.success(filteredReviews))
             } catch {
