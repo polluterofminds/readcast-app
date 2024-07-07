@@ -108,6 +108,8 @@ class UserManager {
     
     var session: Session?
     
+    var authStatus: AuthStatus = AuthStatus(isLoggedIn: false, isWarpcast: false)
+    
     private init() {
         client = SupabaseClient(supabaseURL: URL(string: "https://zytztcmrhfyjwfsrjtmq.supabase.co")!, supabaseKey: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp5dHp0Y21yaGZ5andmc3JqdG1xIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDM2MzEzMzUsImV4cCI6MjAxOTIwNzMzNX0.kTYNOq2ATSzAMBfn94_vs6JqlWOa-r4HAmOXeVIKIDU")
         
@@ -195,7 +197,7 @@ class UserManager {
                 print("Error getting session data")
             }
         }
-        
+        authStatus = status
         return status
     }
     

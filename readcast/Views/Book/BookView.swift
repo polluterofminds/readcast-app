@@ -14,7 +14,7 @@ struct BookView: View {
     @State public var book: Book
     @State public var reviews: [ReviewItem] = []
     @State public var reviewsLoading: Bool = true
-    @State public var libraryItem: LibraryItem = LibraryItem(book_id_fid_key: "", fid: 0, book_id: "", status: "", books: Book(id: "", author: "", categories: "", createdAt: "", description: "", thumbnail: "", title: "", reviews: 0, titleAuthorKey: ""))
+    @State public var libraryItem: LibraryItem = LibraryItem(book_id_fid_key: "", fid: 0, book_id: "", status: "", books: Book(id: "", author: "", categories: "", createdAt: "", description: "", thumbnail: "", title: "", reviews: 0, titleAuthorKey: ""), user_id: nil)
     @State public var options = [StatusValue(display: "To Read", value: "tbr", icon: "bookmark"), StatusValue(display: "In Progress", value: "in-progress", icon: "book"), StatusValue(display: "Completed", value: "completed", icon: "checkmark.seal")]
     @State public var selectedStatus = StatusValue(display: "Add to Library", value: "atl", icon: "bookmark")
     @State public var date = Date()
@@ -49,7 +49,6 @@ struct BookView: View {
     }
     
     func setStatus() {
-        print("setting status")
         if libraryItem.status != "" {
             switch libraryItem.status {
             case "in-progress":
@@ -69,7 +68,6 @@ struct BookView: View {
                 break
             }
         }
-        print(selectedStatus)
     }
     
     func retrieveItemsFromUserDefaults() -> [Book]? {
@@ -126,7 +124,6 @@ struct BookView: View {
     }
     
     func updateBookInLibrary(bookType: String) {
-        print("Updating book in library")
         //  Need to know if book was in Library or not
         if libraryItem.status != "" {
             //  It's in the library

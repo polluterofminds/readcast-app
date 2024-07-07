@@ -38,7 +38,6 @@ struct BookFeedView: View {
         showProgressView = true
         category = selectedCategory
         if selectedCategory == "Friends" {
-            print("Swapping books")
             books = friendsBooks
             showProgressView = false
         } else {
@@ -57,8 +56,7 @@ struct BookFeedView: View {
                     user = userData
                     BookManager.shared.fetchBooks(category: "Friends", fid: user.fid) { result in
                                 switch result {
-                                case .success(let books):
-                                    print("friend books loaded")
+                                case .success(let books):            
                                     self.friendsBooks = books
                                     showProgressView = false
                                 case .failure(let error):

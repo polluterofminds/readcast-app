@@ -14,7 +14,7 @@ struct ProfileView: View {
     func logUserOut() async {
         print("Logging out...")
         let authStatus = await UserManager.shared.getAuthStatus()
-        print(authStatus)
+        UserManager.shared.logOut()
         if authStatus.isWarpcast {
             UserManager.shared.logOut()
             DispatchQueue.main.async {
@@ -54,7 +54,7 @@ struct ProfileView: View {
                 VStack {
                     HStack {
                         AsyncImageView(imageUrl: user.pfpURL, fallback: "person", width: 75, height: 75)
-                            .clipShape(Circle())                            
+                            .clipShape(Circle())
                             .padding(.horizontal)
                         VStack(alignment: .leading) {
                             Text(user.displayName)

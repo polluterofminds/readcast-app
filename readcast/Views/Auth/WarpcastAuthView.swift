@@ -65,8 +65,7 @@ struct WarpcastAuthView: View {
         gettingLink = true
         UserManager.shared.signIn() { result in
             switch result {
-            case .success(let signerDetails):
-                print(signerDetails)
+            case .success(let signerDetails):          
                 if signerDetails.data.status != "completed" {
                     //  Using polling token
                     polling = true

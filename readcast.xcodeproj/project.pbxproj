@@ -51,6 +51,7 @@
 		41EDE4AC2C386AE0008D0579 /* CustomTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41EDE4AB2C386AE0008D0579 /* CustomTextField.swift */; };
 		41EDE4AF2C388A49008D0579 /* Gravatar in Frameworks */ = {isa = PBXBuildFile; productRef = 41EDE4AE2C388A49008D0579 /* Gravatar */; };
 		41EDE4B12C388A49008D0579 /* GravatarUI in Frameworks */ = {isa = PBXBuildFile; productRef = 41EDE4B02C388A49008D0579 /* GravatarUI */; };
+		41EDE4B32C3ADBE3008D0579 /* DBManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41EDE4B22C3ADBE3008D0579 /* DBManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -92,6 +93,7 @@
 		41EDE4A12C3853F3008D0579 /* SignInWithAppleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInWithAppleView.swift; sourceTree = "<group>"; };
 		41EDE4A92C386A98008D0579 /* WarpcastAuthView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WarpcastAuthView.swift; sourceTree = "<group>"; };
 		41EDE4AB2C386AE0008D0579 /* CustomTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTextField.swift; sourceTree = "<group>"; };
+		41EDE4B22C3ADBE3008D0579 /* DBManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -212,6 +214,7 @@
 				41B9F7912BCD460E00377B75 /* LifecycleManager.swift */,
 				4173F00E2BAF749600BDB517 /* UserManager.swift */,
 				4102A9102BA0CC7B00D4B24C /* ConfigManager.swift */,
+				41EDE4B22C3ADBE3008D0579 /* DBManager.swift */,
 			);
 			path = Managers;
 			sourceTree = "<group>";
@@ -353,6 +356,7 @@
 				4197022C2B9FE38900372961 /* BookFeedView.swift in Sources */,
 				41EDE4AA2C386A98008D0579 /* WarpcastAuthView.swift in Sources */,
 				4173EFFE2BA7327E00BDB517 /* LibraryView.swift in Sources */,
+				41EDE4B32C3ADBE3008D0579 /* DBManager.swift in Sources */,
 				4173F0112BAF7B3D00BDB517 /* AuthView.swift in Sources */,
 				41EDE4A22C3853F3008D0579 /* SignInWithAppleView.swift in Sources */,
 				4173F0052BA7365A00BDB517 /* BookView.swift in Sources */,

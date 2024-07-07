@@ -14,7 +14,6 @@ struct LibraryView: View {
     @State public var category: LibraryCategory = LibraryCategory(name: "tbr", displayName: "To Read")
     
     func filterLibraryItems() {
-        print(category)
         if category.name == "all" {
             filteredLibrary = library
         } else if category.name == "tbr" {
@@ -24,18 +23,24 @@ struct LibraryView: View {
         }
         loading = false
     }
-    func loadLibraryItems() {
-        BookManager.shared.fetchBooksFromLibrary() { result in
-                    switch result {
-                    case .success(let books):
-                        print("Loaded the books")
-                        self.library = books
-                        filterLibraryItems()
-                    case .failure(let error):
-                        print("Failed to fetch library: \(error)")
-                        loading = false
+    func loadLibraryItems() async {
+        let authStatus = UserManager.shared.authStatus
+        if authStatus.isWarpcast {
+            BookManager.shared.fetchBooksFromLibrary() { result in
+                        switch result {
+                        case .success(let books):              
+                            self.library = books
+                            filterLibraryItems()
+                        case .failure(let error):
+                            print("Failed to fetch library: \(error)")
+                            loading = false
+                        }
                     }
-                }
+        } else {
+            let books = await DBManager.shared.loadLibrary()
+            library = books
+            loading = false
+        }
     }
     var body: some View {
         VStack {
@@ -59,7 +64,9 @@ struct LibraryView: View {
         .padding(.top, 20)
         .background(.white)
         .onAppear {
-            loadLibraryItems()
+            Task {
+                await loadLibraryItems()
+            }
         }
         .navigationBarBackButtonHidden(true)
         .navigationBarItems(leading:

@@ -64,7 +64,7 @@ struct ReviewItem: Codable {
     var created_at: String
     var fid: Double
     var stars: Int8?
-    var books: Book?
+    var books: Book
     var hash: String?
     var thread_hash: String?
     var parent_hash: String?
@@ -76,12 +76,13 @@ struct ReviewItem: Codable {
 struct LibraryItem: Codable {
     var id: String?
     var book_id_fid_key: String
-    var fid: Int
+    var fid: Int?
     var book_id: String
     var status: String?
     var book_type: String?
     var date_completed: String?
     var books: Book
+    let user_id: UUID?
 }
 
 struct SearchItem: Codable, Hashable {
@@ -117,7 +118,7 @@ class BookManager {
     var books: [Book] = []
     var reviews: [ReviewItem] = []
     var searchResults: [SearchItem] = []
-    var libraryItem: LibraryItem = LibraryItem(book_id_fid_key: "", fid: 0, book_id: "", books: Book(id: "", author: "", categories: "", createdAt: "", description: "", thumbnail: "", title: "", reviews: 0, titleAuthorKey: ""))
+    var libraryItem: LibraryItem = LibraryItem(book_id_fid_key: "", fid: 0, book_id: "", books: Book(id: "", author: "", categories: "", createdAt: "", description: "", thumbnail: "", title: "", reviews: 0, titleAuthorKey: ""), user_id: nil)
     
     func fetchBooks(category: String, fid: Int, completion: @escaping (Result<[Book], Error>) -> Void) {
         guard let url = URL(string: "\(ConfigManager.shared.apiUrl)/books/\(category)?fid=\(fid)") else {
@@ -165,7 +166,6 @@ class BookManager {
             
             do {
                 let decodedData = try JSONDecoder().decode(Book.self, from: data)
-                print("SUCCESSFULLY GOT THE BOOK")
                 completion(.success(decodedData))
             } catch {
                 completion(.failure(error))
@@ -200,7 +200,6 @@ class BookManager {
             
             do {
                 let decodedData = try JSONDecoder().decode(LibraryItem.self, from: data)
-                print("Library Item")
                 print(decodedData)
                 self.libraryItem = decodedData
                 completion(.success(decodedData))
@@ -223,7 +222,6 @@ class BookManager {
         
         // Add Authorization header
         request.addValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
-        print("Loading from library")
         URLSession.shared.dataTask(with: request) { data, response, error in
             if let error = error {
                 completion(.failure(error))
@@ -297,7 +295,6 @@ class BookManager {
         do {
             let jsonData = try JSONEncoder().encode(updateRequest)
             request.httpBody = jsonData
-            print(jsonData)
             let task = URLSession.shared.dataTask(with: request) { data, response, error in
                 if let error = error {
                     print("Error occurred: \(error)")
@@ -438,7 +435,6 @@ class BookManager {
         do {
             let jsonData = try JSONEncoder().encode(commentRequest)
             request.httpBody = jsonData
-            print(jsonData)
             let task = URLSession.shared.dataTask(with: request) { data, response, error in
                 if let error = error {
                     print("Error occurred: \(error)")

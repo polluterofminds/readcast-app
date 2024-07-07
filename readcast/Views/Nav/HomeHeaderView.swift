@@ -34,6 +34,7 @@ struct HomeHeaderView: View {
         print("auth status: ", authStatus)
         if authStatus.isLoggedIn && authStatus.isWarpcast {
             //  Get User Info
+            print("Getting Farcaster account info...")
             UserManager.shared.getUserInfo() { result in
                 switch result {
                 case.success(let userDetails):
@@ -45,9 +46,6 @@ struct HomeHeaderView: View {
                     break
                 }
             }
-        } else if authStatus.isLoggedIn {
-            let session = UserManager.shared.session
-            print(session)
         }
     }
     

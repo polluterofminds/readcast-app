@@ -57,7 +57,6 @@ struct SearchView: View {
     @State public var recentSearches: [SearchItem] = []
     
     func loadRecentSearches() {
-        print("Loading recent...")
         guard let data = UserDefaults.standard.data(forKey: "recent_searches") else { return }
         do {
             let decoder = JSONDecoder()
