@@ -130,7 +130,7 @@ class UserManager {
     var user: User = User(fid: 0, custodyAddress: "", recoveryAddress: "", followingCount: 0, followerCount: 0, verifications: [], bio: "", displayName: "", pfpURL: "", username: "", powerBadgeUser: false)
     var signerDetails: SignerData = SignerData(data: SignerInfo(signerId: "", token: "", deepLinkURL: "", status: ""))
     
-    func getUserInfo(completion: @escaping (Result<User, Error>) -> Void) {
+    func getUserInfo(completion: @escaping (Result<DBUser, Error>) -> Void) {
         var userFid = 0
         if let fid = UserDefaults.standard.value(forKey: "fid") as? String {
             print("Fid: \(fid)")
@@ -159,8 +159,7 @@ class UserManager {
             }
             
             do {
-                let decodedData = try JSONDecoder().decode(User.self, from: data)
-                self.user = decodedData
+                let decodedData = try JSONDecoder().decode(DBUser.self, from: data)
                 completion(.success(decodedData))
             } catch {
                 completion(.failure(error))

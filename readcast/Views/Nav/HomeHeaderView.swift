@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct HomeHeaderView: View {
-    @State public var user: User = User(fid: 0, custodyAddress: "", recoveryAddress: "", followingCount: 0, followerCount: 0, verifications: [], bio: "", displayName: "", pfpURL: "", username: "", powerBadgeUser: false)
+    @State public var user: DBUser = DBUser(email_address: "", id: nil, app_user: nil, display_name: nil, username: nil, pfp_url: nil, bio: nil, fid: nil)
     @State public var greeting: String = "Good Morning"
     @State public var authStatus: AuthStatus = AuthStatus(isLoggedIn: false, isWarpcast: false)
     func getTimeOfDay() {
@@ -58,7 +58,7 @@ struct HomeHeaderView: View {
             Spacer()
             if authStatus.isLoggedIn {
                 NavigationLink(destination: ProfileView()) {
-                    AsyncImageView(imageUrl: user.pfpURL, fallback: "gear", width: 30, height: 30).foregroundColor(.black)
+                    AsyncImageView(imageUrl: user.pfp_url ?? "", fallback: "gear", width: 30, height: 30).foregroundColor(.black)
                         .clipShape(Circle())                        
                 }
             } else {

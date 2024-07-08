@@ -16,11 +16,11 @@ struct BookFeedView: View {
     @State public var books: [Book] = []
     @State public var showProgressView: Bool = true
     @State public var categories = [Category(name: "Trending"), Category(name: "Newest"), Category(name: "Fiction"), Category(name: "Business"), Category(name: "Biography")]
-    @State public var user = User(fid: 0, custodyAddress: "", recoveryAddress: "", followingCount: 0, followerCount: 0, verifications: [], bio: "", displayName: "", pfpURL: "", username: "", powerBadgeUser: false)
+    @State public var user: DBUser = DBUser(email_address: "", id: nil, app_user: nil, display_name: nil, username: nil, pfp_url: nil, bio: nil, fid: nil)
     @State public var friendsBooks: [Book] = []
     
     func loadBookFeed() {
-        BookManager.shared.fetchBooks(category: category, fid: user.fid) { result in
+        BookManager.shared.fetchBooks(category: category, fid: user.fid ?? 0) { result in
                     switch result {
                     case .success(let books):
                         self.books = books
@@ -54,7 +54,7 @@ struct BookFeedView: View {
                         self.categories.append(Category(name: "Friends"))
                     }
                     user = userData
-                    BookManager.shared.fetchBooks(category: "Friends", fid: user.fid) { result in
+                    BookManager.shared.fetchBooks(category: "Friends", fid: user.fid ?? 0) { result in
                                 switch result {
                                 case .success(let books):            
                                     self.friendsBooks = books
