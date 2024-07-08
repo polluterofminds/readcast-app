@@ -57,7 +57,7 @@ struct LibraryView: View {
             } else {
                 LibraryCategoriesView(category: $category, filterLibrary: filterLibraryItems)
                 ScrollView {
-                    LibraryResultsView(results: $filteredLibrary)
+                    LibraryResultsView(results: $filteredLibrary, loadLibraryItems: loadLibraryItems)
                 }
             }
         }

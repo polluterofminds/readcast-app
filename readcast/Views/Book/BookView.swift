@@ -133,8 +133,6 @@ struct BookView: View {
                         selectedStatus = StatusValue(display: "Add to Library", value: "atl", icon: "bookmark")
                         break
                     case .failure(let error):
-                        // Handle error
-        //                    showProgressView = false
                         print("Failed to fetch books: \(error)")
                     }
                 }
