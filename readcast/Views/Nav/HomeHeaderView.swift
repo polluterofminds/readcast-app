@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct HomeHeaderView: View {
-    @State public var user: DBUser = DBUser(email_address: "", id: nil, app_user: nil, display_name: nil, username: nil, pfp_url: nil, bio: nil, fid: nil)
+    @State public var user: DBUser = DBUser(email_address: "", id: nil, app_user: nil, display_name: nil, username: nil, pfp: nil, bio: nil, fid: nil)
     @State public var greeting: String = "Good Morning"
     @State public var authStatus: AuthStatus = AuthStatus(isLoggedIn: false, isWarpcast: false)
     func getTimeOfDay() {
@@ -46,6 +46,11 @@ struct HomeHeaderView: View {
                     break
                 }
             }
+        } else if authStatus.isLoggedIn {
+            let userDetails = await DBManager.shared.getUser()
+            DispatchQueue.main.async {
+                user = userDetails
+            }
         }
     }
     
@@ -56,10 +61,10 @@ struct HomeHeaderView: View {
                 .fontWeight(/*@START_MENU_TOKEN@*/.bold/*@END_MENU_TOKEN@*/)
                 .font(Font.custom(ConfigManager.shared.primaryFont, size: 22))
             Spacer()
-            if authStatus.isLoggedIn {
+            if authStatus.isLoggedIn && user.id != nil {
                 NavigationLink(destination: ProfileView()) {
-                    AsyncImageView(imageUrl: user.pfp_url ?? "", fallback: "gear", width: 30, height: 30).foregroundColor(.black)
-                        .clipShape(Circle())                        
+                    AsyncImageView(imageUrl: user.pfp ?? "", fallback: "gear", width: 30, height: 30).foregroundColor(.black)
+                        .clipShape(Circle())
                 }
             } else {
                 NavigationLink(destination: AuthView()){
@@ -81,7 +86,7 @@ struct HomeHeaderView: View {
             LinearGradient(
                 gradient: Gradient(colors: [hexToColor(hex: "#CEFF41"), .white]),
                 startPoint: .top,
-                endPoint: .bottom 
+                endPoint: .bottom
             )
         )
         .onAppear {

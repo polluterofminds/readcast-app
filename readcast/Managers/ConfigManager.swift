@@ -11,4 +11,5 @@ class ConfigManager {
     static let shared = ConfigManager()
     var apiUrl: String = "https://api.readcast.xyz"
     var primaryFont: String = "Shapiro 95 Super Extd"
+    let gatewayUrl = "https://readcast.mypinata.cloud"
 }

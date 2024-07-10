@@ -17,12 +17,22 @@ struct LibraryInsert: Decodable, Encodable {
 }
 
 struct DBUser: Decodable, Encodable {
-    let email_address: String
+    let email_address: String?
     let id: UUID?
     let app_user: Bool?
     let display_name: String?
     let username: String?
-    let pfp_url: String?
+    let pfp: String?
+    let bio: String?
+    let fid: Int?
+}
+
+struct DBUserUpdate: Decodable, Encodable {
+    let email_address: String
+    let app_user: Bool?
+    let display_name: String?
+    let username: String?
+    let pfp: String?
     let bio: String?
     let fid: Int?
 }
@@ -94,7 +104,7 @@ class DBManager {
         let session = UserManager.shared.client.auth.currentSession
         do {
             if session?.user.email != nil && session?.user.id != nil {
-                let user = DBUser(email_address: session!.user.email!, id: session!.user.id, app_user: true, display_name: nil, username: nil, pfp_url: nil, bio: nil, fid: nil)
+                let user = DBUser(email_address: session!.user.email!, id: session!.user.id, app_user: true, display_name: nil, username: nil, pfp: nil, bio: nil, fid: nil)
                 try await client
                   .from("users")
                   .upsert(user)
@@ -107,7 +117,28 @@ class DBManager {
         }
     }
     
+    func upsertUserWithValues(username: String?, display_name: String?, bio: String?, pfp_url: String?) async -> Void {
+        let client = UserManager.shared.client
+        let session = UserManager.shared.client.auth.currentSession
+        do {
+            if session?.user.email != nil && session?.user.id != nil {
+                let user = DBUserUpdate(email_address: session!.user.email!, app_user: true, display_name: display_name ?? nil, username: username ?? nil, pfp: pfp_url ?? nil, bio: bio != nil ? bio : nil, fid: nil)
+                print(user)
+                try await client
+                  .from("users")
+                  .update(user)
+                  .eq("id", value: session!.user.id)
+                  .execute()
+            } else {
+                print("Session is nil")
+            }
+        } catch {
+            print("Error updating user \(error)")
+        }
+    }
+    
     func getUser() async -> DBUser {
+        print("Getting user...")
         let client = UserManager.shared.client
         do {
             let users: [DBUser] = try await client
@@ -116,11 +147,34 @@ class DBManager {
               .eq("id", value: UserManager.shared.session?.user.id)
               .execute()
               .value
-            
-            return users.first ?? DBUser(email_address: "", id: nil, app_user: nil, display_name: nil, username: nil, pfp_url: nil, bio: nil, fid: nil)
+            return users.first ?? DBUser(email_address: "", id: nil, app_user: nil, display_name: nil, username: nil, pfp: nil, bio: nil, fid: nil)
         } catch {
-            print("Error upserting user \(error)")
-            return DBUser(email_address: "", id: nil, app_user: nil, display_name: nil, username: nil, pfp_url: nil, bio: nil, fid: nil)
+            print("Error getting user \(error)")
+            return DBUser(email_address: "", id: nil, app_user: nil, display_name: nil, username: nil, pfp: nil, bio: nil, fid: nil)
+        }
+    }
+    
+    func isUsernameAvailable(username: String) async -> Bool {
+        let client = UserManager.shared.client
+        do {
+            print(username)
+            let users: [DBUser] = try await client
+              .from("users")
+              .select()
+              .eq("username", value: username)
+              .execute()
+              .value
+            
+            print(users)
+            if users.isEmpty {
+                print("returning true")
+                return true
+            }
+            print("returning false")
+            return false
+        } catch {
+            print("Error getting user \(error)")
+            return false
         }
     }
 }

@@ -16,7 +16,7 @@ struct BookFeedView: View {
     @State public var books: [Book] = []
     @State public var showProgressView: Bool = true
     @State public var categories = [Category(name: "Trending"), Category(name: "Newest"), Category(name: "Fiction"), Category(name: "Business"), Category(name: "Biography")]
-    @State public var user: DBUser = DBUser(email_address: "", id: nil, app_user: nil, display_name: nil, username: nil, pfp_url: nil, bio: nil, fid: nil)
+    @State public var user: DBUser = DBUser(email_address: "", id: nil, app_user: nil, display_name: nil, username: nil, pfp: nil, bio: nil, fid: nil)
     @State public var friendsBooks: [Book] = []
     
     func loadBookFeed() {
