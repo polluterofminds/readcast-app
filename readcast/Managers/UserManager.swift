@@ -279,6 +279,7 @@ class UserManager {
                     print(decodedData.data.result.signedKeyRequest)
                     UserDefaults.standard.setValue(String(decodedData.data.result.signedKeyRequest.userFid!), forKey: "fid")
                     UserDefaults.standard.setValue("true", forKey: "signer_approved")
+                    self.authStatus = AuthStatus(isLoggedIn: true, isWarpcast: true)
                 }
                 completion(.success(decodedData))
             } catch {

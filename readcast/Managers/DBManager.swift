@@ -8,6 +8,7 @@
 import Foundation
 
 struct LibraryInsert: Decodable, Encodable {
+    let id: String?
     let book_id: String
     let status: String?
     let book_type: String
@@ -72,7 +73,7 @@ class DBManager {
         }
     }
     
-    func upsertBookLibrary(item: LibraryInsert) async {
+    func insertBookInLibrary(item: LibraryInsert) async {
         let client = UserManager.shared.client
         do {
             try await client
@@ -81,6 +82,19 @@ class DBManager {
               .execute()
         } catch {
             print("Error loading library \(error)")
+        }
+    }
+    
+    func upsertBookInLibrary(item: LibraryInsert) async {
+        print(item)
+        let client = UserManager.shared.client
+        do {
+            try await client
+              .from("library")
+              .upsert(item, onConflict: "book_id_fid_key")
+              .execute()
+        } catch {
+            print("Error updating library \(error)")
         }
     }
     
@@ -144,7 +158,7 @@ class DBManager {
             let users: [DBUser] = try await client
               .from("users")
               .select()
-              .eq("id", value: UserManager.shared.session?.user.id)
+              .eq("id", value: UserManager.shared.client.auth.currentUser?.id)
               .execute()
               .value
             return users.first ?? DBUser(email_address: "", id: nil, app_user: nil, display_name: nil, username: nil, pfp: nil, bio: nil, fid: nil)

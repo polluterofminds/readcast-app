@@ -56,7 +56,7 @@ struct ProfileHeaderSaveButtonView: View {
         }
     }
     
-    func asyncMockSaveFunction() async {
+    @Sendable func asyncMockSaveFunction() async {
         print("Save")
     }
     return ProfileHeaderSaveButtonView(showSaveButton: false, username: .constant("justinhunter"), initialUsername: .constant("justinhunter"), showAlert: .constant(false), saveProfileInfo: mockSaveFunction)

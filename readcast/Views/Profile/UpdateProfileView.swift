@@ -123,7 +123,8 @@ struct UpdateProfileView: View {
             
             Spacer()
         }
-        .onChange(of: pfp) { pfpString in
+        .onChange(of: pfp) { newValue, oldValue in
+            print("Text changed from \(oldValue) to \(newValue)")
             loadProfileImage()
         }
         .onAppear {

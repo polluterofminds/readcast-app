@@ -128,7 +128,7 @@ struct BookView: View {
             if UserManager.shared.authStatus.isWarpcast {
                 BookManager.shared.removeBookFromLibrary(bookId: book.id!) { result in
                     switch result {
-                    case .success(let bookResult):
+                    case .success(_):
                         resetLibraryStatus()
                         selectedStatus = StatusValue(display: "Add to Library", value: "atl", icon: "bookmark")
                         break
@@ -154,17 +154,25 @@ struct BookView: View {
         let authStatus = UserManager.shared.authStatus
         //  Need to know if book was in Library or not
         if libraryItem.status != "" {
-            //  It's in the library
-            let dateToUse = selectedStatus.value == "completed" ? date : nil
-            BookManager.shared.upsertLibraryStatus(book: book, libraryId: libraryItem.id ?? "", bookStatus: selectedStatus.value, bookType: bookType, dateCompleted: dateToUse) { result in
-                switch result {
-                case .success(_):
-                    isPresented = false
-                    loadLibraryStatus(bookToLoad: book)
-                    break
-                case .failure(let error):
-                    print("Failed to fetch books: \(error)")
+            if authStatus.isWarpcast {
+                //  It's in the library
+                let dateToUse = selectedStatus.value == "completed" ? date : nil
+                BookManager.shared.upsertLibraryStatus(book: book, libraryId: libraryItem.id ?? "", bookStatus: selectedStatus.value, bookType: bookType, dateCompleted: dateToUse) { result in
+                    switch result {
+                    case .success(_):
+                        isPresented = false
+                        loadLibraryStatus(bookToLoad: book)
+                        break
+                    case .failure(let error):
+                        print("Failed to fetch books: \(error)")
+                    }
                 }
+            } else {
+                let user_id = UserManager.shared.session?.user.id
+                let email = UserManager.shared.session?.user.email
+                await DBManager.shared.upsertBookInLibrary(item: LibraryInsert(id: libraryItem.id, book_id: book.id ?? "", status: selectedStatus.value, book_type: bookType, date_completed: nil, book_id_fid_key: book.id! + email!, user_id: user_id!))
+                isPresented = false
+                loadLibraryStatus(bookToLoad: book)
             }
         } else {
             if authStatus.isWarpcast {
@@ -181,7 +189,7 @@ struct BookView: View {
             } else {
                 let user_id = UserManager.shared.session?.user.id
                 let email = UserManager.shared.session?.user.email
-                await DBManager.shared.upsertBookLibrary(item: LibraryInsert(book_id: book.id ?? "", status: selectedStatus.value, book_type: bookType, date_completed: nil, book_id_fid_key: book.id! + email!, user_id: user_id!))
+                await DBManager.shared.insertBookInLibrary(item: LibraryInsert(id: libraryItem.id, book_id: book.id ?? "", status: selectedStatus.value, book_type: bookType, date_completed: nil, book_id_fid_key: book.id! + email!, user_id: user_id!))
             }
         }
     }

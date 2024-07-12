@@ -36,7 +36,7 @@ struct SignInWithAppleView: View {
                         )
                     )
                     
-                    if let session = UserManager.shared.client.auth.currentSession {
+                    if UserManager.shared.client.auth.currentSession != nil {
                         Task {
                             await DBManager.shared.upsertUser()
                         }

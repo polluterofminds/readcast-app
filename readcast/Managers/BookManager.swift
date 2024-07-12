@@ -266,7 +266,7 @@ class BookManager {
                     return
                 }
                 
-                guard let data = data else {
+                guard data != nil else {
                     completion(.failure(NSError(domain: "No data received", code: 1, userInfo: nil)))
                     return
                 }
@@ -302,7 +302,7 @@ class BookManager {
                     return
                 }
                 
-                guard let data = data else {
+                guard data != nil else {
                     completion(.failure(NSError(domain: "No data received", code: 1, userInfo: nil)))
                     return
                 }
@@ -326,28 +326,22 @@ class BookManager {
         request.addValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
         
-        do {
-            let task = URLSession.shared.dataTask(with: request) { data, response, error in
-                if let error = error {
-                    print("Error occurred: \(error)")
-                    completion(.failure(error))
-                    return
-                }
-                
-                guard let data = data else {
-                    completion(.failure(NSError(domain: "No data received", code: 1, userInfo: nil)))
-                    return
-                }
-    
-                completion(.success("Success"))
+        let task = URLSession.shared.dataTask(with: request) { data, response, error in
+            if let error = error {
+                print("Error occurred: \(error)")
+                completion(.failure(error))
+                return
             }
             
-            task.resume()
-        } catch {
-            print("Error serializing JSON: \(error)")
-            completion(.failure(error))
-            return
+            guard data != nil else {
+                completion(.failure(NSError(domain: "No data received", code: 1, userInfo: nil)))
+                return
+            }
+
+            completion(.success("Success"))
         }
+        
+        task.resume()
     }
 
     func parse<T: Codable>(_ jsonString: String, type: [T].Type) -> [T]? {
@@ -474,7 +468,7 @@ class BookManager {
                     return
                 }
                 
-                guard let data = data else {
+                guard data != nil else {
                     completion(.failure(NSError(domain: "No data received", code: 1, userInfo: nil)))
                     return
                 }
@@ -510,7 +504,7 @@ class BookManager {
                     return
                 }
                 
-                guard let data = data else {
+                guard data != nil else {
                     completion(.failure(NSError(domain: "No data received", code: 1, userInfo: nil)))
                     return
                 }
