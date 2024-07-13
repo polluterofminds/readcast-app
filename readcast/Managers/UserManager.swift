@@ -77,8 +77,8 @@ struct SignedKeyRequest: Codable {
     let isSponsored: Bool
 }
 
-struct Reported: Codable {
-    let fid: Int
+struct Reported: Codable {    
+    let user_id: UUID
 }
 
 struct Credentials: Codable {
@@ -100,6 +100,8 @@ struct EmailSignInResponse: Codable {
 struct AuthStatus {
     let isLoggedIn: Bool
     let isWarpcast: Bool
+    let fid: Int?
+    let user_id: UUID?
 }
 
 class UserManager {
@@ -108,8 +110,8 @@ class UserManager {
     
     var session: Session?
     
-    var authStatus: AuthStatus = AuthStatus(isLoggedIn: false, isWarpcast: false)
-    
+    var authStatus: AuthStatus = AuthStatus(isLoggedIn: false, isWarpcast: false, fid: nil, user_id: nil)
+
     private init() {
         client = SupabaseClient(supabaseURL: URL(string: "https://zytztcmrhfyjwfsrjtmq.supabase.co")!, supabaseKey: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp5dHp0Y21yaGZ5andmc3JqdG1xIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDM2MzEzMzUsImV4cCI6MjAxOTIwNzMzNX0.kTYNOq2ATSzAMBfn94_vs6JqlWOa-r4HAmOXeVIKIDU")
         
@@ -168,18 +170,26 @@ class UserManager {
     }
     
     func getAuthStatus() async -> AuthStatus {
-        var status = AuthStatus(isLoggedIn: false, isWarpcast: false)
+        var userFid = 0
+        var status = AuthStatus(isLoggedIn: false, isWarpcast: false, fid: nil, user_id: nil)
         if let authApproved = UserDefaults.standard.value(forKey: "signer_approved") as? String {
             print("Is auth approved?")
             print(authApproved)
             if authApproved == "true" {
                 print("Auth is approved")
-                status = AuthStatus(isLoggedIn: true, isWarpcast: true)
+                if let fid = UserDefaults.standard.value(forKey: "fid") as? String {
+                    print("Fid: \(fid)")
+                    userFid = Int(fid) ?? 0
+                    status = AuthStatus(isLoggedIn: true, isWarpcast: true, fid: userFid, user_id: nil)
+                } else {
+                    print("Token not found")
+                    status = AuthStatus(isLoggedIn: true, isWarpcast: true, fid: nil, user_id: nil)
+                }
             } else {
                 do {
                     let sessionData: Session = try await client.auth.session
                     if sessionData.user.email != "" && sessionData.user.email != nil {
-                        status = AuthStatus(isLoggedIn: true, isWarpcast: false)
+                        status = AuthStatus(isLoggedIn: true, isWarpcast: false, fid: nil, user_id: nil)
                     }
                 } catch {
                     print("Error getting session data")
@@ -190,7 +200,7 @@ class UserManager {
             do {
                 let sessionData: Session = try await client.auth.session
                 if sessionData.user.email != "" && sessionData.user.email != nil {
-                    status = AuthStatus(isLoggedIn: true, isWarpcast: false)
+                    status = AuthStatus(isLoggedIn: true, isWarpcast: false, fid: nil, user_id: sessionData.user.id)
                 }
             } catch {
                 print("Error getting session data")
@@ -279,7 +289,7 @@ class UserManager {
                     print(decodedData.data.result.signedKeyRequest)
                     UserDefaults.standard.setValue(String(decodedData.data.result.signedKeyRequest.userFid!), forKey: "fid")
                     UserDefaults.standard.setValue("true", forKey: "signer_approved")
-                    self.authStatus = AuthStatus(isLoggedIn: true, isWarpcast: true)
+                    self.authStatus = AuthStatus(isLoggedIn: true, isWarpcast: true, fid: decodedData.data.result.signedKeyRequest.userFid!, user_id: nil)
                 }
                 completion(.success(decodedData))
             } catch {
@@ -288,7 +298,7 @@ class UserManager {
         }.resume()
     }
     
-    func storeReportedFid(fid: Int) {
+    func storeReportedUser(user_id: UUID) {
         var reportedArray: [Reported] = []
         func parse<T: Codable>(_ jsonString: String, type: [T].Type) -> [T]? {
             let decoder = JSONDecoder()
@@ -307,7 +317,7 @@ class UserManager {
             reportedArray = parse(reported, type: [Reported].self) ?? []
         }
         
-        reportedArray.append(Reported(fid: fid))
+        reportedArray.append(Reported(user_id: user_id))
         
         //  Stringify and store in userdefaults
         

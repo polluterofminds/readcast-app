@@ -16,7 +16,7 @@ struct BookDiscussionView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading) {
-                ForEach(reviews, id: \.id) { review in
+                ForEach(reviews, id: \.review_id) { review in
                     ReviewItemView(book: book, review: review, loadReviews: loadReviews)
                 }
             }

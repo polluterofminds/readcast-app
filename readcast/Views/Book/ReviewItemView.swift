@@ -16,6 +16,26 @@ struct ReviewItemView: View {
         
     }
     
+    func deleteReview() {
+        let authStatus = UserManager.shared.authStatus
+        if(authStatus.isWarpcast) {
+            BookManager.shared.deleteReview(review: review) { result in
+                switch result {
+                case .success(_):
+                    loadReviews(book)
+                    break
+                case .failure(let error):
+                    print("Failed to fetch books: \(error)")
+                }
+            }
+        } else {
+            Task {
+                await DBManager.shared.deleteReview(review:review)
+                loadReviews(book)
+            }
+        }
+    }
+    
     func reportAndHide() {
         BookManager.shared.reportReview(review: review) { result in
             switch result {
@@ -25,15 +45,15 @@ struct ReviewItemView: View {
                 print("Failed to fetch books: \(error)")
             }
         }
-        UserManager.shared.storeReportedFid(fid: Int(review.fid))
+        UserManager.shared.storeReportedUser(user_id: review.user_id)
         loadReviews(book)
     }
     
     var body: some View {
         VStack(alignment: .leading) {
             HStack {
-                AsyncImageView(imageUrl: review.users?.pfp ?? "", circle: true, fallback: "person", width: 30, height: 30)
-                Text("@\(review.users?.username ?? "")")
+                AsyncImageView(imageUrl: review.pfp ?? "", circle: true, fallback: "person", width: 30, height: 30)
+                Text("@\(review.username ?? "")")
                     .font(.system(size: 14))
                     .foregroundColor(.black)
             }
@@ -44,13 +64,39 @@ struct ReviewItemView: View {
             }
             HStack {
                 Spacer()
-                Button(action: reportAndHide) {
-                    Text("Report and hide")
-                        .padding(.trailing)
-                        .padding(.top)
-                        .font(.system(size: 12))
-                        .foregroundColor(.black)
+                Menu {
+                    if UserManager.shared.authStatus.isWarpcast && Int(review.fid ?? 0) == UserManager.shared.authStatus.fid {
+                        Button(action: deleteReview) {
+                            HStack {
+                                Text("Delete comment")
+                                Image(systemName: "trash")
+                                    .foregroundColor(.gray)
+                            }
+                        }
+                        .foregroundColor(.gray)
+                    } else if UserManager.shared.authStatus.isLoggedIn && UserManager.shared.authStatus.user_id == review.user_id {
+                        Button(action: deleteReview) {
+                            HStack {
+                                Text("Delete comment")
+                                Image(systemName: "trash")
+                                    .foregroundColor(.gray)
+                            }
+                        }
+                        .foregroundColor(.gray)
+                    }
+                    Button(action: reportAndHide) {
+                        HStack {
+                            Text("Report and hide")
+                            Image(systemName: "flag")
+                                .foregroundColor(.gray)
+                        }
+                    }
+                    .foregroundColor(.gray)
+                    .padding(.trailing)
+                } label: {
+                    Label("", systemImage: "ellipsis")
                 }
+                .foregroundColor(.gray)
             }
         }
         .padding(.bottom, 10)
@@ -79,9 +125,8 @@ struct ReviewItemView_Previews: PreviewProvider {
                 titleAuthorKey: ""
             ),
             review: ReviewItem(
-                id: "f9c97d47-7ec9-4100-9b42-90531efd5b1a",
-                timestamp: "2023-06-28T18:26:15.000Z",
-                title: "The Three-Body Problem",
+                review_id: "f9c97d47-7ec9-4100-9b42-90531efd5b1a",
+                timestamp: "2023-06-28T18:26:15.000Z",                
                 review: "Started reading 3 Body Problem last week after years of wanting to read it",
                 created_at: "2024-01-27T20:03:52.775517+00:00",
                 fid: 7588.0,
@@ -102,13 +147,9 @@ struct ReviewItemView_Previews: PreviewProvider {
                 parent_hash: nil,
                 book_uuid: "31177c58-c61f-4fd5-a244-fd75a7c843fd",
                 weight: nil,
-                users: Optional(readcast.ReviewUser(
-                    fid: 716.0,
-                    username: Optional("ayushm.eth"),
-                    pfp: Optional("https://i.imgur.com/J7duv4f.jpg"),
-                    bio: Optional("20. hacking @ https://www.spire.dev/ \npreviously intern Nethermind, epns.io"),
-                    display_name: Optional("Ayush")
-                ))
+                username: Optional("ayushm.eth"),
+                pfp: Optional("https://i.imgur.com/J7duv4f.jpg"),
+                display_name: Optional("Ayush"), bio: Optional("20. hacking @ https://www.spire.dev/ \npreviously intern Nethermind, epns.io"), user_id: UUID(uuidString: "ec649518-93c3-453b-bc88-115a4f987a63")!
             ),
             loadReviews: loadReviewPlaceholder
         )

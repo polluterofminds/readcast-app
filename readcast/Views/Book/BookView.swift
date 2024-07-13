@@ -22,6 +22,7 @@ struct BookView: View {
     @State public var submitting = false
     
     func loadReviews(bookToLoad: Book) {
+        print("loading reviews...")
         BookManager.shared.fetchReviews(bookId: book.id ?? "") { result in
                     switch result {
                     case .success(let reviews):
@@ -34,6 +35,7 @@ struct BookView: View {
     }
     
     func loadLibraryStatus(bookToLoad: Book) {
+        print("Loading from library")
         let authStatus = UserManager.shared.authStatus
         if authStatus.isWarpcast {
             BookManager.shared.fetchBookFromLibrary(bookId: bookToLoad.id ?? "") { result in
@@ -102,6 +104,7 @@ struct BookView: View {
     }
     
     func loadBookByTitleAuthorKey() {
+        print("Loading by title author key")
         saveItemsToUserDefaults(book)
         BookManager.shared.fetchBookByTitleAuthorKey(titleAuthorKey: book.titleAuthorKey ?? "") { result in
             switch result {
@@ -190,6 +193,8 @@ struct BookView: View {
                 let user_id = UserManager.shared.session?.user.id
                 let email = UserManager.shared.session?.user.email
                 await DBManager.shared.insertBookInLibrary(item: LibraryInsert(id: libraryItem.id, book_id: book.id ?? "", status: selectedStatus.value, book_type: bookType, date_completed: nil, book_id_fid_key: book.id! + email!, user_id: user_id!))
+                isPresented = false
+                loadBookByTitleAuthorKey()
             }
         }
     }
@@ -197,17 +202,28 @@ struct BookView: View {
     func submitCast() {
         if castText.count <= 240 {
             submitting = true
-            BookManager.shared.submitComment(book: book, commentText: castText) { result in
-                switch result {
-                case .success(_):
+            let authStatus = UserManager.shared.authStatus
+            if authStatus.isWarpcast {
+                BookManager.shared.submitComment(book: book, commentText: castText) { result in
+                    switch result {
+                    case .success(_):
+                        castText = ""
+                        loadReviews(bookToLoad: book)
+                        submitting = false
+                        showCommentModal = false
+                        break
+                    case .failure(let error):
+                        print("Failed to fetch books: \(error)")
+                        submitting = false
+                    }
+                }
+            } else {
+                Task {
+                    await DBManager.shared.submitReview(book: book, review: castText)
                     castText = ""
                     loadReviews(bookToLoad: book)
                     submitting = false
                     showCommentModal = false
-                    break
-                case .failure(let error):
-                    print("Failed to fetch books: \(error)")
-                    submitting = false
                 }
             }
         }

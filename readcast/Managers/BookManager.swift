@@ -18,7 +18,7 @@ struct Book: Codable {
     let title: String?
     let reviews: Int?
     let titleAuthorKey: String?
-
+    
     enum CodingKeys: String, CodingKey {
         case id
         case author
@@ -57,12 +57,11 @@ struct ReviewUser: Codable {
 }
 
 struct ReviewItem: Codable {
-    var id: String
-    var timestamp: String
-    var title: String
+    var review_id: String
+    var timestamp: String?
     var review: String
     var created_at: String
-    var fid: Double
+    var fid: Double?
     var stars: Int8?
     var books: Book?
     var hash: String?
@@ -70,7 +69,11 @@ struct ReviewItem: Codable {
     var parent_hash: String?
     var book_uuid: String
     var weight: Int?
-    var users: ReviewUser?
+    var username: String?
+    var pfp: String?
+    var display_name: String?
+    var bio: String?
+    var user_id: UUID
 }
 
 struct LibraryItem: Codable {
@@ -109,7 +112,7 @@ struct SearchItem: Codable, Hashable {
 
 struct ReportRequest: Codable {
     let reviewId: String
-    let reporteeFid: Int
+    let reporteeUserId: UUID
 }
 
 class BookManager {
@@ -270,7 +273,7 @@ class BookManager {
                     completion(.failure(NSError(domain: "No data received", code: 1, userInfo: nil)))
                     return
                 }
-    
+                
                 completion(.success("Success"))
             }
             
@@ -306,7 +309,7 @@ class BookManager {
                     completion(.failure(NSError(domain: "No data received", code: 1, userInfo: nil)))
                     return
                 }
-    
+                
                 completion(.success("Success"))
             }
             
@@ -337,13 +340,13 @@ class BookManager {
                 completion(.failure(NSError(domain: "No data received", code: 1, userInfo: nil)))
                 return
             }
-
+            
             completion(.success("Success"))
         }
         
         task.resume()
     }
-
+    
     func parse<T: Codable>(_ jsonString: String, type: [T].Type) -> [T]? {
         let decoder = JSONDecoder()
         if let jsonData = jsonString.data(using: .utf8) {
@@ -381,11 +384,11 @@ class BookManager {
                 if let reported = UserDefaults.standard.value(forKey: "reported") as? String {
                     reportedArray = self.parse(reported, type: [Reported].self) ?? []
                 }
-                let reportedFids = reportedArray.map { $0.fid }
-                            
+                let reportedUsers = reportedArray.map { $0.user_id }
+                
                 // Filter out reviews with fids in reportedFids
-                let filteredReviews = decodedData.filter { !reportedFids.contains(Int($0.fid)) }
-
+                let filteredReviews = decodedData.filter { !reportedUsers.contains($0.user_id) }
+                
                 self.reviews = filteredReviews
                 completion(.success(filteredReviews))
             } catch {
@@ -421,6 +424,38 @@ class BookManager {
         }.resume()
     }
     
+    func deleteReview(review: ReviewItem, completion: @escaping (Result<String, Error>) -> Void) {
+        let token = UserManager.shared.getAuthToken()
+        guard let url = URL(string: "\(ConfigManager.shared.apiUrl)/reviews/\(review.review_id)") else { return }
+        var request = URLRequest(url: url)
+        request.httpMethod = "DELETE"
+        request.addValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        do {
+            let task = URLSession.shared.dataTask(with: request) { data, response, error in
+                if let error = error {
+                    print("Error occurred: \(error)")
+                    completion(.failure(error))
+                    return
+                }
+                
+                guard data != nil else {
+                    completion(.failure(NSError(domain: "No data received", code: 1, userInfo: nil)))
+                    return
+                }
+                
+                completion(.success("Success"))
+            }
+            
+            task.resume()
+        } catch {
+            print("Error serializing JSON: \(error)")
+            completion(.failure(error))
+            return
+        }
+    }
+    
     func fetchSearchResults(searchText: String, completion: @escaping (Result<[SearchItem], Error>) -> Void) {
         guard let url = URL(string: "\(ConfigManager.shared.apiUrl)/books/search?terms=\(searchText)") else {
             completion(.failure(NSError(domain: "Invalid URL", code: 0, userInfo: nil)))
@@ -450,7 +485,7 @@ class BookManager {
     
     func submitComment(book: Book, commentText: String, completion: @escaping (Result<String, Error>) -> Void) {
         let commentRequest = CommentRequest(book: book, review: commentText)
-
+        
         let token = UserManager.shared.getAuthToken()
         guard let url = URL(string: "\(ConfigManager.shared.apiUrl)/reviews") else { return }
         var request = URLRequest(url: url)
@@ -472,7 +507,7 @@ class BookManager {
                     completion(.failure(NSError(domain: "No data received", code: 1, userInfo: nil)))
                     return
                 }
-    
+                
                 completion(.success("Success"))
             }
             
@@ -486,7 +521,7 @@ class BookManager {
     
     func reportReview(review: ReviewItem, completion: @escaping (Result<String, Error>) -> Void) {
         let token = UserManager.shared.getAuthToken()
-        let reportRequest = ReportRequest(reviewId: review.id, reporteeFid: Int(review.fid))
+        let reportRequest = ReportRequest(reviewId: review.review_id, reporteeUserId: review.user_id)
         guard let url = URL(string: "\(ConfigManager.shared.apiUrl)/reviews/report") else { return }
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
@@ -508,7 +543,7 @@ class BookManager {
                     completion(.failure(NSError(domain: "No data received", code: 1, userInfo: nil)))
                     return
                 }
-    
+                
                 completion(.success("Success"))
             }
             

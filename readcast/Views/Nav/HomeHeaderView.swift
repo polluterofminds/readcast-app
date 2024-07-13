@@ -10,7 +10,7 @@ import SwiftUI
 struct HomeHeaderView: View {
     @State public var user: DBUser = DBUser(email_address: "", id: nil, app_user: nil, display_name: nil, username: nil, pfp: nil, bio: nil, fid: nil)
     @State public var greeting: String = "Good Morning"
-    @State public var authStatus: AuthStatus = AuthStatus(isLoggedIn: false, isWarpcast: false)
+    @State public var authStatus: AuthStatus = AuthStatus(isLoggedIn: false, isWarpcast: false, fid: nil, user_id: nil)
     func getTimeOfDay() {
         let date = Date()
         let calendar = Calendar.current
