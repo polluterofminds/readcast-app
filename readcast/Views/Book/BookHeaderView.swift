@@ -10,14 +10,14 @@ import SwiftUI
 struct BookHeaderView: View {
     @State public var book: Book
     @State public var fullDesc: Bool = false
-    
+    @State public var bookThumbnail = ""
     func toggleFullDescription() {
         fullDesc.toggle()
     }
     
     var body: some View {
         HStack(alignment: .top) {
-            AsyncImageView(imageUrl: book.thumbnail ?? "", fallback: "book", width: 100, height: 150)
+            AsyncImageView(imageUrl: $bookThumbnail, fallback: "book", width: 100, height: 150)
             VStack(alignment: .leading, content: {
                 Text(book.categories ?? "")
                     .lineLimit(1)
@@ -50,6 +50,12 @@ struct BookHeaderView: View {
                     }
                 }
             })
+        }
+        .onAppear {
+            bookThumbnail = book.thumbnail ?? ""
+        }
+        .onChange(of: book.thumbnail) { newValue in
+            bookThumbnail = book.thumbnail ?? ""
         }
         .padding()
         .foregroundColor(.black)

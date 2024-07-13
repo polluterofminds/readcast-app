@@ -9,11 +9,12 @@ import SwiftUI
 
 struct BookItemView: View {
     @State public var book: Book
+    @State public var bookThumbnail = ""
     var body: some View {
         VStack {
             NavigationLink(destination: BookView(book: book)) {
                 HStack {
-                    AsyncImageView(imageUrl: book.thumbnail ?? "", fallback: "book", width: 100, height: 150)
+                    AsyncImageView(imageUrl: $bookThumbnail, fallback: "book", width: 100, height: 150)
                     VStack(alignment: .leading, content: {
                         Text(book.categories ?? "")
                             .lineLimit(1)
@@ -45,6 +46,12 @@ struct BookItemView: View {
             .foregroundColor(.black)
         }
         .background(.white)
+        .onAppear {
+            bookThumbnail = book.thumbnail ?? ""
+        }
+        .onChange(of: book.thumbnail) { newValue in
+            bookThumbnail = newValue ?? ""
+        }
     }
 }
 

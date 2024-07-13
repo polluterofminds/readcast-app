@@ -9,10 +9,11 @@ import SwiftUI
 
 struct StaticProfileView: View {
     @Binding public var user: DBUser
+    @State public var profileImageUrl = ""
     var body: some View {
         VStack {
             HStack {
-                AsyncImageView(imageUrl: user.pfp ?? "", fallback: "person", width: 75, height: 75)
+                AsyncImageView(imageUrl: $profileImageUrl, fallback: "person", width: 75, height: 75)
                     .clipShape(Circle())
                     .padding(.horizontal)
                 VStack(alignment: .leading) {
@@ -31,6 +32,16 @@ struct StaticProfileView: View {
         }
         .padding(.top)
         .background(.white)
+        .onAppear {
+            print("Initial value")
+            print(user.pfp)
+            profileImageUrl = user.pfp ?? ""
+        }
+        .onChange(of: user.pfp) { newValue in
+            print("PFP updated")
+            print(newValue)
+            profileImageUrl = newValue ?? ""
+        }
     }
 }
 

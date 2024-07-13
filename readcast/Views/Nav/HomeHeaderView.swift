@@ -11,6 +11,7 @@ struct HomeHeaderView: View {
     @State public var user: DBUser = DBUser(email_address: "", id: nil, app_user: nil, display_name: nil, username: nil, pfp: nil, bio: nil, fid: nil)
     @State public var greeting: String = "Good Morning"
     @State public var authStatus: AuthStatus = AuthStatus(isLoggedIn: false, isWarpcast: false, fid: nil, user_id: nil)
+    @State public var profileImageUrl = ""
     func getTimeOfDay() {
         let date = Date()
         let calendar = Calendar.current
@@ -40,6 +41,7 @@ struct HomeHeaderView: View {
                 case.success(let userDetails):
                     print(userDetails)
                     user = userDetails
+                    profileImageUrl = userDetails.pfp ?? ""
                     break
                 case.failure(let error):
                     print("Failed to get user: \(error)")
@@ -50,6 +52,7 @@ struct HomeHeaderView: View {
             let userDetails = await DBManager.shared.getUser()
             DispatchQueue.main.async {
                 user = userDetails
+                profileImageUrl = userDetails.pfp ?? ""
             }
         }
     }
@@ -63,12 +66,12 @@ struct HomeHeaderView: View {
             Spacer()
             if authStatus.isLoggedIn && user.id != nil {
                 NavigationLink(destination: ProfileView()) {
-                    AsyncImageView(imageUrl: user.pfp ?? "", fallback: "gear", width: 30, height: 30).foregroundColor(.black)
+                    AsyncImageView(imageUrl: $profileImageUrl, fallback: "gear", width: 30, height: 30).foregroundColor(.black)
                         .clipShape(Circle())
                 }
             } else {
                 NavigationLink(destination: AuthView()){
-                    AsyncImageView(imageUrl: "", fallback: "person", width: 30, height: 30).foregroundColor(.black)
+                    AsyncImageView(imageUrl: $profileImageUrl, fallback: "person", width: 30, height: 30).foregroundColor(.black)
                         .clipShape(Circle())
                         .padding(3)
                         .overlay(
@@ -89,11 +92,14 @@ struct HomeHeaderView: View {
                 endPoint: .bottom
             )
         )
-        .onAppear {
+        .onAppear {            
             getTimeOfDay()
             Task {
                 await isAuthenticated()
             }
+        }
+        .onChange(of: user.pfp) { newValue in
+            profileImageUrl = newValue ?? ""
         }
         .overlay(Rectangle().frame(height: 1).foregroundColor(Color.black), alignment: .bottom)
     }

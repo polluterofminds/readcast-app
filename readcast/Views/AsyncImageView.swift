@@ -19,7 +19,7 @@ extension View {
 }
 
 struct AsyncImageView: View {
-    @State public var imageUrl: String
+    @Binding public var imageUrl: String
     @State public var circle: Bool?
     @State public var fallback: String
     @State public var width: CGFloat
@@ -50,5 +50,5 @@ struct AsyncImageView: View {
 }
 
 #Preview {
-    AsyncImageView(imageUrl: "", fallback: "book", width: 40, height: 60)
+    AsyncImageView(imageUrl: .constant(""), fallback: "book", width: 40, height: 60)
 }

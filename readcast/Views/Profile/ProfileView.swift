@@ -3,7 +3,7 @@ import SwiftUI
 struct ProfileView: View {
     @Environment(\.presentationMode) var presentationMode
     @State public var loading = false
-    @State public var user: DBUser = DBUser(email_address: "justin.edward.hunter@protonmail.com", id: nil, app_user: nil, display_name: "", username: "justinhunter", pfp: "https://readcast.mypinata.cloud/ipfs/bafkreic5xlhkxitqe4yvo2ffl24vvciadxwqizdvsyn4thzkfibgbkzr6a", bio: nil, fid: nil)
+    @State public var user: DBUser = DBUser(email_address: nil, id: nil, app_user: nil, display_name: "", username: "", pfp: nil, bio: nil, fid: nil)
     @State public var username = ""
     @State public var displayName = ""
     @State public var bio = ""
@@ -17,6 +17,7 @@ struct ProfileView: View {
     @State private var alertTitle = "Error"
     @State private var alertPrimaryButtonTitle = "OK"
     @State private var editProfile = false
+    @State private var placeholderImage = ""
     
     func logUserOut() async {
         print("Logging out...")
@@ -57,6 +58,7 @@ struct ProfileView: View {
                 print("getting user data")
                 let userData = await DBManager.shared.getUser()
                 user = userData
+                print(userData)
                 pfp = userData.pfp ?? ""
             }
         }
@@ -154,7 +156,7 @@ struct ProfileView: View {
                             initialUsername = user.username ?? ""
                             
                         }) {
-                            AsyncImageView(imageUrl: "", fallback: "square.and.pencil", width: 30, height: 30).foregroundColor(.black)                                
+                            AsyncImageView(imageUrl: $placeholderImage, fallback: "square.and.pencil", width: 30, height: 30).foregroundColor(.black)                                
                         }
                     }
                 }

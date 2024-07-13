@@ -11,6 +11,7 @@ struct ReviewItemView: View {
     @State public var book: Book
     @State public var review: ReviewItem
     let loadReviews: (Book) -> Void
+    @State public var profileImageUrl = ""
     
     func loadReplies() {
         
@@ -52,7 +53,7 @@ struct ReviewItemView: View {
     var body: some View {
         VStack(alignment: .leading) {
             HStack {
-                AsyncImageView(imageUrl: review.pfp ?? "", circle: true, fallback: "person", width: 30, height: 30)
+                AsyncImageView(imageUrl: $profileImageUrl, circle: true, fallback: "person", width: 30, height: 30)
                 Text("@\(review.username ?? "")")
                     .font(.system(size: 14))
                     .foregroundColor(.black)
@@ -101,7 +102,11 @@ struct ReviewItemView: View {
         }
         .padding(.bottom, 10)
         .onAppear {
+            profileImageUrl = review.pfp ?? ""
             loadReplies()
+        }
+        .onChange(of: review.pfp) { newValue in
+            profileImageUrl = newValue ?? ""
         }
         .background(.white)
     }
