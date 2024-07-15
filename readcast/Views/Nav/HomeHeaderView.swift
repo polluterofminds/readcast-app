@@ -54,6 +54,9 @@ struct HomeHeaderView: View {
                 user = userDetails
                 profileImageUrl = userDetails.pfp ?? ""
             }
+        } else {
+            user = DBUser(email_address: "", id: nil, app_user: nil, display_name: nil, username: nil, pfp: nil, bio: nil, fid: nil)
+            profileImageUrl = ""
         }
     }
     

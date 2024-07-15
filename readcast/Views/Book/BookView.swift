@@ -190,11 +190,14 @@ struct BookView: View {
                     }
                 }
             } else {
-                let user_id = UserManager.shared.session?.user.id
-                let email = UserManager.shared.session?.user.email
-                await DBManager.shared.insertBookInLibrary(item: LibraryInsert(id: libraryItem.id, book_id: book.id ?? "", status: selectedStatus.value, book_type: bookType, date_completed: nil, book_id_fid_key: book.id! + email!, user_id: user_id!))
-                isPresented = false
-                loadBookByTitleAuthorKey()
+                let user_id = UserManager.shared.client.auth.currentUser?.id
+                let email = UserManager.shared.client.auth.currentUser?.email
+                
+                if user_id != nil && email != nil {
+                    await DBManager.shared.insertBookInLibrary(item: LibraryInsert(id: libraryItem.id, book_id: book.id ?? "", status: selectedStatus.value, book_type: bookType, date_completed: nil, book_id_fid_key: book.id! + email!, user_id: user_id!))
+                    isPresented = false
+                    loadBookByTitleAuthorKey()
+                }
             }
         }
     }
