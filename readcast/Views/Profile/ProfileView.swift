@@ -85,6 +85,13 @@ struct ProfileView: View {
         editProfile = false
     }
     
+    private func deleteAccount() {
+        Task {
+            await UserManager.shared.deleteUserAccount()
+            await logUserOut()
+        }
+    }
+    
     var body: some View {
         ReusableAlertView(
             isPresented: $showAlert,
@@ -111,12 +118,11 @@ struct ProfileView: View {
                         UpdateProfileView(username: $username, displayName: $displayName, bio: $bio, ipfsHash: $ipfsHash, pfp: $pfp)
                     } else {
                         Spacer()
-                        StaticProfileView(user: $user)
+                        StaticProfileView(user: $user, deleteAccount: deleteAccount)
                             .onAppear {
                                 getUserData()
                             }
                     }
-                    
                     Spacer()
                     Button(action: {
                         Task {

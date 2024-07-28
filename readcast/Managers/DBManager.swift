@@ -250,4 +250,48 @@ class DBManager {
             print("Error deleting review \(error)")
         }
     }
+    
+    func deleteUser(userId: UUID) async -> String {
+        let client = UserManager.shared.client
+        
+        //  Delete reviews
+        do {
+            let data = try await client
+                .from("reviews")
+                .delete()
+                .eq("user_id", value: client.auth.currentUser?.id)
+                .execute()
+                .value
+        } catch {
+            print("Error deleting reviews for user \(error)")
+            return "Error"
+        }
+        //  Delete library
+        do {
+            let data = try await client
+                .from("library")
+                .delete()
+                .eq("user_id", value: client.auth.currentUser?.id)
+                .execute()
+                .value
+        } catch {
+            print("Error deleting library for user \(error)")
+            return "Error"
+        }
+        //  Delete user
+        do {
+            let data = try await client
+                .from("users")
+                .delete()
+                .eq("id", value: userId)
+                .execute()
+                .value
+            print(data)
+        } catch {
+            print("Error deleting user \(error)")
+            return "Error"
+        }
+        
+        return "Done"
+    }
 }

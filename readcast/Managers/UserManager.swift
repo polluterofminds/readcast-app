@@ -340,4 +340,16 @@ class UserManager {
             UserDefaults.standard.setValue(jsonString, forKey: "reported")
         }
     }
+    
+    func deleteUserAccount() async -> Void {
+        let authStatus = UserManager.shared.authStatus
+        
+        if authStatus.isWarpcast == false {
+            let userId = authStatus.user_id!
+            let result = await DBManager.shared.deleteUser(userId: userId)
+            print(result)
+        } else {
+            print("Warpcast accounts cannot be deleted from Readcast")
+        }
+    }
 }
