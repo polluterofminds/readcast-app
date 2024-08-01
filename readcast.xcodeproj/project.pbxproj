@@ -40,6 +40,7 @@
 		4197022E2B9FE48F00372961 /* BookItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4197022D2B9FE48F00372961 /* BookItemView.swift */; };
 		419702302B9FE54100372961 /* AsyncImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4197022F2B9FE54100372961 /* AsyncImageView.swift */; };
 		419D824C2C5AD38F00967B1C /* ShareSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 419D824B2C5AD38F00967B1C /* ShareSheetView.swift */; };
+		419D824F2C5BF4B400967B1C /* SDWebImageSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = 419D824E2C5BF4B400967B1C /* SDWebImageSwiftUI */; };
 		41B9F7802BBAD52200377B75 /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41B9F77F2BBAD52200377B75 /* ProfileView.swift */; };
 		41B9F7882BBB23C800377B75 /* SearchHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41B9F7872BBB23C800377B75 /* SearchHeaderView.swift */; };
 		41B9F78A2BBB2BC200377B75 /* SearchBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41B9F7892BBB2BC200377B75 /* SearchBarView.swift */; };
@@ -117,6 +118,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				419D824F2C5BF4B400967B1C /* SDWebImageSwiftUI in Frameworks */,
 				41EDE4AF2C388A49008D0579 /* Gravatar in Frameworks */,
 				41EDE4972C3851DB008D0579 /* PostgREST in Frameworks */,
 				41EDE4952C3851DB008D0579 /* Functions in Frameworks */,
@@ -315,6 +317,7 @@
 				41EDE4A42C385426008D0579 /* GoTrue */,
 				41EDE4AE2C388A49008D0579 /* Gravatar */,
 				41EDE4B02C388A49008D0579 /* GravatarUI */,
+				419D824E2C5BF4B400967B1C /* SDWebImageSwiftUI */,
 			);
 			productName = readcast;
 			productReference = 418B97D12B3B671A00842309 /* readcast.app */;
@@ -348,6 +351,7 @@
 				41EDE4912C3851DB008D0579 /* XCRemoteSwiftPackageReference "supabase-swift" */,
 				41EDE4A32C385426008D0579 /* XCRemoteSwiftPackageReference "gotrue-swift" */,
 				41EDE4AD2C388A49008D0579 /* XCRemoteSwiftPackageReference "Gravatar-SDK-iOS" */,
+				419D824D2C5BF4B400967B1C /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */,
 			);
 			productRefGroup = 418B97D22B3B671A00842309 /* Products */;
 			projectDirPath = "";
@@ -646,6 +650,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		419D824D2C5BF4B400967B1C /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SDWebImage/SDWebImageSwiftUI";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 3.1.1;
+			};
+		};
 		41EDE4912C3851DB008D0579 /* XCRemoteSwiftPackageReference "supabase-swift" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/supabase/supabase-swift.git";
@@ -673,6 +685,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		419D824E2C5BF4B400967B1C /* SDWebImageSwiftUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 419D824D2C5BF4B400967B1C /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */;
+			productName = SDWebImageSwiftUI;
+		};
 		41EDE4922C3851DB008D0579 /* Auth */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 41EDE4912C3851DB008D0579 /* XCRemoteSwiftPackageReference "supabase-swift" */;
