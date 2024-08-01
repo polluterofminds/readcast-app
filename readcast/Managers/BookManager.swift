@@ -124,7 +124,7 @@ class BookManager {
     var libraryItem: LibraryItem = LibraryItem(book_id_fid_key: "", fid: 0, book_id: "", books: Book(id: "", author: "", categories: "", createdAt: "", description: "", thumbnail: "", title: "", reviews: 0, titleAuthorKey: ""), user_id: nil)
     
     func fetchBooks(category: String, fid: Int, completion: @escaping (Result<[Book], Error>) -> Void) {
-        guard let url = URL(string: "\(ConfigManager.shared.apiUrl)/books/\(category)?fid=\(fid)") else {
+        guard let url = URL(string: "\(ConfigManager.shared.apiUrl)/books/category/\(category)?fid=\(fid)") else {
             completion(.failure(NSError(domain: "Invalid URL", code: 0, userInfo: nil)))
             return
         }
@@ -143,6 +143,32 @@ class BookManager {
             do {
                 let decodedData = try JSONDecoder().decode([Book].self, from: data)
                 self.books = decodedData
+                completion(.success(decodedData))
+            } catch {
+                completion(.failure(error))
+            }
+        }.resume()
+    }
+    
+    func fetchBookById(bookId: String, completion: @escaping (Result<Book, Error>) -> Void) {
+        guard let url = URL(string: "\(ConfigManager.shared.apiUrl)/books/\(bookId)") else {
+            completion(.failure(NSError(domain: "Invalid URL", code: 0, userInfo: nil)))
+            return
+        }
+        
+        URLSession.shared.dataTask(with: url) { data, response, error in
+            if let error = error {
+                completion(.failure(error))
+                return
+            }
+            
+            guard let data = data else {
+                completion(.failure(NSError(domain: "No data received", code: 1, userInfo: nil)))
+                return
+            }
+            
+            do {
+                let decodedData = try JSONDecoder().decode(Book.self, from: data)
                 completion(.success(decodedData))
             } catch {
                 completion(.failure(error))

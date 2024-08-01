@@ -6,12 +6,15 @@
 //
 
 import SwiftUI
+import UIKit
 
 struct ReviewItemView: View {
     @State public var book: Book
     @State public var review: ReviewItem
     let loadReviews: (Book) -> Void
     @State public var profileImageUrl = ""
+    @State private var isShareSheetPresented = false
+    @State private var itemsToShare: [Any] = []
     
     func loadReplies() {
         
@@ -48,6 +51,15 @@ struct ReviewItemView: View {
         }
         UserManager.shared.storeReportedUser(user_id: review.user_id)
         loadReviews(book)
+    }
+    
+    func getShareableContent() -> String {
+        let textToShare = """
+        Review by @\(review.username ?? ""):
+        \(review.review)
+        Check out the full review in the app: readcast://reviews?bookId=\(String(book.id ?? ""))&reviewId=\(review.review_id)
+        """
+        return textToShare
     }
     
     var body: some View {
@@ -94,6 +106,9 @@ struct ReviewItemView: View {
                     }
                     .foregroundColor(.gray)
                     .padding(.trailing)
+                    ShareSheet(action: getShareableContent())
+                        .foregroundColor(.gray)
+                        .padding(.trailing)
                 } label: {
                     Label("", systemImage: "ellipsis")
                 }
@@ -111,6 +126,20 @@ struct ReviewItemView: View {
         .background(.white)
     }
 }
+
+struct ActivityView: UIViewControllerRepresentable {
+    let activityItems: [Any]
+    let applicationActivities: [UIActivity]? = nil
+    
+    func makeUIViewController(context: UIViewControllerRepresentableContext<ActivityView>) -> UIActivityViewController {
+        let controller = UIActivityViewController(activityItems: activityItems, applicationActivities: applicationActivities)
+        controller.excludedActivityTypes = [.addToReadingList, .assignToContact]
+        return controller
+    }
+    
+    func updateUIViewController(_ uiViewController: UIActivityViewController, context: UIViewControllerRepresentableContext<ActivityView>) {}
+}
+
 
 struct ReviewItemView_Previews: PreviewProvider {
     static var previews: some View {
@@ -131,7 +160,7 @@ struct ReviewItemView_Previews: PreviewProvider {
             ),
             review: ReviewItem(
                 review_id: "f9c97d47-7ec9-4100-9b42-90531efd5b1a",
-                timestamp: "2023-06-28T18:26:15.000Z",                
+                timestamp: "2023-06-28T18:26:15.000Z",
                 review: "Started reading 3 Body Problem last week after years of wanting to read it",
                 created_at: "2024-01-27T20:03:52.775517+00:00",
                 fid: 7588.0,

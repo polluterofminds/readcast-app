@@ -4,6 +4,21 @@
 <dict>
 	<key>ATSApplicationFontsPath</key>
 	<string></string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLIconFile</key>
+			<string>Splash_Screen</string>
+			<key>CFBundleURLName</key>
+			<string>readcast</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>readcast</string>
+			</array>
+		</dict>
+	</array>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Shapiro 95 Super Extd.otf</string>

@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct BookView: View {  
+struct BookView: View {
     @Environment(\.presentationMode) var presentationMode
     @State public var isPresented = false
     @State public var showCommentModal = false
@@ -20,17 +20,19 @@ struct BookView: View {
     @State public var date = Date()
     @State public var castText = ""
     @State public var submitting = false
+    @EnvironmentObject var navigationManager: NavigationManager
+    @State private var reviewToScrollTo: String?
     
     func loadReviews(bookToLoad: Book) {
         print("loading reviews...")
         BookManager.shared.fetchReviews(bookId: book.id ?? "") { result in
-                    switch result {
-                    case .success(let reviews):
-                        self.reviews = reviews
-                    case .failure(let error):
-                        print("Failed to fetch reviews: \(error)")
-                    }
-                }
+            switch result {
+            case .success(let reviews):
+                self.reviews = reviews
+            case .failure(let error):
+                print("Failed to fetch reviews: \(error)")
+            }
+        }
         reviewsLoading = false
     }
     
@@ -89,11 +91,11 @@ struct BookView: View {
         do {
             var recentSearches = retrieveItemsFromUserDefaults() ?? []
             if !recentSearches.contains(where: { $0.id == item.id }) {
-                    recentSearches.append(item)
-                    let encoder = JSONEncoder()
-                    let encodedData = try encoder.encode(recentSearches)
-                    UserDefaults.standard.set(encodedData, forKey: "recent_searches")
-                    }
+                recentSearches.append(item)
+                let encoder = JSONEncoder()
+                let encodedData = try encoder.encode(recentSearches)
+                UserDefaults.standard.set(encodedData, forKey: "recent_searches")
+            }
         } catch {
             print("Error encoding items: \(error.localizedDescription)")
         }
@@ -231,25 +233,42 @@ struct BookView: View {
             }
         }
     }
-
+    
     var body: some View {
         VStack {
-            ScrollView {
-                BookHeaderView(book: book)
-                BookActionView(libraryItem: $libraryItem, options: options, selectedStatus: $selectedStatus, updateStatus: updateStatus)
-                BookDiscussionView(book: book, reviews: $reviews, reviewsLoading: $reviewsLoading, loadReviews: loadReviews)
-                Spacer()
+            ScrollViewReader { proxy in
+                ScrollView {
+                    BookHeaderView(book: book)
+                    BookActionView(libraryItem: $libraryItem, options: options, selectedStatus: $selectedStatus, updateStatus: updateStatus)
+                    BookDiscussionView(book: book, reviews: $reviews, reviewsLoading: $reviewsLoading, loadReviews: loadReviews)
+                        .onAppear {
+                            if let navigateToReview = navigationManager.navigateToReview,
+                               navigateToReview.bookId == book.id {
+                                reviewToScrollTo = navigateToReview.reviewId
+                            }
+                        }
+                        .onChange(of: reviewsLoading) { loading in
+                            if !loading, let reviewId = reviewToScrollTo {
+                                print("Scrolling!")
+                                // Scroll if loading has finished and we have a review to scroll to
+                                withAnimation {
+                                    proxy.scrollTo(reviewId, anchor: .top)
+                                }
+                            }
+                        }
+                    Spacer()
+                }
             }
             Button(action: {
-                    showCommentModal = true
-                }) {
-                    Text("Discuss Book")
-                        .frame(maxWidth: .infinity)
-                        .padding()
-                        .background(hexToColor(hex: "#CEFF41"))
-                        .foregroundColor(.black)
-                        .font(Font.custom(ConfigManager.shared.primaryFont, size: 16))
-                }
+                showCommentModal = true
+            }) {
+                Text("Discuss Book")
+                    .frame(maxWidth: .infinity)
+                    .padding()
+                    .background(hexToColor(hex: "#CEFF41"))
+                    .foregroundColor(.black)
+                    .font(Font.custom(ConfigManager.shared.primaryFont, size: 16))
+            }
         }
         .edgesIgnoringSafeArea(.bottom)
         .sheet(isPresented: $showCommentModal, content: {
@@ -260,10 +279,10 @@ struct BookView: View {
         })
         .sheet(isPresented: $isPresented, content: {
             BookStatusView(isPresented: $isPresented, date: $date, selectedStatus: $selectedStatus, updateStatus: updateBookInLibrary)
-                        .frame(maxWidth: .infinity, maxHeight: .infinity)
-                        .background(Color.white)
-                        .edgesIgnoringSafeArea(.bottom)
-                })
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .background(Color.white)
+                .edgesIgnoringSafeArea(.bottom)
+        })
         .background(Color.white)
         .onAppear {
             if book.id == "" {
@@ -286,12 +305,12 @@ struct BookView: View {
         }
         .navigationBarBackButtonHidden(true)
         .navigationBarItems(leading:
-            Button(action: {
-                self.presentationMode.wrappedValue.dismiss()
-            }) {
-                Image(systemName: "chevron.left")
-                    .foregroundColor(.black)
-            }
+                                Button(action: {
+            self.presentationMode.wrappedValue.dismiss()
+        }) {
+            Image(systemName: "chevron.left")
+                .foregroundColor(.black)
+        }
         )
     }
 }
