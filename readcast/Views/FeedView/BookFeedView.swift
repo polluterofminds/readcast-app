@@ -15,9 +15,8 @@ struct BookFeedView: View {
     @State public var category: String = "Trending"
     @State public var books: [Book] = []
     @State public var showProgressView: Bool = true
-    @State public var categories = [Category(name: "Trending"), Category(name: "Newest"), Category(name: "Fiction"), Category(name: "Business"), Category(name: "Biography")]
+    @State public var categories = [Category(name: "Trending"), Category(name: "Newest"), Category(name: "Popular"), Category(name: "Fiction"), Category(name: "Business"), Category(name: "Biography")]
     @State public var user: DBUser = DBUser(email_address: "", id: nil, app_user: nil, display_name: nil, username: nil, pfp: nil, bio: nil, fid: nil)
-    @State public var friendsBooks: [Book] = []
     
     func loadBookFeed() {
         BookManager.shared.fetchBooks(category: category, fid: user.fid ?? 0) { result in
@@ -37,12 +36,7 @@ struct BookFeedView: View {
         books = []
         showProgressView = true
         category = selectedCategory
-        if selectedCategory == "Friends" {
-            books = friendsBooks
-            showProgressView = false
-        } else {
-            loadBookFeed()
-        }
+        loadBookFeed()
     }
     
     func checkAuthStatus() {
@@ -50,21 +44,7 @@ struct BookFeedView: View {
             switch result {
             case .success(let userData):
                 if(userData.fid != 0) {
-                    if !self.categories.contains(where: { $0.name == "Friends" }) {
-                        self.categories.append(Category(name: "Friends"))
-                    }
                     user = userData
-                    BookManager.shared.fetchBooks(category: "Friends", fid: user.fid ?? 0) { result in
-                                switch result {
-                                case .success(let books):            
-                                    self.friendsBooks = books
-                                    showProgressView = false
-                                case .failure(let error):
-                                    // Handle error
-                                    showProgressView = false
-                                    print("Failed to fetch books: \(error)")
-                                }
-                            }
                 }
                 
                 break
