@@ -57,7 +57,7 @@ struct ReviewItemView: View {
         let textToShare = """
         Review by @\(review.username ?? ""):
         \(review.review)
-        Check out the full review in the app: readcast://reviews?bookId=\(String(book.id ?? ""))&reviewId=\(review.review_id)
+        Check out the full review in the app: readcast://reviews/\(String(book.id ?? ""))/\(review.review_id)
         """
         return textToShare
     }
@@ -97,6 +97,9 @@ struct ReviewItemView: View {
                         }
                         .foregroundColor(.gray)
                     }
+                    ShareSheet(action: getShareableContent())
+                        .foregroundColor(.gray)
+                        .padding(.trailing)
                     Button(action: reportAndHide) {
                         HStack {
                             Text("Report and hide")
@@ -106,9 +109,6 @@ struct ReviewItemView: View {
                     }
                     .foregroundColor(.gray)
                     .padding(.trailing)
-                    ShareSheet(action: getShareableContent())
-                        .foregroundColor(.gray)
-                        .padding(.trailing)
                 } label: {
                     Label("", systemImage: "ellipsis")
                 }

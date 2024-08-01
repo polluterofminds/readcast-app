@@ -124,7 +124,7 @@ class BookManager {
     var libraryItem: LibraryItem = LibraryItem(book_id_fid_key: "", fid: 0, book_id: "", books: Book(id: "", author: "", categories: "", createdAt: "", description: "", thumbnail: "", title: "", reviews: 0, titleAuthorKey: ""), user_id: nil)
     
     func fetchBooks(category: String, fid: Int, completion: @escaping (Result<[Book], Error>) -> Void) {
-        guard let url = URL(string: "\(ConfigManager.shared.apiUrl)/books/category/\(category)?fid=\(fid)") else {
+        guard let url = URL(string: "\(ConfigManager.shared.apiUrl)/books/\(category)?fid=\(fid)") else {
             completion(.failure(NSError(domain: "Invalid URL", code: 0, userInfo: nil)))
             return
         }
@@ -151,7 +151,7 @@ class BookManager {
     }
     
     func fetchBookById(bookId: String, completion: @escaping (Result<Book, Error>) -> Void) {
-        guard let url = URL(string: "\(ConfigManager.shared.apiUrl)/books/\(bookId)") else {
+        guard let url = URL(string: "\(ConfigManager.shared.apiUrl)/books/single/\(bookId)") else {
             completion(.failure(NSError(domain: "Invalid URL", code: 0, userInfo: nil)))
             return
         }
