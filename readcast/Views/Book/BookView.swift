@@ -22,6 +22,7 @@ struct BookView: View {
     @State public var submitting = false
     @EnvironmentObject var navigationManager: NavigationManager
     @State private var reviewToScrollTo: String?
+    @State private var loadingAttempts = 0
     
     func loadReviews(bookToLoad: Book) {
         print("loading reviews...")
@@ -106,11 +107,15 @@ struct BookView: View {
     }
     
     func loadBookByTitleAuthorKey() {
+        print("Book: ")
+        print(book)
         print("Loading by title author key")
+        loadingAttempts = loadingAttempts + 1
         saveItemsToUserDefaults(book)
         BookManager.shared.fetchBookByTitleAuthorKey(titleAuthorKey: book.titleAuthorKey ?? "") { result in
             switch result {
             case .success(let bookResult):
+                print("Found book")
                 self.book = bookResult
                 //  load reviews now
                 loadReviews(bookToLoad: bookResult)
@@ -118,6 +123,23 @@ struct BookView: View {
                 break
             case .failure(let error):
                 print("Failed to fetch books: \(error)")
+                //  Upsert the book. This one probably came from a search result
+                var newBook = book
+                newBook.id = nil
+                newBook.reviews = nil
+                if UserManager.shared.authStatus.isWarpcast {
+                    
+                } else {
+                    var newBook = book
+                    newBook.id = nil
+                    Task {
+                        await DBManager.shared.upsertBook(book: newBook)
+                    }
+                }
+                if loadingAttempts < 2 {
+                    print("Loading book again")
+                    loadBookByTitleAuthorKey()
+                }
             }
         }
     }
@@ -175,7 +197,7 @@ struct BookView: View {
             } else {
                 let user_id = UserManager.shared.session?.user.id
                 let email = UserManager.shared.session?.user.email
-                await DBManager.shared.upsertBookInLibrary(item: LibraryInsert(id: libraryItem.id, book_id: book.id ?? "", status: selectedStatus.value, book_type: bookType, date_completed: nil, book_id_fid_key: book.id! + email!, user_id: user_id!))
+                await DBManager.shared.upsertBookInLibrary(book: book, item: LibraryInsert(id: libraryItem.id, book_id: book.id ?? "", status: selectedStatus.value, book_type: bookType, date_completed: nil, book_id_fid_key: book.id! + email!, user_id: user_id!))
                 isPresented = false
                 loadLibraryStatus(bookToLoad: book)
             }

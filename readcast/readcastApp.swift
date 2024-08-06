@@ -16,8 +16,6 @@ struct readcastApp: App {
                 .environmentObject(AppLifecycleWatcher())
                 .environmentObject(navigationManager)
                 .onOpenURL { url in
-                    print("OPEN URL:")
-                    print(url)
                     navigationManager.handleDeepLink(url: url)
                 }
                 .background(Color.white)

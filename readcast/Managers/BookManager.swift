@@ -9,14 +9,14 @@ import Foundation
 import SwiftData
 
 struct Book: Codable {
-    let id: String?
+    var id: String?
     let author: String?
     let categories: String?
     let createdAt: String?
     let description: String?
     let thumbnail: String?
     let title: String?
-    let reviews: Int?
+    var reviews: Int?
     let titleAuthorKey: String?
     
     enum CodingKeys: String, CodingKey {
@@ -34,7 +34,7 @@ struct Book: Codable {
 
 struct BookUpdateRequest: Codable {
     let book: Book
-    let details: Details
+    let details: Details?
 }
 
 struct Details: Codable {
@@ -122,6 +122,42 @@ class BookManager {
     var reviews: [ReviewItem] = []
     var searchResults: [SearchItem] = []
     var libraryItem: LibraryItem = LibraryItem(book_id_fid_key: "", fid: 0, book_id: "", books: Book(id: "", author: "", categories: "", createdAt: "", description: "", thumbnail: "", title: "", reviews: 0, titleAuthorKey: ""), user_id: nil)
+    
+    func upsertBook(book: Book, completion: @escaping (Result<String, Error>) -> Void) {
+        guard let url = URL(string: "\(ConfigManager.shared.apiUrl)/books") else { return }
+        var request = URLRequest(url: url)
+        request.httpMethod = "PUT"
+        request.addValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        let updateRequest = BookUpdateRequest(book: book, details: nil)
+        
+        do {
+            let jsonData = try JSONEncoder().encode(updateRequest)
+            request.httpBody = jsonData
+            
+            let task = URLSession.shared.dataTask(with: request) { data, response, error in
+                if let error = error {
+                    print("Error occurred: \(error)")
+                    completion(.failure(error))
+                    return
+                }
+                
+                guard data != nil else {
+                    completion(.failure(NSError(domain: "No data received", code: 1, userInfo: nil)))
+                    return
+                }
+                
+                completion(.success("Success"))
+            }
+            
+            task.resume()
+        } catch {
+            print("Error serializing JSON: \(error)")
+            completion(.failure(error))
+            return
+        }
+    }
     
     func fetchBooks(category: String, fid: Int, completion: @escaping (Result<[Book], Error>) -> Void) {
         guard let url = URL(string: "\(ConfigManager.shared.apiUrl)/books/\(category)?fid=\(fid)") else {

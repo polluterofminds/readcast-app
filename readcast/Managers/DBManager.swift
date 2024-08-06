@@ -17,6 +17,15 @@ struct LibraryInsert: Decodable, Encodable {
     let user_id: UUID
 }
 
+struct BookInsert: Decodable, Encodable {
+    let title: String
+    let author: String
+    let description: String
+    let thumbnail: String
+    let categories: String
+    let title_author_key: String
+}
+
 struct DBUser: Decodable, Encodable {
     let email_address: String?
     let id: UUID?
@@ -97,8 +106,7 @@ class DBManager {
         }
     }
     
-    func upsertBookInLibrary(item: LibraryInsert) async {
-        print(item)
+    func upsertBookInLibrary(book: Book, item: LibraryInsert) async {
         let client = UserManager.shared.client
         do {
             try await client
@@ -127,11 +135,24 @@ class DBManager {
     
     func upsertBook(book: Book) async -> Void {
         let client = UserManager.shared.client
-        let session = UserManager.shared.client.auth.currentSession
+        
+        var httpsThumbnail = ""
+        if let uri = book.thumbnail, let range = uri.range(of: "://") {
+            let splitUri = uri[range.upperBound...]
+            let finalUri = "https://\(splitUri)"
+            print(finalUri)
+            httpsThumbnail = finalUri
+        } else {
+            print("Invalid URI")
+        }
+
+        
+        let bookToInsert = BookInsert(title: book.title ?? "", author: book.author ?? "", description: book.description ?? "", thumbnail: httpsThumbnail, categories: book.categories ?? "", title_author_key: book.titleAuthorKey ?? "")
+        
         do {
             try await client
                 .from("books")
-                .upsert(book)
+                .upsert(bookToInsert)
                 .execute()
         } catch {
             print("Error upserting book \(error)")
